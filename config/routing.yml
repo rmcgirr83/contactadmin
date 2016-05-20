@@ -1,0 +1,3 @@
+rmcgirr83_contactadmin_displayform:
+    path: /contactadmin
+    defaults: { _controller: rmcgirr83.contactadmin.main.controller:displayform }
