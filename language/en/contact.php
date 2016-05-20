@@ -14,7 +14,7 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
- 
+
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_BOT_FORUM_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the forum selected in the configuration is incorrect. Please visit the forum %3$s and choose a different forum in the ACP for the Contact Administration.',
 	'CONTACT_CONFIRM'			=> 'Confirm',
 	'CONTACT_DISABLED'			=> 'You can’t use the contact form at the moment because it is disabled.',
-	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration .<br />The extension is set to send an email but the  configuration isn’t setup to send emails.  Please notify the  administrator or webmaster: <a href="mailto:%1$s">%1$s</a>', 
+	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration .<br />The extension is set to send an email but the  configuration isn’t setup to send emails.  Please notify the  administrator or webmaster: <a href="mailto:%1$s">%1$s</a>',
 	'CONTACT_MSG_SENT'			=> 'Your message has been sent successfully',
 	'CONTACT_MSG_BODY_EXPLAIN'	=> '<br /><span>Please use the contact form <strong><em>only</em></strong> if there is no other way to contact us.<br /><br /><span style="text-align:center;"><strong>Your ΙΡ address is being recorded and any abuse attempt will be punished.</strong></span>',
 	'CONTACT_NO_MSG'			=> 'You didn’t enter a message.',
@@ -56,12 +56,12 @@ $lang = array_merge($lang, array(
 	'CONTACT_TEMPLATE_NO_REASON'	=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email Address:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Subject:[/b] %4$s' . "\n" . '[b]Has entered the following message into the contact form:[/b] %5$s',
 	'CONTACT_TITLE'				=> 'Contact Administration',
 	'CONTACT_TOO_MANY'			=> 'You have exceeded the maximum number of contact confirmation attempts for this session. Please try again later.',
-	
+
 	'CONTACT_YOUR_NAME'			=> 'Your name',
 	'CONTACT_YOUR_NAME_EXPLAIN'	=> 'Please enter your name, so the message has an identity.',
 	'CONTACT_YOUR_EMAIL'		=> 'Your email address',
 	'CONTACT_YOUR_EMAIL_EXPLAIN'	=> 'Please enter a valid email address, so we can contact you.',
-	
+
 	'TOO_MANY_CONTACT_TRIES'	=> 'You have exceeded the maximum number of attempts for this session. Please try again later.',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',

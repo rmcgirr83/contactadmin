@@ -138,12 +138,12 @@ class main_controller
 			// from includes/functions_contact.php
 			// check to make sure forum is, ermmm, forum
 			// not link and not cat
-			$this->functions->contact_check($this->config['contactadmin_forum'], '', 'contact_check_forum');
+			$this->functions->contact_check('contact_check_forum', $this->config['contactadmin_forum'], '');
 		}
 		else if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM'])))
 		{
 			// quick check to ensure our "bot" is good
-			$this->functions->contact_check('', $this->config['contactadmin_bot_user'], 'contact_check_bot');
+			$this->functions->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user'], );
 		}
 
 		// Only have contact CAPTCHA confirmation for guests, if the option is enabled
@@ -350,11 +350,6 @@ class main_controller
 
 					case $this->contact_constants['CONTACT_METHOD_POST']:
 
-						if(!function_exists('submit_post'))
-						{
-							include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-						}
-
 						$sql = 'SELECT forum_name
 							FROM ' . FORUMS_TABLE . '
 							WHERE forum_id = ' . (int) $this->config['contactadmin_forum'];
@@ -491,7 +486,6 @@ class main_controller
 			));
 		}
 
-
 		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? '' : ' enctype="multipart/form-data"';
 		$attachment_allowed = false;
 
@@ -512,7 +506,6 @@ class main_controller
 			'CONTACT_REASONS'	=> (!empty($this->contact_reasons['contactadmin_reasons'])) ? $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']) : '',
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
-
 
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? sprintf($this->user->lang($this->config['allow_name_chars'] . '_EXPLAIN'), $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->user->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 

@@ -70,7 +70,7 @@ class functions_contactadmin
 	*/
 	public function contact_change_auth($bot_id, $mode = 'replace', $bkup_data = false)
 	{
-		switch($mode)
+		switch ($mode)
 		{
 			// change our user to one we chose in the ACP settings
 			// for posting or PM'ing only
@@ -113,12 +113,12 @@ class functions_contactadmin
 	* @param $forum_name returned from contact_check_forum
 	* ensures postable forum and correct "bot"
 	*/
-	public function contact_check($forum_id = false, $bot_id = false, $mode, $method = false)
+	public function contact_check($mode, $forum_id = false, $bot_id = false, $method = false)
 	{
 		// the servers url
 		$server_url = generate_board_url();
 
-		switch($mode)
+		switch ($mode)
 		{
 			// check for a valid forum
 			case 'contact_check_forum':
@@ -152,7 +152,7 @@ class functions_contactadmin
 
 					throw new http_exception(503, $message);
 				}
-				elseif (!$row)
+				else if (!$row)
 				{
 					// disable the extension
 					$this->config->set('contactadmin_enable', 0);
@@ -161,7 +161,6 @@ class functions_contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
 
 					$message = sprintf($this->user->lang['CONTACT_DISABLED'], '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
-
 
 					throw new http_exception(503, $message);
 				}
@@ -198,7 +197,7 @@ class functions_contactadmin
 
 					throw new http_exception(503, $message);
 				}
-				elseif (!$row)
+				else if (!$row)
 				{
 					// disable the extension
 					$this->config->set('contactadmin_enable', 0);
@@ -218,7 +217,7 @@ class functions_contactadmin
 				//this is only called if there are no contact admins available
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
 
-				if ($method == CONTACT_METHOD_EMAIL)
+				if ($method == $this->contact_constants['CONTACT_METHOD_EMAIL'])
 				{
 					$error = $this->user->lang('EMAIL');
 				}
@@ -445,7 +444,7 @@ class functions_contactadmin
 		{
 			// we have no one to send anything to
 			// notify the board default
-			$this->functions->contact_check('', '', 'contact_nobody', (int) $this->config['contactadmin_method']);
+			$this->functions->contact_check('contact_nobody', false, false, (int) $this->config['contactadmin_method']);
 		}
 
 		return $contact_users;

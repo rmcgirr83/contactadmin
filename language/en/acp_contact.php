@@ -14,7 +14,7 @@ if (!defined('IN_PHPBB'))
 {
 	exit;
 }
- 
+
 if (empty($lang) || !is_array($lang))
 {
 	$lang = array();
@@ -45,7 +45,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_ATTACHMENTS'				=> 'Attachments allowed',
 	'CONTACT_ATTACHMENTS_EXPLAIN'		=> 'If set attachments will be allowed in posting to the forum and private messages.<br>The extensions allowed are the same as the board configuration.<br><span style="color:red;">Does not apply for contact method via “EMail”.</span>',
 	'CONTACT_CONFIRM_GUESTS'			=> 'Visual confirmation for guests only',
-	'CONTACT_CONFIRM_GUESTS_EXPLAIN'	=> 'If this option is enabled, the visual confirmation is only displayed to guests (if it’s enabled).',	
+	'CONTACT_CONFIRM_GUESTS_EXPLAIN'	=> 'If this option is enabled, the visual confirmation is only displayed to guests (if it’s enabled).',
 	'CONTACT_FOUNDER'					=> 'Contact via just the Board Founder',
 	'CONTACT_FOUNDER_EXPLAIN'			=> 'If set only the Founder of the Forum will get Email or PM notifications.',
 	'CONTACT_GENERAL_SETTINGS'			=> 'General contact page settings',
@@ -71,7 +71,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_METHOD_EMAIL'			=> 'Email',
 	'CONTACT_METHOD_PM'				=> 'Private message',
 	'CONTACT_METHOD_POST'			=> 'Forum post',
-	
+
 	// Contact posters...user bot
 	'CONTACT_POST_NEITHER'			=> 'Neither',
 	'CONTACT_POST_GUEST'			=> 'Guests only',
