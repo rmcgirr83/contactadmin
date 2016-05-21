@@ -305,13 +305,14 @@ class main_controller
 			* Modify data and error strings
 			*
 			* @event rmcgirr83.contactadmin.modify_data_and_error
-			* @var array	error		Error strings
-			* @var array	data		An array with data
+			* @var array	error			Error strings
+			* @var array	data			An array with data
+			* @var	object	message_parser	The message parser object
 			* @since 1.0.0
 			*/
 			$vars = array('error', 'data', 'message_parser');
 			extract($this->dispatcher->trigger_event('rmcgirr83.contactadmin.modify_data_and_error', compact($vars)));
-			
+
 			// no errors, let's proceed
 			if (!sizeof($error))
 			{
