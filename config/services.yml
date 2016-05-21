@@ -19,6 +19,7 @@ services:
             - '@config_text'
             - '@dbal.conn'
             - '@controller.helper'
+            - '@dispatcher'            
             - '@request'
             - '@service_container'
             - '@template'

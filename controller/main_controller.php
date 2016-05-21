@@ -32,6 +32,9 @@ class main_controller
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
+	/** @var \phpbb\event\dispatcher_interface */
+	protected $dispatcher;
+
 	/* @var \phpbb\request\request */
 	protected $request;
 
@@ -62,6 +65,7 @@ class main_controller
 			\phpbb\config\db_text $config_text,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\controller\helper $helper,
+			\phpbb\event\dispatcher_interface $dispatcher,
 			\phpbb\request\request $request,
 			ContainerInterface $phpbb_container,
 			\phpbb\template\template $template,
@@ -76,6 +80,7 @@ class main_controller
 		$this->config_text = $config_text;
 		$this->db = $db;
 		$this->helper = $helper;
+		$this->dispatcher = $dispatcher;
 		$this->request = $request;
 		$this->container = $phpbb_container;
 		$this->template = $template;
@@ -138,12 +143,12 @@ class main_controller
 			// from includes/functions_contact.php
 			// check to make sure forum is, ermmm, forum
 			// not link and not cat
-			$this->functions->contact_check('contact_check_forum', $this->config['contactadmin_forum'], '');
+			$this->functions->contact_check($this->config['contactadmin_forum'], '', 'contact_check_forum');
 		}
 		else if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM'])))
 		{
 			// quick check to ensure our "bot" is good
-			$this->functions->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user'], );
+			$this->functions->contact_check('', $this->config['contactadmin_bot_user'], 'contact_check_bot');
 		}
 
 		// Only have contact CAPTCHA confirmation for guests, if the option is enabled
@@ -296,7 +301,17 @@ class main_controller
 
 				$message_parser->parse(true, true, true, true, false, true, true);
 			}
-
+			/**
+			* Modify data and error strings
+			*
+			* @event rmcgirr83.contactadmin.modify_data_and_error
+			* @var array	error		Error strings
+			* @var array	data		An array with data
+			* @since 1.0.0
+			*/
+			$vars = array('error', 'data', 'message_parser');
+			extract($this->dispatcher->trigger_event('rmcgirr83.contactadmin.modify_data_and_error', compact($vars)));
+			
 			// no errors, let's proceed
 			if (!sizeof($error))
 			{
@@ -486,6 +501,7 @@ class main_controller
 			));
 		}
 
+
 		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? '' : ' enctype="multipart/form-data"';
 		$attachment_allowed = false;
 
@@ -506,6 +522,7 @@ class main_controller
 			'CONTACT_REASONS'	=> (!empty($this->contact_reasons['contactadmin_reasons'])) ? $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']) : '',
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
+
 
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? sprintf($this->user->lang($this->config['allow_name_chars'] . '_EXPLAIN'), $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->user->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 
