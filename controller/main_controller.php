@@ -508,7 +508,7 @@ class main_controller
 		// the forum allows attachments?
 		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_POST'])
 		{
-			$attachment_allowed = ($this->auth->acl_get('f_attach', (int) $this->config['contactadmin_forum']) && $this->config['allow_attachments'] && $this->config['contactadmin_attach_allowed'] && $form_enctype) ? true : $attachment_allowed;
+			$attachment_allowed = ($this->config['allow_attachments'] && $this->config['contactadmin_attach_allowed'] && $form_enctype) ? true : $attachment_allowed;
 		}
 		// the forum allows attachments in PMs?
 		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'])
