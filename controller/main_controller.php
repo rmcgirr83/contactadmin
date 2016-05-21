@@ -414,13 +414,13 @@ class main_controller
 
 						// Send using email (default)..first remove all bbcodes
 						$bbcode_remove = '#\[/?[^\[\]]+\]#';
-						$message = censor_text($contact_data['contact_message']);
+						$message = censor_text($data['contact_message']);
 						$message = preg_replace($bbcode_remove, '', $message);
 						$message = htmlspecialchars_decode($message);
 
 						// Some of the code borrowed from includes/ucp/ucp_register.php
 						// The first argument of messenger::messenger() decides if it uses the message queue (which we will)
-						if (!function_exists('send'))
+						if (!class_exists('messenger'))
 						{
 							include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
 						}
@@ -437,11 +437,11 @@ class main_controller
 						{
 								if (!empty($data['contact_reason']))
 								{
-									$messenger->template('contact', $contact_users[$i]['user_lang']);
+									$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 								}
 								else
 								{
-									$messenger->template('contact_no_reason', $contact_users[$i]['user_lang']);
+									$messenger->template('@rmcgirr83_contactadmin/contact_no_reason', $contact_users[$i]['user_lang']);
 								}
 								$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
 								$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
@@ -452,12 +452,12 @@ class main_controller
 									'ADM_USERNAME'	=> htmlspecialchars_decode($contact_users[$i]['username']),
 									'SITENAME'		=> htmlspecialchars_decode($this->config['sitename']),
 									'USER_IP'		=> $this->user->ip,
-									'USERNAME'		=> $this->user_name,
+									'USERNAME'		=> $data['username'],
 									'USER_EMAIL'	=> htmlspecialchars_decode($data['email']),
-									'DATE'			=> $date,
+									'DATE'			=> gmstrftime("%A %d-%b-%y %T %Z", time()),
 									'REASON'		=> htmlspecialchars_decode($data['contact_reason']),
 
-									'SUBJECT'		=> htmlspecialchars_decode($subject),
+									'SUBJECT'		=> htmlspecialchars_decode($data['contact_subject']),
 									'MESSAGE'		=> $message,
 								));
 
@@ -502,7 +502,6 @@ class main_controller
 			));
 		}
 
-
 		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? '' : ' enctype="multipart/form-data"';
 		$attachment_allowed = false;
 
@@ -523,7 +522,6 @@ class main_controller
 			'CONTACT_REASONS'	=> (!empty($this->contact_reasons['contactadmin_reasons'])) ? $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']) : '',
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
-
 
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? sprintf($this->user->lang($this->config['allow_name_chars'] . '_EXPLAIN'), $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->user->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 
