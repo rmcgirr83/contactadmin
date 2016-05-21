@@ -143,12 +143,12 @@ class main_controller
 			// from includes/functions_contact.php
 			// check to make sure forum is, ermmm, forum
 			// not link and not cat
-			$this->functions->contact_check($this->config['contactadmin_forum'], '', 'contact_check_forum');
+			$this->functions->contact_check('contact_check_forum', $this->config['contactadmin_forum']);
 		}
 		else if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM'])))
 		{
 			// quick check to ensure our "bot" is good
-			$this->functions->contact_check('', $this->config['contactadmin_bot_user'], 'contact_check_bot');
+			$this->functions->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user']);
 		}
 
 		// Only have contact CAPTCHA confirmation for guests, if the option is enabled
