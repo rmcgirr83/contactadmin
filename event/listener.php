@@ -54,9 +54,12 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->config['contactadmin_enable'] && !$this->user->data['is_bot'])
 		{
+			$version = phpbb_version_compare($this->config['version'], '3.2.0-b2', '>=');
+
 			$this->template->assign_vars(array(
 				'U_CONTACT_US'		=> false,
 				'U_CONTACTADMIN'	=> $this->helper->route('rmcgirr83_contactadmin_displayform'),
+				'S_FORUM_VERSION'	=> $version,
 			));
 		}
 	}
