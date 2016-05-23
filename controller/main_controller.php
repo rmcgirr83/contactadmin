@@ -92,11 +92,11 @@ class main_controller
 
 		$this->contact_constants = $this->functions->contact_constants();
 		$this->contact_reasons = $this->config_text->get_array(array('contactadmin_reasons'));
+
 		//convert the reasons string into an array
 		if (!empty($this->contact_reasons['contactadmin_reasons']))
 		{
-			$this->contact_reasons = bbcode_nl2br($this->contact_reasons['contactadmin_reasons']);
-			$this->contact_reasons = explode('<br />', $this->contact_reasons);
+			$this->contact_reasons = explode("<br />", bbcode_nl2br($this->contact_reasons['contactadmin_reasons']));
 		}
 		else
 		{
@@ -263,7 +263,17 @@ class main_controller
 			// pretty up the user name..but only for non emails
 			if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_PM'], $this->contact_constants['CONTACT_METHOD_POST'])))
 			{
-				$user_name = $this->user->data['is_registered'] ? get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']) : $data['username'];
+				// we can't use get_username_string in 3.2
+				if (phpbb_version_compare($this->config['version'], '3.2.0-b2', '>='))
+				{
+					$url = $this->root_path . 'memberlist.' . $this->php_ext . '?mode=viewprofile&u=' . $this->user->data['user_id'];
+					$color = $this->user->data['user_colour'];
+					$user_name = $this->user->data['is_registered'] ? '[url=' . $url . '][color=#' . $color . ']' . $this->user->data['username'] . '[/color][/url]' : $data['username'];
+				}
+				else
+				{
+					$user_name = $this->user->data['is_registered'] ? get_username_string('full', $this->user->data['user_id'], $this->user->data['username'], $this->user->data['user_colour']) : $data['username'];
+				}
 			}
 			else
 			{
