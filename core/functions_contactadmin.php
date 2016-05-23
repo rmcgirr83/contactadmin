@@ -308,7 +308,7 @@ class functions_contactadmin
 		// only accept arrays, no empty ones
 		if (!is_array($input_ary) || !sizeof($input_ary))
 		{
-			return;
+			return false;
 		}
 
 		// If selected isn't in the array, use first entry

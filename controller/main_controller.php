@@ -93,8 +93,15 @@ class main_controller
 		$this->contact_constants = $this->functions->contact_constants();
 		$this->contact_reasons = $this->config_text->get_array(array('contactadmin_reasons'));
 		//convert the reasons string into an array
-		$this->contact_reasons = bbcode_nl2br($this->contact_reasons['contactadmin_reasons']);
-		$this->contact_reasons = explode('<br />', $this->contact_reasons);
+		if (!empty($this->contact_reasons['contactadmin_reasons']))
+		{
+			$this->contact_reasons = bbcode_nl2br($this->contact_reasons['contactadmin_reasons']);
+			$this->contact_reasons = explode('<br />', $this->contact_reasons);
+		}
+		else
+		{
+			$this->contact_reasons = array();
+		}
 
 		if (!function_exists('validate_data'))
 		{
@@ -522,7 +529,7 @@ class main_controller
 		$this->template->assign_vars(array(
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
-			'CONTACT_REASONS'	=> (sizeof($this->contact_reasons)) ? $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']) : '',
+			'CONTACT_REASONS'	=> $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']),
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
 
