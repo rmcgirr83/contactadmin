@@ -218,7 +218,7 @@ class main_controller
 				}
 				else
 				{
-					$error = validate_data($contact_data, array(
+					$error = validate_data($data, array(
 						'email'				=> array(
 							array('string', false, 6, 60),
 							array('email')),
@@ -449,7 +449,7 @@ class main_controller
 						// Loop through our list of users
 						for ($i = 0, $size = sizeof($contact_users); $i < $size; $i++)
 						{
-							$messenger->template('@rmcgirr83_contactadmin/contact_no_reason', $contact_users[$i]['user_lang']);
+							$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
 							$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
