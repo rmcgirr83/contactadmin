@@ -96,7 +96,7 @@ class main_controller
 		//convert the reasons string into an array
 		if (!empty($this->contact_reasons['contactadmin_reasons']))
 		{
-			$this->contact_reasons = explode("<br />", bbcode_nl2br($this->contact_reasons['contactadmin_reasons']));
+			$this->contact_reasons = explode("\n",$this->contact_reasons['contactadmin_reasons']);
 		}
 		else
 		{
@@ -236,7 +236,7 @@ class main_controller
 			$error = array_map(array($this->user, 'lang'), $error);
 
 			// Validate message and subject
-			if (utf8_clean_string($data['contact_subject']) === '')
+			if (utf8_clean_string($data['contact_subject']) === '' && empty($data['contact_reason']))
 			{
 				$error[] = $this->user->lang('CONTACT_NO_SUBJ');
 			}
@@ -291,13 +291,13 @@ class main_controller
 				$contact_message = censor_text(trim('[quote] ' . $data['contact_message'] . '[/quote]'));
 
 				// there may not be a reason entered in the ACP...so change the template to reflect this
-				if (sizeof($this->contact_reasons))
+				if (!empty($data['contact_reason']))
 				{
-					$contact_message = sprintf($this->user->lang('CONTACT_TEMPLATE'), $user_name, $data['email'], $this->user->ip, $data['contact_reason'], $data['contact_subject'], $contact_message);
+					$contact_message = sprintf($this->user->lang('CONTACT_TEMPLATE'), $user_name, $data['email'], $this->user->ip, $data['contact_reason'], $contact_message);
 				}
 				else
 				{
-					$contact_message = sprintf($this->user->lang('CONTACT_TEMPLATE_NO_REASON'), $user_name, $data['email'], $this->user->ip, $data['contact_subject'], $contact_message);
+					$contact_message = sprintf($this->user->lang('CONTACT_TEMPLATE'), $user_name, $data['email'], $this->user->ip, $data['contact_subject'], $contact_message);
 				}
 
 				$message_parser->message = $contact_message;
@@ -342,6 +342,8 @@ class main_controller
 					}
 				}
 
+				$subject = (!empty($data['contact_reason'])) ? $data['contact_reason'] : $data['contact_subject'];
+
 				switch ($this->config['contactadmin_method'])
 				{
 					case $this->contact_constants['CONTACT_METHOD_PM']:
@@ -371,7 +373,7 @@ class main_controller
 						for ($i = 0, $size = sizeof($contact_users); $i < $size; $i++)
 						{
 								$pm_data['address_list'] = array('u' => array($contact_users[$i]['user_id'] => 'to'));
-								submit_pm('post', $data['contact_subject'], $pm_data, false);
+								submit_pm('post', $subject, $pm_data, false);
 						}
 
 					break;
@@ -403,7 +405,7 @@ class main_controller
 							'filename_data'		=> $message_parser->filename_data,
 
 							'post_edit_locked'	=> 0,
-							'topic_title'		=> $data['contact_subject'],
+							'topic_title'		=> $subject,
 							'notify_set'		=> false,
 							'notify'			=> true,
 							'post_time'			=> time(),
@@ -417,7 +419,7 @@ class main_controller
 						$poll = array();
 
 						// Submit the post!
-						submit_post('post', $data['contact_subject'], $this->user->data['username'], POST_NORMAL, $poll, $post_data);
+						submit_post('post', $subject, $this->user->data['username'], POST_NORMAL, $poll, $post_data);
 
 					break;
 
@@ -447,33 +449,26 @@ class main_controller
 						// Loop through our list of users
 						for ($i = 0, $size = sizeof($contact_users); $i < $size; $i++)
 						{
-								if (!empty($data['contact_reason']))
-								{
-									$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
-								}
-								else
-								{
-									$messenger->template('@rmcgirr83_contactadmin/contact_no_reason', $contact_users[$i]['user_lang']);
-								}
-								$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
-								$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
-								$messenger->from($data['email']);
-								$messenger->replyto($data['email']);
+							$messenger->template('@rmcgirr83_contactadmin/contact_no_reason', $contact_users[$i]['user_lang']);
 
-								$messenger->assign_vars(array(
-									'ADM_USERNAME'	=> htmlspecialchars_decode($contact_users[$i]['username']),
-									'SITENAME'		=> htmlspecialchars_decode($this->config['sitename']),
-									'USER_IP'		=> $this->user->ip,
-									'USERNAME'		=> $data['username'],
-									'USER_EMAIL'	=> htmlspecialchars_decode($data['email']),
-									'DATE'			=> gmstrftime("%A %d-%b-%y %T %Z", time()),
-									'REASON'		=> htmlspecialchars_decode($data['contact_reason']),
+							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
+							$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
+							$messenger->from($data['email']);
+							$messenger->replyto($data['email']);
 
-									'SUBJECT'		=> htmlspecialchars_decode($data['contact_subject']),
-									'MESSAGE'		=> $message,
-								));
+							$messenger->assign_vars(array(
+								'ADM_USERNAME'	=> htmlspecialchars_decode($contact_users[$i]['username']),
+								'SITENAME'		=> htmlspecialchars_decode($this->config['sitename']),
+								'USER_IP'		=> $this->user->ip,
+								'USERNAME'		=> $data['username'],
+								'USER_EMAIL'	=> htmlspecialchars_decode($data['email']),
+								'DATE'			=> gmstrftime("%A %d-%b-%y %T %Z", time()),
 
-								$messenger->send($contact_users[$i]['user_notify_type']);
+								'SUBJECT'		=> htmlspecialchars_decode($subject),
+								'MESSAGE'		=> $message,
+							));
+
+							$messenger->send($contact_users[$i]['user_notify_type']);
 						}
 
 						// Save emails in the queue to prevent timeouts
@@ -551,28 +546,5 @@ class main_controller
 
 		// Send all data to the template file
 		return $this->helper->render('contactadmin_body.html', $this->user->lang('ACP_CAT_CONTACTADMIN'));
-	}
-
-	private function display_positions($input_ary, $selected)
-	{
-		// only accept arrays, no empty ones
-		if (!is_array($input_ary) || !sizeof($input_ary))
-		{
-			return;
-		}
-
-		// If selected isn't in the array, use first entry
-		if (!in_array($selected, $input_ary))
-		{
-			$selected = $input_ary[0];
-		}
-
-		$select = '';
-		foreach ($input_ary as $item)
-		{
-			$item_selected = ($item == $selected) ? ' selected="selected"' : '';
-			$select .= '<option value="' . $item . '"' . $item_selected . '>' . $item . '</option>';
-		}
-		return $select;
 	}
 }

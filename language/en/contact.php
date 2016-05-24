@@ -52,8 +52,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_NO_MSG'			=> 'You didn’t enter a message.',
 	'CONTACT_NO_SUBJ'			=> 'You didn’t enter a subject.',
 	'CONTACT_REASON'			=> 'Reason',
-	'CONTACT_TEMPLATE'			=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email Address:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Reason:[/b] %4$s' . "\n" . '[b]Subject:[/b] %5$s' . "\n" . '[b]Has entered the following message into the contact form:[/b]%6$s',
-	'CONTACT_TEMPLATE_NO_REASON'	=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email Address:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Subject:[/b] %4$s' . "\n" . '[b]Has entered the following message into the contact form:[/b] %5$s',
+	'CONTACT_TEMPLATE'			=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email Address:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Subject:[/b] %4$s' . "\n" . '[b]Has entered the following message into the contact form:[/b] %5$s',
 	'CONTACT_TITLE'				=> 'Contact Administration',
 	'CONTACT_TOO_MANY'			=> 'You have exceeded the maximum number of contact confirmation attempts for this session. Please try again later.',
 

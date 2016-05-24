@@ -29,10 +29,12 @@
 			<dd><select name="contact_reason" id="contact_reason" tabindex="4">{CONTACT_REASONS}</select></dd>
 		</dl>
 		<!-- ENDIF -->
+		<!-- IF not CONTACT_REASONS -->
 		<dl>
 			<dt><label for="contact_subject">{L_SUBJECT}{L_COLON}</label></dt>
 			<dd><input type="text" size="45" maxlength="64" class="inputbox" name="contact_subject" id="contact_subject" value="{CONTACT_SUBJECT}" tabindex="5" /></dd>
 		</dl>
+		<!-- ENDIF -->
 		<dl>
 			<dt><label for="message">{L_MESSAGE_BODY}{L_COLON}</label>{L_CONTACT_MSG_BODY_EXPLAIN}<hr />
 			</dt>
