@@ -226,7 +226,8 @@ class main_controller
 				}
 			}
 
-			if (!preg_match('/^' . get_preg_expression('email') . '$/i', $data['email']))
+			// always check our email addresses
+			if (!preg_match('/^' . get_preg_expression('email') . '$/i', $data['email']) && !$this->config['contactadmin_email_chk'])
 			{
 				$error[] = $this->user->lang('EMAIL_INVALID_EMAIL');
 			}
