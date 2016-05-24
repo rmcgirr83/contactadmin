@@ -226,6 +226,10 @@ class main_controller
 				}
 			}
 
+			if (!preg_match('/^' . get_preg_expression('email') . '$/i', $data['email']))
+			{
+				$error[] = $this->user->lang('EMAIL_INVALID_EMAIL');
+			}
 			// check form
 			if (!check_form_key('contactadmin'))
 			{
