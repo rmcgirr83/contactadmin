@@ -10,7 +10,7 @@ services:
             - '@template'
             - '@user'
             - '@log'
-            - '@rmcgirr83.contactadmin.functions'
+            - '@rmcgirr83.contactadmin.core'
     rmcgirr83.contactadmin.main.controller:
         class: rmcgirr83\contactadmin\controller\main_controller
         arguments:
@@ -26,7 +26,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
-            - '@rmcgirr83.contactadmin.functions'
+            - '@rmcgirr83.contactadmin.core'
             - '@captcha.factory'
     rmcgirr83.contactadmin.listener:
         class: rmcgirr83\contactadmin\event\listener
@@ -37,8 +37,8 @@ services:
             - '@user'
         tags:
             - { name: event.listener }
-    rmcgirr83.contactadmin.functions:
-        class: rmcgirr83\contactadmin\core\functions_contactadmin
+    rmcgirr83.contactadmin.core:
+        class: rmcgirr83\contactadmin\core\contactadmin
         arguments:
             - '@auth'
             - '@cache'

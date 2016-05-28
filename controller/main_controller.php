@@ -53,8 +53,8 @@ class main_controller
 	/** @var string phpEx */
 	protected $php_ext;
 
-	/* @var \rmcgirr83\contactadmin\core\functions_contactadmin */
-	protected $functions;
+	/* @var \rmcgirr83\contactadmin\core\contactadmin */
+	protected $contactadmin;
 
 	/** @var \phpbb\captcha\factory */
 	protected $captcha_factory;
@@ -72,7 +72,7 @@ class main_controller
 			\phpbb\user $user,
 			$root_path,
 			$php_ext,
-			\rmcgirr83\contactadmin\core\functions_contactadmin $functions,
+			\rmcgirr83\contactadmin\core\contactadmin $contactadmin,
 			\phpbb\captcha\factory $captcha_factory)
 	{
 		$this->auth = $auth;
@@ -87,10 +87,10 @@ class main_controller
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-		$this->functions = $functions;
+		$this->contactadmin = $contactadmin;
 		$this->captcha_factory = $captcha_factory;
 
-		$this->contact_constants = $this->functions->contact_constants();
+		$this->contact_constants = $this->contactadmin->contact_constants();
 		$this->contact_reasons = $this->config_text->get_array(array('contactadmin_reasons'));
 
 		//convert the reasons string into an array
@@ -106,10 +106,6 @@ class main_controller
 		if (!function_exists('validate_data'))
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-		if (!function_exists('submit_post'))
-		{
-			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
 		}
 		if (!class_exists('parse_message'))
 		{
@@ -150,15 +146,14 @@ class main_controller
 		// has to be able to accept posts
 		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_POST'])
 		{
-			// from includes/functions_contact.php
 			// check to make sure forum is, ermmm, forum
 			// not link and not cat
-			$this->functions->contact_check('contact_check_forum', $this->config['contactadmin_forum']);
+			$this->contactadmin->contact_check('contact_check_forum', $this->config['contactadmin_forum']);
 		}
 		else if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM'])))
 		{
 			// quick check to ensure our "bot" is good
-			$this->functions->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user']);
+			$this->contactadmin->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user']);
 		}
 
 		// Only have contact CAPTCHA confirmation for guests, if the option is enabled
@@ -335,7 +330,7 @@ class main_controller
 			{
 				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_POST'])
 				{
-					$contact_users = $this->functions->admin_array();
+					$contact_users = $this->contactadmin->admin_array();
 				}
 
 				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_EMAIL'])
@@ -343,7 +338,7 @@ class main_controller
 					// change the users stuff
 					if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && !$this->user->data['is_registered']))
 					{
-						$contact_perms = $this->functions->contact_change_auth($this->config['contactadmin_bot_user']);
+						$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 					}
 				}
 
@@ -375,7 +370,8 @@ class main_controller
 						);
 
 						// Loop through our list of users
-						for ($i = 0, $size = sizeof($contact_users); $i < $size; $i++)
+						$size = sizeof($contact_users);
+						for ($i = 0; $i < $size; $i++)
 						{
 								$pm_data['address_list'] = array('u' => array($contact_users[$i]['user_id'] => 'to'));
 								submit_pm('post', $subject, $pm_data, false);
@@ -384,6 +380,11 @@ class main_controller
 					break;
 
 					case $this->contact_constants['CONTACT_METHOD_POST']:
+
+						if (!function_exists('submit_post'))
+						{
+							include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+						}
 
 						$sql = 'SELECT forum_name
 							FROM ' . FORUMS_TABLE . '
@@ -443,6 +444,7 @@ class main_controller
 						{
 							include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
 						}
+
 						$messenger = new \messenger(true);
 
 						// Email headers
@@ -451,9 +453,13 @@ class main_controller
 						$messenger->headers('X-AntiAbuse: Username - ' . $this->user->data['username']);
 						$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 
+						$size = sizeof($contact_users);
 						// Loop through our list of users
-						for ($i = 0, $size = sizeof($contact_users); $i < $size; $i++)
+						for ($i = 0; $i < $size; $i++)
 						{
+							$timezone = new \DateTimeZone(!empty($contact_users[$i]['user_timezone']) ? $contact_users[$i]['user_timezone'] : $this->config['board_timezone']);
+							$date = $this->user->format_date(time(), 'D M d, Y g:i a');
+							
 							$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
@@ -467,9 +473,9 @@ class main_controller
 								'USER_IP'		=> $this->user->ip,
 								'USERNAME'		=> $data['username'],
 								'USER_EMAIL'	=> htmlspecialchars_decode($data['email']),
-								'DATE'			=> gmstrftime("%A %d-%b-%y %T %Z", time()),
+								'DATE'			=> $date,
 
-								'SUBJECT'		=> htmlspecialchars_decode($subject),
+								'SUBJECT'		=> $subject,
 								'MESSAGE'		=> $message,
 							));
 
@@ -491,7 +497,7 @@ class main_controller
 				if (isset($contact_perms))
 				{
 					//Restore user
-					$this->functions->contact_change_auth('', 'restore', $contact_perms);
+					$this->contactadmin->contact_change_auth('', 'restore', $contact_perms);
 				}
 
 				$message = $this->user->lang('CONTACT_MSG_SENT') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
@@ -531,7 +537,7 @@ class main_controller
 		$this->template->assign_vars(array(
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
-			'CONTACT_REASONS'	=> $this->functions->contact_make_select($this->contact_reasons, $data['contact_reason']),
+			'CONTACT_REASONS'	=> $this->contactadmin->contact_make_select($this->contact_reasons, $data['contact_reason']),
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
 

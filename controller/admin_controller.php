@@ -38,8 +38,8 @@ class admin_controller
 	/** @var \phpbb\log\log */
 	protected $log;
 
-	/* @var \rmcgirr83\contactadmin\core\functions_contactadmin */
-	protected $functions;
+	/* @var \rmcgirr83\contactadmin\core\contactadmin */
+	protected $contactadmin;
 
 	/** @var string Custom form action */
 	protected $u_action;
@@ -55,7 +55,7 @@ class admin_controller
 	* @param \phpbb\template\template								$template			Template object
 	* @param \phpbb\user											$user				User object
 	* @param \phpbb\log												$log				Log object
-	* @param \rmcgirr83\contactadmin\core\functions_contactadmin	$functions			Functions for the extension
+	* @param \rmcgirr83\contactadmin\core\contactadmin				$contactadmin		Methods for the extension
 	* @return \rmcgirr83\contactadmin\controller\admin_controller
 	* @access public
 	*/
@@ -68,7 +68,7 @@ class admin_controller
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			\phpbb\log\log $log,
-			\rmcgirr83\contactadmin\core\functions_contactadmin $functions)
+			\rmcgirr83\contactadmin\core\contactadmin $contactadmin)
 	{
 		$this->cache = $cache;
 		$this->config = $config;
@@ -78,7 +78,7 @@ class admin_controller
 		$this->template = $template;
 		$this->user = $user;
 		$this->log = $log;
-		$this->functions = $functions;
+		$this->contactadmin = $contactadmin;
 	}
 
 	public function display_options()
@@ -125,10 +125,10 @@ class admin_controller
 			'CONTACT_MAX_ATTEMPTS'			=> $this->config['contactadmin_max_attempts'],
 			'CONTACT_FOUNDER'				=> $this->config['contactadmin_founder_only'],
 			'CONTACT_REASONS'				=> $contactadmin['contactadmin_reasons'],
-			'CONTACT_METHOD'				=> $this->functions->method_select($this->config['contactadmin_method']),
-			'CONTACT_BOT_POSTER'			=> $this->functions->poster_select($this->config['contactadmin_bot_poster']),
-			'CONTACT_BOT_FORUM'				=> $this->functions->forum_select($this->config['contactadmin_forum']),
-			'CONTACT_BOT_USER'				=> $this->functions->bot_user_select($this->config['contactadmin_bot_user']),
+			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
+			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
+			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
+			'CONTACT_BOT_USER'				=> $this->contactadmin->bot_user_select($this->config['contactadmin_bot_user']),
 			'CONTACT_USERNAME_CHK'			=> $this->config['contactadmin_username_chk'],
 			'CONTACT_EMAIL_CHK'				=> $this->config['contactadmin_email_chk'],
 

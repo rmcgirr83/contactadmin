@@ -11,7 +11,7 @@ namespace rmcgirr83\contactadmin\core;
 
 use phpbb\exception\http_exception;
 
-class functions_contactadmin
+class contactadmin
 {
 	/** @var \phpbb\auth\auth */
 	protected $auth;
