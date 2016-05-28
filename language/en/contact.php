@@ -62,6 +62,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_YOUR_EMAIL_EXPLAIN'	=> 'Please enter a valid email address, so we can contact you.',
 
 	'TOO_MANY_CONTACT_TRIES'	=> 'You have exceeded the maximum number of attempts for this session. Please try again later.',
+	'CONTACT_NO_NAME'			=> 'You didn’t enter a name.',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
 ));

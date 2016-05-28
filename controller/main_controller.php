@@ -220,6 +220,11 @@ class main_controller
 					));
 				}
 			}
+			// always check for a username
+			if (utf8_clean_string($data['username']) === '' && !$this->config['contactadmin_username_chk'])
+			{
+				$error[] = $this->user->lang('CONTACT_NO_NAME');
+			}
 
 			// always check our email addresses
 			if (!preg_match('/^' . get_preg_expression('email') . '$/i', $data['email']) && !$this->config['contactadmin_email_chk'])
@@ -457,8 +462,9 @@ class main_controller
 						// Loop through our list of users
 						for ($i = 0; $i < $size; $i++)
 						{
-							$timezone = new \DateTimeZone(!empty($contact_users[$i]['user_timezone']) ? $contact_users[$i]['user_timezone'] : $this->config['board_timezone']);
-							$date = $this->user->format_date(time(), 'D M d, Y g:i a');
+							$tz = (!empty($contact_users[$i]['user_timezone']) ? $contact_users[$i]['user_timezone'] : $this->config['board_timezone']);
+							$date = new \DateTime("now", new \DateTimeZone($tz));
+							$date = $date->format('D M d, Y g:i a');
 
 							$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 
