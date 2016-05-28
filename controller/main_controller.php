@@ -459,7 +459,7 @@ class main_controller
 						{
 							$timezone = new \DateTimeZone(!empty($contact_users[$i]['user_timezone']) ? $contact_users[$i]['user_timezone'] : $this->config['board_timezone']);
 							$date = $this->user->format_date(time(), 'D M d, Y g:i a');
-							
+
 							$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
