@@ -444,7 +444,7 @@ class contactadmin
 		{
 			// we have no one to send anything to
 			// notify the board default
-			$this->functions->contact_check('contact_nobody', false, false, (int) $this->config['contactadmin_method']);
+			$this->contact_check('contact_nobody', false, false, (int) $this->config['contactadmin_method']);
 		}
 
 		return $contact_users;
