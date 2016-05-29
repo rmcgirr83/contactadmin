@@ -41,7 +41,7 @@ $lang = array_merge($lang, array(
 	'LOG_CONFIG_CONTACT_ADMIN'		=> '<strong>Altered Contact Board Administration page settings</strong>',
 	'LOG_CONTACT_BOT_INVALID'		=> '<strong>The Contact Board Administration bot has an invalid user id selected:</strong><br />User ID %1$s',
 	'LOG_CONTACT_FORUM_INVALID'		=> '<strong>The Contact Board Administration forum has an invalid forum selected:</strong><br />Forum ID %1$s',
-	'LOG_CONTACT_NONE'				=> '<strong>No Administrators are allowing users to contact them via %1$s in the Contact Board Administration</strong>',
+	'LOG_CONTACT_NONE'				=> '<strong>No Administrators are allowing users to contact them via %1$s in the Contact Board Administration extension</strong>',
 	'LOG_CONTACT_CONFIG_UPDATE'		=> '<strong>Updated Contact Board Administration config settings</strong>',
 
 ));

@@ -177,17 +177,17 @@ class main_controller
 			$captcha->init($this->contact_constants['CONFIRM_CONTACT']);
 		}
 
+		// our data array
+		$data = array(
+			'username'			=> ($this->user->data['user_id'] != ANONYMOUS) ?  $this->user->data['username'] : $this->request->variable('username', '', true),
+			'email'				=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['user_email'] : strtolower($this->request->variable('email', '')),
+			'contact_reason'	=> $this->request->variable('contact_reason', '', true),
+			'contact_subject'	=> $this->request->variable('contact_subject', '', true),
+			'contact_message'	=> $this->request->variable('message', '', true),
+		);
+
 		if ($submit)
 		{
-			// our data array
-			$data = array(
-				'username'			=> ($this->user->data['user_id'] != ANONYMOUS) ?  $this->user->data['username'] : $this->request->variable('username', '', true),
-				'email'				=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['user_email'] : strtolower($this->request->variable('email', '')),
-				'contact_reason'	=> $this->request->variable('contact_reason', '', true),
-				'contact_subject'	=> $this->request->variable('contact_subject', '', true),
-				'contact_message'	=> $this->request->variable('message', '', true),
-			);
-
 			$error = array();
 			// let's check our inputs against the database..but only for unregistered user and only if so set in ACP
 			if (!$this->user->data['is_registered'] && ($this->config['contactadmin_username_chk'] || $this->config['contactadmin_email_chk']))
@@ -231,6 +231,7 @@ class main_controller
 			{
 				$error[] = $this->user->lang('EMAIL_INVALID_EMAIL');
 			}
+
 			// check form
 			if (!check_form_key('contactadmin'))
 			{

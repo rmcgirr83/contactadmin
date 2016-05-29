@@ -239,7 +239,7 @@ class contactadmin
 					$this->config->set('contactadmin_enable', 0);
 
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['username'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
 
 					// show a message to the user
 					$message = sprintf($this->user->lang('CONTACT_BOT_ERROR'), '<br /><br />' . sprintf($this->user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$this->root_path}index.$phpEx") . '">', '</a>'));
@@ -252,7 +252,7 @@ class contactadmin
 					$this->config->set('contactadmin_enable', 0);
 
 					// add an entry into the log error table
-					$this->log->add('admin', $this->user->data['username'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
+					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
 
 					// show a message to the user
 					$message = sprintf($this->user->lang('CONTACT_DISABLED'), '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
@@ -411,6 +411,7 @@ class contactadmin
 	public function admin_array()
 	{
 		$sql_where = '';
+		$contact_users = array();
 		// Only founders...maybe
 		if ($this->config['contactadmin_founder_only'])
 		{
@@ -432,12 +433,15 @@ class contactadmin
 			}
 		}
 
-		$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
-			FROM ' . USERS_TABLE . ' ' .
-			$sql_where;
-		$result = $this->db->sql_query($sql);
-		$contact_users = $this->db->sql_fetchrowset($result);
-		$this->db->sql_freeresult($result);
+		if (!empty($sql_where))
+		{
+			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
+				FROM ' . USERS_TABLE . ' ' .
+				$sql_where;
+			$result = $this->db->sql_query($sql);
+			$contact_users = $this->db->sql_fetchrowset($result);
+			$this->db->sql_freeresult($result);
+		}
 
 		// we didn't get a soul
 		if (!sizeof($contact_users))
