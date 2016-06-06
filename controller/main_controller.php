@@ -165,18 +165,6 @@ class main_controller
 		// Our request variables
 		$submit		= $this->request->is_set_post('submit') ? true : false;
 
-		$data = array(
-			'contact_reason'	=> $this->request->variable('contact_reason', '', true),
-		);
-		add_form_key('contactadmin');
-
-		// Visual Confirmation - The CAPTCHA kicks in here
-		if ($this->config['contactadmin_confirm'])
-		{
-			$captcha = $this->captcha_factory->get_instance($this->config['captcha_plugin']);
-			$captcha->init($this->contact_constants['CONFIRM_CONTACT']);
-		}
-
 		// our data array
 		$data = array(
 			'username'			=> ($this->user->data['user_id'] != ANONYMOUS) ?  $this->user->data['username'] : $this->request->variable('username', '', true),
@@ -185,6 +173,15 @@ class main_controller
 			'contact_subject'	=> $this->request->variable('contact_subject', '', true),
 			'contact_message'	=> $this->request->variable('message', '', true),
 		);
+
+		add_form_key('contactadmin');
+
+		// Visual Confirmation - The CAPTCHA kicks in here
+		if ($this->config['contactadmin_confirm'])
+		{
+			$captcha = $this->captcha_factory->get_instance($this->config['captcha_plugin']);
+			$captcha->init($this->contact_constants['CONFIRM_CONTACT']);
+		}
 
 		if ($submit)
 		{
@@ -379,8 +376,8 @@ class main_controller
 						$size = sizeof($contact_users);
 						for ($i = 0; $i < $size; $i++)
 						{
-								$pm_data['address_list'] = array('u' => array($contact_users[$i]['user_id'] => 'to'));
-								submit_pm('post', $subject, $pm_data, false);
+							$pm_data['address_list'] = array('u' => array($contact_users[$i]['user_id'] => 'to'));
+							submit_pm('post', $subject, $pm_data, false);
 						}
 
 					break;
