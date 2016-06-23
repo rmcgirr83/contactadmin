@@ -113,6 +113,10 @@ class main_controller
 		{
 			include($this->root_path . 'includes/message_parser.' . $this->php_ext);
 		}
+		if (!function_exists('upload_attachment'))
+		{
+			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+		}
 	}
 
 	/**
