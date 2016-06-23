@@ -73,7 +73,8 @@ class main_controller
 			$root_path,
 			$php_ext,
 			\rmcgirr83\contactadmin\core\contactadmin $contactadmin,
-			\phpbb\captcha\factory $captcha_factory)
+			\phpbb\captcha\factory $captcha_factory,
+			\rmcgirr83\topicdescription\event\listener $topicdescription = null)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -89,6 +90,7 @@ class main_controller
 		$this->php_ext = $php_ext;
 		$this->contactadmin = $contactadmin;
 		$this->captcha_factory = $captcha_factory;
+		$this->topicdescription = $topicdescription;
 
 		$this->contact_constants = $this->contactadmin->contact_constants();
 		$this->contact_reasons = $this->config_text->get_array(array('contactadmin_reasons'));
@@ -424,7 +426,10 @@ class main_controller
 							'force_approved_state'	=> ITEM_APPROVED,
 							'force_visibility' => ITEM_APPROVED,
 						);
-
+						if ($this->topicdescription !== null)
+						{
+							$post_data['topic_desc'] = '';
+						}
 						$poll = array();
 
 						// Submit the post!

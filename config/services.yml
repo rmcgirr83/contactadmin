@@ -28,6 +28,7 @@ services:
             - '%core.php_ext%'
             - '@rmcgirr83.contactadmin.core'
             - '@captcha.factory'
+            - '@?rmcgirr83.topicdescription.listener'
     rmcgirr83.contactadmin.listener:
         class: rmcgirr83\contactadmin\event\listener
         arguments:
