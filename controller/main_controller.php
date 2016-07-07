@@ -47,6 +47,9 @@ class main_controller
 	/** @var \phpbb\user */
 	protected $user;
 
+	/** @var \phpbb\log\log */
+	protected $log;
+
 	/** @var string phpBB root path */
 	protected $root_path;
 
@@ -70,6 +73,7 @@ class main_controller
 			ContainerInterface $phpbb_container,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
+			\phpbb\log\log $log,
 			$root_path,
 			$php_ext,
 			\rmcgirr83\contactadmin\core\contactadmin $contactadmin,
@@ -86,6 +90,7 @@ class main_controller
 		$this->container = $phpbb_container;
 		$this->template = $template;
 		$this->user = $user;
+		$this->log = $log;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
 		$this->contactadmin = $contactadmin;
@@ -143,6 +148,10 @@ class main_controller
 		if (!$this->config['email_enable'] && $this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'])
 		{
 			$this->config->set('contactadmin_enable', 0);
+
+			// add an entry into the error log
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_EMAIL_INVALID',  time());			
+
 			$message = sprintf($this->user->lang('CONTACT_MAIL_DISABLED'), $this->config['board_contact']);
 
 			throw new http_exception(503, $message);
@@ -203,7 +212,7 @@ class main_controller
 							array('username', '')),
 						'email'				=> array(
 							array('string', false, 6, 60),
-							array('email')),
+							array('user_email')),
 						));
 				}
 				else if ($this->config['contactadmin_username_chk'])
@@ -219,7 +228,7 @@ class main_controller
 					$error = validate_data($data, array(
 						'email'				=> array(
 							array('string', false, 6, 60),
-							array('email')),
+							array('user_email')),
 					));
 				}
 			}
@@ -389,11 +398,6 @@ class main_controller
 					break;
 
 					case $this->contact_constants['CONTACT_METHOD_POST']:
-
-						if (!function_exists('submit_post'))
-						{
-							include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-						}
 
 						$sql = 'SELECT forum_name
 							FROM ' . FORUMS_TABLE . '

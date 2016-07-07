@@ -24,6 +24,7 @@ services:
             - '@service_container'
             - '@template'
             - '@user'
+            - '@log'            
             - '%core.root_path%'
             - '%core.php_ext%'
             - '@rmcgirr83.contactadmin.core'

@@ -47,9 +47,19 @@ class listener implements EventSubscriberInterface
 	{
 		return array(
 			'core.page_header_after'	=> 'page_header_after',
+			'core.user_setup'			=> 'user_setup',
 		);
 	}
 
+	public function user_setup($event)
+	{
+		$url = $this->helper->get_current_url();
+		if ($this->config['contactadmin_enable'] && !$this->user->data['is_bot'] && $this->config['board_disable'] && substr($url, strrpos($url, '/') + 1) === 'contactadmin')
+		{
+			define('SKIP_CHECK_DISABLED', true);
+		}
+	}
+	
 	public function page_header_after($event)
 	{
 		if ($this->config['contactadmin_enable'] && !$this->user->data['is_bot'])
