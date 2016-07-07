@@ -59,7 +59,7 @@ class listener implements EventSubscriberInterface
 			define('SKIP_CHECK_DISABLED', true);
 		}
 	}
-	
+
 	public function page_header_after($event)
 	{
 		if ($this->config['contactadmin_enable'] && !$this->user->data['is_bot'])

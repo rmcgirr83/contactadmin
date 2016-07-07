@@ -150,7 +150,7 @@ class main_controller
 			$this->config->set('contactadmin_enable', 0);
 
 			// add an entry into the error log
-			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_EMAIL_INVALID',  time());			
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_EMAIL_INVALID',  time());
 
 			$message = sprintf($this->user->lang('CONTACT_MAIL_DISABLED'), $this->config['board_contact']);
 
