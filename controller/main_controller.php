@@ -110,6 +110,10 @@ class main_controller
 			$this->contact_reasons = array();
 		}
 
+		if (!function_exists('submit_post'))
+		{
+			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+		}
 		if (!function_exists('validate_data'))
 		{
 			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
@@ -117,10 +121,6 @@ class main_controller
 		if (!class_exists('parse_message'))
 		{
 			include($this->root_path . 'includes/message_parser.' . $this->php_ext);
-		}
-		if (!function_exists('upload_attachment'))
-		{
-			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
 		}
 	}
 
@@ -177,8 +177,6 @@ class main_controller
 			$this->config['contactadmin_confirm'] = false;
 		}
 
-		// Our request variables
-		$submit		= $this->request->is_set_post('submit') ? true : false;
 
 		// our data array
 		$data = array(
@@ -198,7 +196,7 @@ class main_controller
 			$captcha->init($this->contact_constants['CONFIRM_CONTACT']);
 		}
 
-		if ($submit)
+		if ($this->request->is_set_post('submit'))
 		{
 			$error = array();
 			// let's check our inputs against the database..but only for unregistered user and only if so set in ACP
@@ -282,8 +280,8 @@ class main_controller
 			if (in_array($this->config['contactadmin_method'], array($this->contact_constants['CONTACT_METHOD_PM'], $this->contact_constants['CONTACT_METHOD_POST'])))
 			{
 				$url = generate_board_url() . '/memberlist.' . $this->php_ext . '?mode=viewprofile&u=' . $this->user->data['user_id'];
-				$color = $this->user->data['user_colour'];
-				$user_name = $this->user->data['is_registered'] ? '[url=' . $url . '][color=#' . $color . ']' . $this->user->data['username'] . '[/color][/url]' : $data['username'];
+				$color = $this->user->data['user_colour'] ? '[color=#' . $this->user->data['user_colour'] . ']' . $this->user->data['username'] . '[/color]' : $this->user->data['username'];
+				$user_name = $this->user->data['is_registered'] ? '[url=' . $url . ']' . $color . '[/url]' : $data['username'];
 			}
 			else
 			{
@@ -292,17 +290,23 @@ class main_controller
 
 			if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_EMAIL'])
 			{
+				// change the users stuff
+				if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && !$this->user->data['is_registered']))
+				{
+					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
+				}
+				
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
 				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_PM'])
 				{
 					//$message_parser->get_submitted_attachment_data();
-					$message_parser->parse_attachments('fileupload', 'post', $this->config['contactadmin_forum'], $submit, false, false);
+					$message_parser->parse_attachments('fileupload', 'post', $this->config['contactadmin_forum'], true, false, false);
 				}
 				else
 				{
 					//$message_parser->get_submitted_attachment_data();
-					$message_parser->parse_attachments('fileupload', 'post', 0, $submit, false, false, true);
+					$message_parser->parse_attachments('fileupload', 'post', 0, true, false, false, true);
 				}
 
 				// pretty up the message for posts and pms
@@ -349,15 +353,6 @@ class main_controller
 				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_POST'])
 				{
 					$contact_users = $this->contactadmin->admin_array();
-				}
-
-				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_EMAIL'])
-				{
-					// change the users stuff
-					if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && !$this->user->data['is_registered']))
-					{
-						$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
-					}
 				}
 
 				$subject = (!empty($data['contact_reason'])) ? $data['contact_reason'] : $data['contact_subject'];
@@ -550,6 +545,13 @@ class main_controller
 		{
 			$attachment_allowed = ($this->config['contactadmin_attach_allowed'] && $this->config['allow_pm_attach'] && $form_enctype) ? true : $attachment_allowed;
 		}
+		
+		// restore permissions
+		if (isset($contact_perms))
+		{
+			//Restore user
+			$this->contactadmin->contact_change_auth('', 'restore', $contact_perms);
+		}
 
 		$this->template->assign_vars(array(
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
@@ -567,8 +569,6 @@ class main_controller
 
 			'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 			'S_ERROR'				=> (isset($error) && sizeof($error)) ? implode('<br />', $error) : '',
-			'S_CONTACT_USERNAME_CHK'	=> $this->config['contactadmin_username_chk'] ? true : false,
-			'S_CONTACT_EMAIL_CHK'	=> $this->config['contactadmin_email_chk'] ? true : false,
 			'S_CONTACT_ACTION'		=> $this->helper->route('rmcgirr83_contactadmin_displayform'),
 		));
 

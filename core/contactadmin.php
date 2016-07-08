@@ -350,9 +350,13 @@ class contactadmin
 		// variables
 		$user_list = '';
 
+		// groups we ignore for the dropdown
+		$groups = array(USER_IGNORE, USER_INACTIVE);
+
 		// do the main sql query
 		$sql = 'SELECT user_id, username
 			FROM ' . USERS_TABLE . '
+			WHERE ' . $this->db->sql_in_set('user_type', $groups, true) . '
 			ORDER BY username_clean';
 		$result = $this->db->sql_query($sql);
 
