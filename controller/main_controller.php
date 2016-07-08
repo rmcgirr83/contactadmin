@@ -177,7 +177,6 @@ class main_controller
 			$this->config['contactadmin_confirm'] = false;
 		}
 
-
 		// our data array
 		$data = array(
 			'username'			=> ($this->user->data['user_id'] != ANONYMOUS) ?  $this->user->data['username'] : $this->request->variable('username', '', true),
@@ -295,7 +294,7 @@ class main_controller
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 				}
-				
+
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
 				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_PM'])
@@ -545,7 +544,7 @@ class main_controller
 		{
 			$attachment_allowed = ($this->config['contactadmin_attach_allowed'] && $this->config['allow_pm_attach'] && $form_enctype) ? true : $attachment_allowed;
 		}
-		
+
 		// restore permissions
 		if (isset($contact_perms))
 		{
