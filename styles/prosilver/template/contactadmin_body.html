@@ -1,11 +1,21 @@
 <!-- INCLUDE overall_header.html -->
-<div class="clear"></div>
+<h2 class="titlespace">{L_ACP_CAT_CONTACTADMIN}</h2>
 
 <form method="post" id="postform" name="postform" action="{S_CONTACT_ACTION}"{S_FORM_ENCTYPE}>
+	<!-- IF CONTACT_INFO -->
+	<div class="panel">
+		<div class="inner">
+			<div class="postbody">
+				<div class="content">
+					{CONTACT_INFO}
+				</div>
+			</div>
+		</div>
+	</div>
+		<br class="clear" />
+	<!-- ENDIF -->
 <div class="panel">
 	<div class="inner">
-
-		<h2>{L_ACP_CAT_CONTACTADMIN}</h2>
 
 		<fieldset class="fields2">
 		<!-- IF S_ERROR -->
@@ -36,8 +46,7 @@
 		</dl>
 		<!-- ENDIF -->
 		<dl>
-			<dt><label for="message">{L_MESSAGE_BODY}{L_COLON}</label>{L_CONTACT_MSG_BODY_EXPLAIN}<hr />
-			</dt>
+			<dt><label for="message">{L_MESSAGE_BODY}{L_COLON}</label></dt>
 			<dd><textarea name="message" id="message" class="inputbox" tabindex="6" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" style="width:98%;height:160px;">{CONTACT_MESSAGE}</textarea></dd>
 		</dl>
 		</fieldset>

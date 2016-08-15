@@ -1,5 +1,15 @@
 <!-- INCLUDE overall_header.html -->
+<script type="text/javascript">
+// <![CDATA[
 
+	var form_name = 'contactadmin';
+	var text_name = 'contact_admin_info';
+	var load_draft = false;
+	var upload = false;
+	var imageTag = false;
+
+// ]]>
+</script>
 <h1>{L_ACP_CAT_CONTACTADMIN}</h1>
 
 <!-- IF CONTACT_ERROR -->
@@ -8,86 +18,124 @@
 	</div>
 <!-- ENDIF -->
 
-<form id="acp_contact" method="post" action="{U_ACTION}">
+<form id="contactadmin" method="post" action="{U_ACTION}">
 	<fieldset>
-	<legend>{L_CONTACT_GENERAL_SETTINGS}</legend>
+		<legend>{L_CONTACT_GENERAL_SETTINGS}</legend>
 			<dl>
-			<dt><label for="contactadmin_enable">{L_CONTACT_ENABLE}:</label><br>
-			<span>{L_CONTACT_ENABLE_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="contactadmin_enable" value="1" <!-- IF CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="contactadmin_enable" value="0" <!-- IF not CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+				<dt><label for="contactadmin_enable">{L_CONTACT_ENABLE}{L_COLON}</label><br>
+				<span>{L_CONTACT_ENABLE_EXPLAIN}</span></dt>
+				<dd><label><input type="radio" class="radio" name="contactadmin_enable" value="1" <!-- IF CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="contactadmin_enable" value="0" <!-- IF not CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			</dl>
+	</fieldset>
+
+	<fieldset>
+		<p>{L_CONTACT_US_INFO_EXPLAIN}</p>
+		<!-- IF CONTACT_INFO_PREVIEW -->
+		<fieldset>
+			<legend>{L_CONTACT_US_INFO_PREVIEW}</legend>
+			<p>{CONTACT_INFO_PREVIEW}</p>
+		</fieldset>
+		<!-- ENDIF -->			
+		<!-- INCLUDE acp_posting_buttons.html -->
+		<dl class="responsive-columns">
+			<dt style="width: 90px;" id="color_palette_placeholder" data-orientation="v" data-height="12" data-width="15" data-bbcode="true">
+			</dt>
+
+			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px;">
+				<textarea name="contact_admin_info" rows="10" cols="60" style="width: 95%;" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);" onfocus="initInsertions();" data-bbcode="true">{CONTACT_INFO}</textarea>
+			</dd>
+
+			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px; margin-top: 5px;">
+				<!-- IF S_BBCODE_ALLOWED -->
+				<label><input type="checkbox" class="radio" name="disable_bbcode"<!-- IF S_BBCODE_DISABLE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_DISABLE_BBCODE}</label>
+				<!-- ENDIF -->
+				<!-- IF S_SMILIES_ALLOWED -->
+				<label><input type="checkbox" class="radio" name="disable_smilies"<!-- IF S_SMILIES_DISABLE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_DISABLE_SMILIES}</label>
+				<!-- ENDIF -->
+				<!-- IF S_LINKS_ALLOWED -->
+				<label><input type="checkbox" class="radio" name="disable_magic_url"<!-- IF S_MAGIC_URL_DISABLE_CHECKED --> checked="checked"<!-- ENDIF --> /> {L_DISABLE_MAGIC_URL}</label>
+				<!-- ENDIF -->
+			</dd>
+			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px; margin-top: 10px;"><strong>{L_OPTIONS}{L_COLON} </strong>{BBCODE_STATUS} :: {IMG_STATUS} :: {FLASH_STATUS} :: {URL_STATUS} :: {SMILIES_STATUS}</dd>
 		</dl>
+		<fieldset class="submit-buttons">
+			<input class="button2" type="submit" name="preview" value="{L_PREVIEW}" />
+		</fieldset>	
+	</fieldset>
+
+	<fieldset>		
 		<dl>
-			<dt><label for="confirm">{L_CONTACT_ACP_CONFIRM}:</label><br>
+			<dt><label for="confirm">{L_CONTACT_ACP_CONFIRM}{L_COLON}</label><br>
 			<span>{L_CONTACT_ACP_CONFIRM_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="confirm" value="1" <!-- IF CONTACT_CONFIRM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="confirm" value="0" <!-- IF not CONTACT_CONFIRM -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="confirm_guests">{L_CONTACT_CONFIRM_GUESTS}:</label><br>
+			<dt><label for="confirm_guests">{L_CONTACT_CONFIRM_GUESTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_CONFIRM_GUESTS_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="confirm_guests" value="1" <!-- IF CONTACT_CONFIRM_GUESTS -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="confirm_guests" value="0" <!-- IF not CONTACT_CONFIRM_GUESTS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="username_chk">{L_CONTACT_USERNAME_CHK}:</label><br>
+			<dt><label for="username_chk">{L_CONTACT_USERNAME_CHK}{L_COLON}</label><br>
 			<span>{L_CONTACT_USERNAME_CHK_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="username_chk" value="1" <!-- IF CONTACT_USERNAME_CHK -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="username_chk" value="0" <!-- IF not CONTACT_USERNAME_CHK -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="email_chk">{L_CONTACT_EMAIL_CHK}:</label><br>
+			<dt><label for="email_chk">{L_CONTACT_EMAIL_CHK}{L_COLON}</label><br>
 			<span>{L_CONTACT_EMAIL_CHK_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="email_chk" value="1" <!-- IF CONTACT_EMAIL_CHK -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="email_chk" value="0" <!-- IF not CONTACT_EMAIL_CHK -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="max_attempts">{L_CONTACT_MAX_ATTEMPTS}:</label><br>
+			<dt><label for="max_attempts">{L_CONTACT_MAX_ATTEMPTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_MAX_ATTEMPTS_EXPLAIN}</span></dt>
 			<dd><input type="text" name="max_attempts" size="10" value="{CONTACT_MAX_ATTEMPTS}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="attach_allowed">{L_CONTACT_ATTACHMENTS}:</label><br>
+			<dt><label for="attach_allowed">{L_CONTACT_ATTACHMENTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_ATTACHMENTS_EXPLAIN}</span></dt>
 			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" <!-- IF CONTACT_ATTACHMENTS -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="attach_allowed" value="0" <!-- IF not CONTACT_ATTACHMENTS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_method">{L_CONTACT_FOUNDER}:</label><br>
+			<dt><label for="contact_method">{L_CONTACT_FOUNDER}{L_COLON}</label><br>
 			<span>{L_CONTACT_FOUNDER}</span></dt>
 			<dd><label><input type="radio" class="radio" name="founder_only" value="1" <!-- IF CONTACT_FOUNDER --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 			<label><input type="radio" class="radio" name="founder_only" value="0" <!-- IF not CONTACT_FOUNDER --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_reasons">{L_CONTACT_REASONS}:</label><br>
+			<dt><label for="contact_reasons">{L_CONTACT_REASONS}{L_COLON}</label><br>
 			<span>{L_CONTACT_REASONS_EXPLAIN}</span></dt>
 			<dd><textarea name="reasons" rows="10" cols="40">{CONTACT_REASONS}</textarea></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_method">{L_CONTACT_METHOD}:</label><br>
+			<dt><label for="contact_method">{L_CONTACT_METHOD}{L_COLON}</label><br>
 			<span>{L_CONTACT_METHOD_EXPLAIN}</span></dt>
 			<dd>{CONTACT_METHOD}</dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_bot_user">{L_CONTACT_BOT_USER}:</label><br>
+			<dt><label for="contact_bot_user">{L_CONTACT_BOT_USER}{L_COLON}</label><br>
 			<span>{L_CONTACT_BOT_USER_EXPLAIN}</span></dt>
 			<dd>{CONTACT_BOT_USER}</dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_bot_poster">{L_CONTACT_BOT_POSTER}:</label><br>
+			<dt><label for="contact_bot_poster">{L_CONTACT_BOT_POSTER}{L_COLON}</label><br>
 			<span>{L_CONTACT_BOT_POSTER_EXPLAIN}</span></dt>
 			<dd>{CONTACT_BOT_POSTER}</dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_forum">{L_CONTACT_BOT_FORUM}:</label><br>
+			<dt><label for="contact_forum">{L_CONTACT_BOT_FORUM}{L_COLON}</label><br>
 			<span>{L_CONTACT_BOT_FORUM_EXPLAIN}</span></dt>
 			<dd>{CONTACT_BOT_FORUM}</dd>
 		</dl>
-		<p class="submit-buttons">
-			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
-			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
-		</p>
-	{S_FORM_TOKEN}
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />		
+		{S_FORM_TOKEN}
 	</fieldset>
 </form>
 <!-- INCLUDE overall_footer.html -->

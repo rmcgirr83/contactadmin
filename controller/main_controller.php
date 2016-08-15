@@ -464,6 +464,10 @@ class main_controller
 						$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 
 						$size = sizeof($contact_users);
+
+						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
+						// if the lang isn't present then errors will present themselves due to no email template found
+						$dir_array = $this->dir_to_array($phpbb_root_path .'ext/phpbbmodders/adduser/language');
 						// Loop through our list of users
 						for ($i = 0; $i < $size; $i++)
 						{
@@ -471,6 +475,9 @@ class main_controller
 							$date = new \DateTime("now", new \DateTimeZone($tz));
 							$date = $date->format('D M d, Y g:i a');
 
+							// now check if the email may exist.  Can't be helped if there is a lang dir and no email dir
+							// use en if not exist
+							$contact_users[$i]['user_lang'] =  (in_array($contact_users[$i]['user_lang'], $dir_array)) ? $contact_users[$i]['user_lang'] : 'en';
 							$messenger->template('@rmcgirr83_contactadmin/contact', $contact_users[$i]['user_lang']);
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
@@ -552,12 +559,31 @@ class main_controller
 			$this->contactadmin->contact_change_auth('', 'restore', $contact_perms);
 		}
 
+		$l_admin_info = $this->config_text->get('contact_admin_info');
+		if ($l_admin_info)
+		{
+			$contactadmin_data			= $this->config_text->get_array(array(
+				'contact_admin_info',
+				'contact_admin_info_uid',
+				'contact_admin_info_bitfield',
+				'contact_admin_info_flags',
+			));
+
+			$l_admin_info = generate_text_for_display(
+				$contactadmin_data['contact_admin_info'],
+				$contactadmin_data['contact_admin_info_uid'],
+				$contactadmin_data['contact_admin_info_bitfield'],
+				$contactadmin_data['contact_admin_info_flags']
+			);
+		}
+
 		$this->template->assign_vars(array(
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
 			'CONTACT_REASONS'	=> $this->contactadmin->contact_make_select($this->contact_reasons, $data['contact_reason']),
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
+			'CONTACT_INFO'		=> $l_admin_info,
 
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? sprintf($this->user->lang($this->config['allow_name_chars'] . '_EXPLAIN'), $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->user->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 

@@ -11,6 +11,8 @@ services:
             - '@user'
             - '@log'
             - '@rmcgirr83.contactadmin.core'
+            - '%core.root_path%'
+            - '%core.php_ext%'            
     rmcgirr83.contactadmin.main.controller:
         class: rmcgirr83\contactadmin\controller\main_controller
         arguments:

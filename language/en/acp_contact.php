@@ -39,7 +39,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'CONTACT_CONFIG_SAVED'			=> 'Contact Board Administration configuration has been updated',
 	'CONTACT_ENABLE'				=> 'Enable Contact Board Administration Extension',
-	'CONTACT_ENABLE_EXPLAIN'		=> 'Enable or disable the mod globally.',
+	'CONTACT_ENABLE_EXPLAIN'		=> 'Enable or disable the extension globally',
 	'CONTACT_ACP_CONFIRM'				=> 'Enable visual confirmation',
 	'CONTACT_ACP_CONFIRM_EXPLAIN'		=> 'If you enable this option, users will have to enter a visual confirmation to send the message.<br>This is to prevent spam messages. Note that this option is for the contact page only.  It does not affect other visual confirmation settings.',
 	'CONTACT_ATTACHMENTS'				=> 'Attachments allowed',
