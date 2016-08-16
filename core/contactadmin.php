@@ -136,6 +136,7 @@ class contactadmin
 				// send an email if board enabled
 				if (!$row && $this->config['email_enable'])
 				{
+
 					// send an email to the board default
 					$email_template = '@rmcgirr83_contactadmin/contact_error_forum';
 					$email_message = sprintf($this->user->lang('CONTACT_BOT_FORUM_MESSAGE'), $this->user->data['username'], $this->config['sitename'], $server_url);
@@ -272,6 +273,9 @@ class contactadmin
 	 */
 	private function contact_send_email($email_template, $email_message)
 	{
+		$dir_array = $this->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
+
+		$lang = (in_array($this->config['default_lang'], $dir_array)) ? $this->config['default_lang'] : 'en';
 		// don't use the queue send the email immediately if not sooner
 		$messenger = new \messenger(false);
 
@@ -281,7 +285,7 @@ class contactadmin
 		$messenger->headers('X-AntiAbuse: Username - ' . $this->user->data['username']);
 		$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 
-		$messenger->template($email_template, $this->config['default_lang']);
+		$messenger->template($email_template, $lang);
 		$messenger->to($this->config['board_email']);
 		$messenger->from($this->config['server_name']);
 
@@ -456,5 +460,19 @@ class contactadmin
 		}
 
 		return $contact_users;
+	}
+
+	/*
+     * Get an array that represents directory tree
+     */
+	public function dir_to_array($directory)
+	{
+		$directories = glob($directory . '/*' , GLOB_ONLYDIR);
+		$dir_array = array();
+		foreach ($directories as $key => $value)
+		{
+			$dir_array[] = substr(strrchr($value, '/'), 1);
+		}
+		return $dir_array;
 	}
 }

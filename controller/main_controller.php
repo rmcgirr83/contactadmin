@@ -467,7 +467,7 @@ class main_controller
 
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
 						// if the lang isn't present then errors will present themselves due to no email template found
-						$dir_array = $this->dir_to_array($phpbb_root_path .'ext/phpbbmodders/adduser/language');
+						$dir_array = $this->contactadmin->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
 						// Loop through our list of users
 						for ($i = 0; $i < $size; $i++)
 						{
