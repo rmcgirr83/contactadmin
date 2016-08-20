@@ -55,7 +55,6 @@ class contactadmin
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-		$this->contact_constants = $this->contact_constants();
 
 		if (!class_exists('messenger'))
 		{
@@ -66,7 +65,10 @@ class contactadmin
 	/**
 	* contact_change_auth
 	* thanks to poppertom69 for the idea..and some of the code
-	*
+	* @param $bot_id	the user id of the contact bot chosen in the ACP
+	* @param $mode		the mode either replace or restore
+	* @param $bkup_data	an array of the current users data
+	* changes the user in posting to that of the bot chosen in the ACP
 	*/
 	public function contact_change_auth($bot_id, $mode = 'replace', $bkup_data = false)
 	{
@@ -89,7 +91,7 @@ class contactadmin
 				$this->db->sql_freeresult($result);
 
 				// reset the current users info to that of the bot
-				$this->user->data = array_merge($this->user->data, $row);
+				$this->user->data = $row;
 
 				unset($row);
 
@@ -109,8 +111,10 @@ class contactadmin
 
 	/**
 	* contact_check
-	* @param $forum_id, the forum id selected in ACP
-	* @param $forum_name returned from contact_check_forum
+	^ @param string		$mode		what we are checking
+	* @param int		$forum_id	the forum id selected in ACP
+	* @param int		$bot_id		the id of the bot selected in the ACP
+	* @param string		$method		the type of contact we are using email, forum post or PM
 	* ensures postable forum and correct "bot"
 	*/
 	public function contact_check($mode, $forum_id = false, $bot_id = false, $method = false)
@@ -218,7 +222,7 @@ class contactadmin
 				//this is only called if there are no contact admins available
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
 
-				if ($method == $this->contact_constants['CONTACT_METHOD_EMAIL'])
+				if ($method == CONTACT_METHOD_EMAIL)
 				{
 					$error = $this->user->lang('EMAIL');
 				}
@@ -267,8 +271,8 @@ class contactadmin
 
 	/**
 	 * contact_send_email
-	 * @param $email_template, the email template to use
-	 * @param $email_message, the message we are sending
+	 * @param $email_template	the email template to use
+	 * @param $email_message	the message we are sending
 	 * sends an email to the board default if an error occurs
 	 */
 	private function contact_send_email($email_template, $email_message)
@@ -303,9 +307,10 @@ class contactadmin
 	/**
 	 * contact_make_select
 	 *
-	 * @param array $input_ary
+	 * @param array 	$input_ary	an array of contact reasons
+	 * @param string	$selected	the chosen reason
 	 * @return string Select html
-	 * for drop down reasons
+	 * for drop down reasons in the contact page
 	 */
 	public function contact_make_select($input_ary, $selected)
 	{
@@ -330,19 +335,6 @@ class contactadmin
 		}
 		return $select;
 	}
-
-	/**
-	* Contact constants
-	*/
-	public function contact_constants()
-	{
-		$contactadmin_constants = "\\rmcgirr83\\contactadmin\\core\\contact_constants";
-		$class = new \ReflectionClass($contactadmin_constants);
-		$contactadmin_constants = $class->getConstants();
-
-		return $contactadmin_constants;
-	}
-
 
 	/**
 	 * make_user_select
@@ -379,9 +371,9 @@ class contactadmin
 	public function method_select($value, $key = '')
 	{
 		$radio_ary = array(
-			$this->contact_constants['CONTACT_METHOD_EMAIL']	=> 'CONTACT_METHOD_EMAIL',
-			$this->contact_constants['CONTACT_METHOD_POST']	=> 'CONTACT_METHOD_POST',
-			$this->contact_constants['CONTACT_METHOD_PM']	=> 'CONTACT_METHOD_PM',
+			contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
+			contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
+			contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
 		);
 		return h_radio('method', $radio_ary, $value, $key);
 	}
@@ -391,9 +383,9 @@ class contactadmin
 	public function poster_select($value, $key = '')
 	{
 		$radio_ary = array(
-			$this->contact_constants['CONTACT_POST_NEITHER']	=> 'CONTACT_POST_NEITHER',
-			$this->contact_constants['CONTACT_POST_GUEST']	=> 'CONTACT_POST_GUEST',
-			$this->contact_constants['CONTACT_POST_ALL']		=> 'CONTACT_POST_ALL',
+			contact_constants::CONTACT_POST_NEITHER	=> 'CONTACT_POST_NEITHER',
+			contact_constants::CONTACT_POST_GUEST	=> 'CONTACT_POST_GUEST',
+			contact_constants::CONTACT_POST_ALL		=> 'CONTACT_POST_ALL',
 		);
 
 		return h_radio('bot_poster', $radio_ary, $value, $key);
@@ -431,11 +423,11 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : array();
 
-			if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'] && sizeof($admin_ary))
+			if ($this->config['contactadmin_method'] == CONTACT_METHOD_EMAIL && sizeof($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
 			}
-			else if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'] && sizeof($admin_ary))
+			else if ($this->config['contactadmin_method'] == CONTACT_METHOD_PM && sizeof($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
 			}
