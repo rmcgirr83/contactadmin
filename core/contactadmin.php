@@ -111,7 +111,7 @@ class contactadmin
 
 	/**
 	* contact_check
-	^ @param string		$mode		what we are checking
+	* @param string		$mode		what we are checking
 	* @param int		$forum_id	the forum id selected in ACP
 	* @param int		$bot_id		the id of the bot selected in the ACP
 	* @param string		$method		the type of contact we are using email, forum post or PM
