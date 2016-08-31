@@ -406,7 +406,7 @@ class contactadmin
 	}
 
 	/**
-	* get an array of admins and mods
+	* get an array of admins
 	*/
 	public function admin_array()
 	{
