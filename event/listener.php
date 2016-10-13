@@ -48,6 +48,7 @@ class listener implements EventSubscriberInterface
 		return array(
 			'core.page_header_after'	=> 'page_header_after',
 			'core.user_setup'			=> 'user_setup',
+			'core.login_box_failed'		=> 'login_box_failed',
 		);
 	}
 
@@ -72,5 +73,16 @@ class listener implements EventSubscriberInterface
 				'S_FORUM_VERSION'	=> $version,
 			));
 		}
+	}
+
+	public function login_box_failed($event)
+	{
+		$error = $event['err'];
+		$result = $event['result'];
+		if ($this->config['contactadmin_enable'] && ($result['error_msg'] == 'LOGIN_ERROR_USERNAME' || $result['error_msg'] == 'LOGIN_ERROR_PASSWORD'))
+		{
+			$error = sprintf($this->user->lang[$result['error_msg']], '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>');
+		}
+		$event['err'] = $error;
 	}
 }
