@@ -25,6 +25,6 @@ class ext extends \phpbb\extension\base
 	{
 		$config = $this->container->get('config');
 		// only allow install between 3.1.3 for events added and 3.4 due to 3.4 removing upload function from includes/functions_posting per 3.2
-		return phpbb_version_compare($config['version'], '3.1.3', '>=')&& phpbb_version_compare($config['version'], '3.4', '<');
+		return phpbb_version_compare($config['version'], '3.1.3', '>=') && phpbb_version_compare($config['version'], '3.4', '<');
 	}
 }

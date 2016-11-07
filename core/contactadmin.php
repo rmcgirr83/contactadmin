@@ -10,6 +10,7 @@
 namespace rmcgirr83\contactadmin\core;
 
 use phpbb\exception\http_exception;
+use rmcgirr83\contactadmin\core\contact_constants;
 
 class contactadmin
 {
@@ -221,8 +222,7 @@ class contactadmin
 
 				//this is only called if there are no contact admins available
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
-
-				if ($method == CONTACT_METHOD_EMAIL)
+				if ($method == contact_constants::CONTACT_METHOD_EMAIL)
 				{
 					$error = $this->user->lang('EMAIL');
 				}
@@ -423,11 +423,11 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : array();
 
-			if ($this->config['contactadmin_method'] == CONTACT_METHOD_EMAIL && sizeof($admin_ary))
+			if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL && sizeof($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
 			}
-			else if ($this->config['contactadmin_method'] == CONTACT_METHOD_PM && sizeof($admin_ary))
+			else if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM && sizeof($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
 			}
