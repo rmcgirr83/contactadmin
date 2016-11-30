@@ -61,7 +61,7 @@ class admin_controller
 	* @param \phpbb\template\template								$template			Template object
 	* @param \phpbb\user											$user				User object
 	* @param \phpbb\log												$log				Log object
-	* @param \rmcgirr83\contactadmin\core\contactadmin				$contact_admin		Methods for the extension
+	* @param \rmcgirr83\contactadmin\core\contactadmin				$contactadmin		Methods for the extension
 	* @param string													$root_path			phpBB root path
 	* @param string													$php_ext			phpEx
 	* @return \rmcgirr83\contactadmin\controller\admin_controller
