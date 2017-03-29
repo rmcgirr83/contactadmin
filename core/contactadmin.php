@@ -93,6 +93,9 @@ class contactadmin
 
 				// reset the current users info to that of the bot
 				$this->user->data = $row;
+				// need to ensure is_registered is set to true, else errors
+				$this->user->data['is_registered'] = true;
+				
 
 				unset($row);
 
