@@ -96,7 +96,6 @@ class contactadmin
 				// need to ensure is_registered is set to true, else errors
 				$this->user->data['is_registered'] = true;
 
-
 				unset($row);
 
 				return $bkup_data;
