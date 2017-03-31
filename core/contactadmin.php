@@ -92,9 +92,9 @@ class contactadmin
 				$this->db->sql_freeresult($result);
 
 				// reset the current users info to that of the bot
-				$this->user->data = $row;
-				// need to ensure is_registered is set to true, else errors
-				$this->user->data['is_registered'] = true;
+				// we do this instead of just using the sql query
+				// for items such as $this->user->data['is_registered'] which isn't a table column from the users table
+				$this->user->data = array_merge($this->user->data, $row);
 
 				unset($row);
 
