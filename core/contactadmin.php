@@ -377,7 +377,7 @@ class contactadmin
 			contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
 			contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
 		);
-		return h_radio('method', $radio_ary, $value, $key);
+		return h_radio('contact_method', $radio_ary, $value, $key);
 	}
 	/**
 	 * Create the selection for the post method
@@ -390,21 +390,21 @@ class contactadmin
 			contact_constants::CONTACT_POST_ALL		=> 'CONTACT_POST_ALL',
 		);
 
-		return h_radio('bot_poster', $radio_ary, $value, $key);
+		return h_radio('contact_bot_poster', $radio_ary, $value, $key);
 	}
 	/**
 	 * Create the selection for the bot forum
 	 */
-	public function forum_select($value, $key = '')
+	public function forum_select($value)
 	{
-		return '<select id="' . $key . '" name="forum">' . make_forum_select($value, false, true, true) . '</select>';
+		return '<select id="contact_forum" name="forum">' . make_forum_select($value, false, true, true) . '</select>';
 	}
 	/**
 	 * Create the selection for the bot
 	 */
-	public function bot_user_select($value, $key = '')
+	public function bot_user_select($value)
 	{
-		return '<select id="' . $key . '" name="bot_user">' . $this->make_user_select($value) . '</select>';
+		return '<select id="contact_bot_user" name="bot_user">' . $this->make_user_select($value) . '</select>';
 	}
 
 	/**

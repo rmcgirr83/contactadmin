@@ -24,8 +24,8 @@
 			<dl>
 				<dt><label for="contactadmin_enable">{L_CONTACT_ENABLE}{L_COLON}</label><br>
 				<span>{L_CONTACT_ENABLE_EXPLAIN}</span></dt>
-				<dd><label><input type="radio" class="radio" name="contactadmin_enable" value="1" <!-- IF CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-				<label><input type="radio" class="radio" name="contactadmin_enable" value="0" <!-- IF not CONTACT_ENABLE -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+				<dd><label><input type="radio" class="radio" name="contactadmin_enable" value="1" <!-- IF CONTACT_ENABLE -->id="contactadmin_enable" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="contactadmin_enable" value="0" <!-- IF not CONTACT_ENABLE -->id="contactadmin_enable" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 			</dl>
 	</fieldset>
 
@@ -68,51 +68,51 @@
 		<dl>
 			<dt><label for="confirm">{L_CONTACT_ACP_CONFIRM}{L_COLON}</label><br>
 			<span>{L_CONTACT_ACP_CONFIRM_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="confirm" value="1" <!-- IF CONTACT_CONFIRM --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="confirm" value="0" <!-- IF not CONTACT_CONFIRM -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="confirm" value="1" <!-- IF CONTACT_CONFIRM -->id="confirm" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="confirm" value="0" <!-- IF not CONTACT_CONFIRM -->id="confirm" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="confirm_guests">{L_CONTACT_CONFIRM_GUESTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_CONFIRM_GUESTS_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="confirm_guests" value="1" <!-- IF CONTACT_CONFIRM_GUESTS -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="confirm_guests" value="0" <!-- IF not CONTACT_CONFIRM_GUESTS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="confirm_guests" value="1" <!-- IF CONTACT_CONFIRM_GUESTS -->id="confirm_guests" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="confirm_guests" value="0" <!-- IF not CONTACT_CONFIRM_GUESTS -->id="confirm_guests" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="username_chk">{L_CONTACT_USERNAME_CHK}{L_COLON}</label><br>
 			<span>{L_CONTACT_USERNAME_CHK_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="username_chk" value="1" <!-- IF CONTACT_USERNAME_CHK -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="username_chk" value="0" <!-- IF not CONTACT_USERNAME_CHK -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="username_chk" value="1" <!-- IF CONTACT_USERNAME_CHK -->id="username_chk" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="username_chk" value="0" <!-- IF not CONTACT_USERNAME_CHK -->id="username_chk" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="email_chk">{L_CONTACT_EMAIL_CHK}{L_COLON}</label><br>
 			<span>{L_CONTACT_EMAIL_CHK_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="email_chk" value="1" <!-- IF CONTACT_EMAIL_CHK -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="email_chk" value="0" <!-- IF not CONTACT_EMAIL_CHK -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="email_chk" value="1" <!-- IF CONTACT_EMAIL_CHK -->id="email_chk" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="email_chk" value="0" <!-- IF not CONTACT_EMAIL_CHK -->id="email_chk"checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="max_attempts">{L_CONTACT_MAX_ATTEMPTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_MAX_ATTEMPTS_EXPLAIN}</span></dt>
-			<dd><input type="text" name="max_attempts" size="10" value="{CONTACT_MAX_ATTEMPTS}" /></dd>
+			<dd><input type="text" id="max_attempts" name="max_attempts" size="10" value="{CONTACT_MAX_ATTEMPTS}" /></dd>
 		</dl>
 		<dl>
 			<dt><label for="attach_allowed">{L_CONTACT_ATTACHMENTS}{L_COLON}</label><br>
 			<span>{L_CONTACT_ATTACHMENTS_EXPLAIN}</span></dt>
-			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" <!-- IF CONTACT_ATTACHMENTS -->checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="attach_allowed" value="0" <!-- IF not CONTACT_ATTACHMENTS -->checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" <!-- IF CONTACT_ATTACHMENTS -->id="attach_allowed" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="attach_allowed" value="0" <!-- IF not CONTACT_ATTACHMENTS -->id="attach_allowed" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_method">{L_CONTACT_FOUNDER}{L_COLON}</label><br>
+			<dt><label for="contact_founder">{L_CONTACT_FOUNDER}{L_COLON}</label><br>
 			<span>{L_CONTACT_FOUNDER}</span></dt>
-			<dd><label><input type="radio" class="radio" name="founder_only" value="1" <!-- IF CONTACT_FOUNDER --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-			<label><input type="radio" class="radio" name="founder_only" value="0" <!-- IF not CONTACT_FOUNDER --> checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
+			<dd><label><input type="radio" class="radio" name="founder_only" value="1" <!-- IF CONTACT_FOUNDER -->id="contact_founder" checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+			<label><input type="radio" class="radio" name="founder_only" value="0" <!-- IF not CONTACT_FOUNDER -->id="contact_founder" checked="checked"<!-- ENDIF --> /> {L_NO}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="contact_reasons">{L_CONTACT_REASONS}{L_COLON}</label><br>
 			<span>{L_CONTACT_REASONS_EXPLAIN}</span></dt>
-			<dd><textarea name="reasons" rows="10" cols="40">{CONTACT_REASONS}</textarea></dd>
+			<dd><textarea id="contact_reasons" name="reasons" rows="10" cols="40">{CONTACT_REASONS}</textarea></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_method">{L_CONTACT_METHOD}{L_COLON}</label><br>
+			<dt><label>{L_CONTACT_METHOD}{L_COLON}</label><br>
 			<span>{L_CONTACT_METHOD_EXPLAIN}</span></dt>
 			<dd>{CONTACT_METHOD}</dd>
 		</dl>
@@ -122,7 +122,7 @@
 			<dd>{CONTACT_BOT_USER}</dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_bot_poster">{L_CONTACT_BOT_POSTER}{L_COLON}</label><br>
+			<dt><label>{L_CONTACT_BOT_POSTER}{L_COLON}</label><br>
 			<span>{L_CONTACT_BOT_POSTER_EXPLAIN}</span></dt>
 			<dd>{CONTACT_BOT_POSTER}</dd>
 		</dl>
