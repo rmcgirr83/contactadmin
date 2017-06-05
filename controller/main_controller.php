@@ -190,7 +190,7 @@ class main_controller
 				if (!function_exists('validate_data'))
 				{
 					include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-				}				
+				}
 				if ($this->config['contactadmin_username_chk'] && $this->config['contactadmin_email_chk'])
 				{
 					$error = validate_data($data, array(
