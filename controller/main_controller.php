@@ -109,19 +109,6 @@ class main_controller
 		{
 			$this->contact_reasons = array();
 		}
-
-		if (!function_exists('submit_post'))
-		{
-			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-		}
-		if (!function_exists('validate_data'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-		if (!class_exists('parse_message'))
-		{
-			include($this->root_path . 'includes/message_parser.' . $this->php_ext);
-		}
 	}
 
 	/**
@@ -200,6 +187,10 @@ class main_controller
 			// let's check our inputs against the database..but only for unregistered user and only if so set in ACP
 			if (!$this->user->data['is_registered'] && ($this->config['contactadmin_username_chk'] || $this->config['contactadmin_email_chk']))
 			{
+				if (!function_exists('validate_data'))
+				{
+					include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+				}				
 				if ($this->config['contactadmin_username_chk'] && $this->config['contactadmin_email_chk'])
 				{
 					$error = validate_data($data, array(
@@ -293,7 +284,10 @@ class main_controller
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 				}
-
+				if (!class_exists('parse_message'))
+				{
+					include($this->root_path . 'includes/message_parser.' . $this->php_ext);
+				}
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
 				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_PM)
@@ -432,7 +426,10 @@ class main_controller
 							$post_data['topic_desc'] = '';
 						}
 						$poll = array();
-
+						if (!function_exists('submit_post'))
+						{
+							include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+						}
 						// Submit the post!
 						submit_post('post', $subject, $this->user->data['username'], POST_NORMAL, $poll, $post_data);
 
