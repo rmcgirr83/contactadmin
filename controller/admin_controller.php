@@ -223,12 +223,12 @@ class admin_controller
 		$this->config->set('contactadmin_attach_allowed', $this->request->variable('attach_allowed', 0));
 		$this->config->set('contactadmin_max_attempts', $this->request->variable('max_attempts', 0));
 		$this->config->set('contactadmin_founder_only', $this->request->variable('founder_only', 0));
-		$this->config->set('contactadmin_bot_poster', $this->request->variable('bot_poster', 0));
+		$this->config->set('contactadmin_bot_poster', $this->request->variable('contact_bot_poster', 0));
 		$this->config->set('contactadmin_forum', $this->request->variable('forum', 0));
 		$this->config->set('contactadmin_bot_user', $this->request->variable('bot_user', 0));
 		$this->config->set('contactadmin_username_chk', $this->request->variable('username_chk', 0));
 		$this->config->set('contactadmin_email_chk', $this->request->variable('email_chk', 0));
-		$this->config->set('contactadmin_method', $this->request->variable('method', 0));
+		$this->config->set('contactadmin_method', $this->request->variable('contact_method', 0));
 	}
 	/**
 	 * Set page url
