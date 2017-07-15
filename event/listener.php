@@ -55,7 +55,8 @@ class listener implements EventSubscriberInterface
 	public function user_setup($event)
 	{
 		$url = $this->helper->get_current_url();
-		if ($this->config['contactadmin_enable'] && !$this->user->data['is_bot'] && $this->config['board_disable'] && substr($url, strrpos($url, '/') + 1) === 'contactadmin')
+		$is_bot = isset($this->user->data['is_bot']) ? $this->user->data['is_bot'] : false;
+		if ($this->config['contactadmin_enable'] && !$is_bot && $this->config['board_disable'] && substr($url, strrpos($url, '/') + 1) === 'contactadmin')
 		{
 			define('SKIP_CHECK_DISABLED', true);
 		}
