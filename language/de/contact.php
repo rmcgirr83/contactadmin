@@ -52,7 +52,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_NO_MSG'			=> 'Du hast keine Nachricht eingegeben.',
 	'CONTACT_NO_SUBJ'			=> 'Du hast keinen Betrett eingegeben.',
 	'CONTACT_REASON'			=> 'Grund',
-	'CONTACT_TEMPLATE'			=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email-Addresse:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Betreff:[/b] %4$s' . "\n" . '[b]Has entered the following message into the contact form:[/b] %5$s',
+	'CONTACT_TEMPLATE'			=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email-Addresse:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Betreff:[/b] %4$s' . "\n" . '[b]Hat die folgende Nachricht in das Kontaktformular eingegeben:[/b] %5$s',
 	'CONTACT_TITLE'				=> 'Kontakt Administration',
 	'CONTACT_TOO_MANY'			=> 'Du hast die maximale Anzahl an möglichen Versuchen den Bestätigungscode auszufüllen erreicht. Bitte versuche es später noch einmal.',
 
