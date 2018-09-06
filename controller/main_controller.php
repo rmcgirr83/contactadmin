@@ -160,7 +160,8 @@ class main_controller
 
 			$message = sprintf($this->user->lang('CONTACT_MAIL_DISABLED'), $this->config['board_contact']);
 
-			throw new http_exception(503, $message);
+			//need trigger_error here as throw new doesn't parse html
+			trigger_error($message);
 		}
 
 		// check to make sure the contact forum is legit for posting
