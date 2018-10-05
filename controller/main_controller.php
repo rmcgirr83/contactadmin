@@ -158,10 +158,9 @@ class main_controller
 			// add an entry into the error log
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_EMAIL_INVALID',  time());
 
-			$message = sprintf($this->user->lang('CONTACT_MAIL_DISABLED'), $this->config['board_contact']);
+			$message = sprintf($this->user->lang('CONTACT_MAIL_DISABLED'), '<a href="mailto:' . htmlspecialchars($this->config['board_contact']) . '">', '</a>');
 
-			//need trigger_error here as throw new doesn't parse html
-			trigger_error($message);
+			return $this->helper->message($message);
 		}
 
 		// check to make sure the contact forum is legit for posting

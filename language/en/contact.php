@@ -46,7 +46,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_BOT_FORUM_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the forum selected in the configuration is incorrect. Please visit the forum %3$s and choose a different forum in the ACP for the Contact Administration.',
 	'CONTACT_CONFIRM'			=> 'Confirm',
 	'CONTACT_DISABLED'			=> 'You can’t use the contact form at the moment because it is disabled.',
-	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration.<br />The extension is set to send an email but the configuration isn’t setup to send emails.  Please notify the administrator or webmaster: <a href="mailto:%1$s">%1$s</a>',
+	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration. The extension is set to send an email but the board configuration isn’t setup to send emails.  Please notify the %sBoard Administrator%s',
 	'CONTACT_MSG_SENT'			=> 'Your message has been sent successfully',
 	'CONTACT_NO_MSG'			=> 'You didn’t enter a message.',
 	'CONTACT_NO_SUBJ'			=> 'You didn’t enter a subject.',
