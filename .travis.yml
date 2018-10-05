@@ -6,37 +6,18 @@ language: php
 
 matrix:
   include:
-    - php: 5.5
-      env: DB=none;NOTESTS=1
-    - php: 5.3.3
-      env: DB=mysqli
-    - php: 5.3
-      env: DB=mysqli # MyISAM
-    - php: 5.4
-      env: DB=mysqli
-    - php: 5.4
-      env: DB=mysql
-    - php: 5.4
-      env: DB=mariadb
-    - php: 5.4
-      env: DB=postgres
-    - php: 5.4
-      env: DB=sqlite3
-    - php: 5.4
-      env: DB=mysqli;SLOWTESTS=1
-    - php: 5.5
-      env: DB=mysqli
-    - php: 5.5
-      env: DB=none;NOTESTS=1
     - php: 5.6
       env: DB=mysqli
+    - php: 5.6
+      env: DB=none;NOTESTS=1
     - php: 7.0
       env: DB=mysqli
-    - php: hhvm
+    - php: 7.1
+      env: DB=mysqli
+    - php: 7.2
       env: DB=mysqli
   allow_failures:
     - php: 7.0
-    - php: hhvm
   fast_finish: true
 
 env:
@@ -45,7 +26,7 @@ env:
     - SNIFF="1"        # Should we run code sniffer on your code?
     - IMAGE_ICC="0"    # Should we run icc profile sniffer on your images?
     - EPV="1"          # Should we run EPV (Extension Pre Validator) on your code?
-    - PHPBB_BRANCH="3.1.x"
+    - PHPBB_BRANCH="3.2.x"
 
 branches:
   only:
