@@ -109,10 +109,7 @@ class main_controller
 		{
 			$this->contact_reasons = array();
 		}
-		if (!class_exists('parse_message'))
-		{
-			include($this->root_path . 'includes/message_parser.' . $this->php_ext);
-		}
+
 		if (!function_exists('create_thumbnail'))
 		{
 			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
@@ -120,14 +117,6 @@ class main_controller
 		if (!class_exists('messenger'))
 		{
 			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
-		}
-		if (!function_exists('validate_data'))
-		{
-			include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-		}
-		if (!function_exists('submit_pm'))
-		{
-			include($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
 		}
 	}
 
@@ -207,6 +196,10 @@ class main_controller
 			// let's check our inputs against the database..but only for unregistered user and only if so set in ACP
 			if (!$this->user->data['is_registered'] && ($this->config['contactadmin_username_chk'] || $this->config['contactadmin_email_chk']))
 			{
+				if (!function_exists('validate_data'))
+				{
+					include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+				}				
 				if ($this->config['contactadmin_username_chk'] && $this->config['contactadmin_email_chk'])
 				{
 					$error = validate_data($data, array(
@@ -300,6 +293,10 @@ class main_controller
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 				}
+				if (!class_exists('parse_message'))
+				{
+					include($this->root_path . 'includes/message_parser.' . $this->php_ext);
+				}				
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
 				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_PM)
@@ -362,7 +359,10 @@ class main_controller
 				switch ($this->config['contactadmin_method'])
 				{
 					case contact_constants::CONTACT_METHOD_PM:
-
+						if (!function_exists('submit_pm'))
+						{
+							include_once($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
+						}
 						$pm_data = array(
 							'from_user_id'		=> (int) $this->user->data['user_id'],
 							'icon_id'			=> 0,
