@@ -199,7 +199,7 @@ class main_controller
 				if (!function_exists('validate_data'))
 				{
 					include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-				}				
+				}
 				if ($this->config['contactadmin_username_chk'] && $this->config['contactadmin_email_chk'])
 				{
 					$error = validate_data($data, array(
@@ -296,7 +296,7 @@ class main_controller
 				if (!class_exists('parse_message'))
 				{
 					include($this->root_path . 'includes/message_parser.' . $this->php_ext);
-				}				
+				}
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
 				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_PM)
