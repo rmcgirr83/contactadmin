@@ -292,7 +292,7 @@ class main_controller
 				if (!function_exists('create_thumbnail'))
 				{
 					include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-				}				
+				}
 				if (!class_exists('parse_message'))
 				{
 					include($this->root_path . 'includes/message_parser.' . $this->php_ext);
