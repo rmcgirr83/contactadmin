@@ -110,10 +110,6 @@ class main_controller
 			$this->contact_reasons = array();
 		}
 
-		if (!function_exists('create_thumbnail'))
-		{
-			include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
-		}
 		if (!class_exists('messenger'))
 		{
 			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
@@ -293,6 +289,10 @@ class main_controller
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 				}
+				if (!function_exists('create_thumbnail'))
+				{
+					include($this->root_path . 'includes/functions_posting.' . $this->php_ext);
+				}				
 				if (!class_exists('parse_message'))
 				{
 					include($this->root_path . 'includes/message_parser.' . $this->php_ext);
