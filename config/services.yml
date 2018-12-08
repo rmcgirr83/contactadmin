@@ -4,9 +4,9 @@ services:
         arguments:
             - '@cache'
             - '@config'
+            - '@config_text'            
             - '@dbal.conn'
             - '@request'
-            - '@service_container'
             - '@template'
             - '@user'
             - '@log'
@@ -23,7 +23,6 @@ services:
             - '@controller.helper'
             - '@dispatcher'
             - '@request'
-            - '@service_container'
             - '@template'
             - '@user'
             - '@log'

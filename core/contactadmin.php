@@ -156,7 +156,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$phpEx") . '">', '</a>');
+					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -201,7 +201,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), array($bot_id, $row));
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$phpEx") . '">', '</a>');
+					$message = $this->user->lang('CONTACT_BOT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -249,7 +249,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_BOT_ERROR'), '<br /><br />' . sprintf($this->user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$this->root_path}index.$phpEx") . '">', '</a>'));
+					$message = sprintf($this->user->lang('CONTACT_BOT_ERROR'), '<br /><br />' . sprintf($this->user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>'));
 
 					throw new http_exception(503, $message);
 				}
@@ -317,7 +317,7 @@ class contactadmin
 	public function contact_make_select($input_ary, $selected)
 	{
 		// only accept arrays, no empty ones
-		if (!is_array($input_ary) || !sizeof($input_ary))
+		if (!is_array($input_ary) || !count($input_ary))
 		{
 			return false;
 		}
@@ -425,11 +425,11 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : array();
 
-			if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL && sizeof($admin_ary))
+			if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL && count($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
 			}
-			else if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM && sizeof($admin_ary))
+			else if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM && count($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
 			}
@@ -446,7 +446,7 @@ class contactadmin
 		}
 
 		// we didn't get a soul
-		if (!sizeof($contact_users))
+		if (!count($contact_users))
 		{
 			// we have no one to send anything to
 			// notify the board default

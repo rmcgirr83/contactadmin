@@ -10,8 +10,6 @@
 
 namespace rmcgirr83\contactadmin\controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 class admin_controller
 {
 	/** @var \phpbb\cache\service */
@@ -20,14 +18,14 @@ class admin_controller
 	/** @var \phpbb\config\config */
 	protected $config;
 
+	/** @var \phpbb\config\db_text */
+	protected $config_text;	
+
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
 	/** @var \phpbb\request\request */
 	protected $request;
-
-	/** @var ContainerInterface */
-	protected $phpbb_container;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -55,24 +53,23 @@ class admin_controller
 	*
 	* @param \phpbb\cache\service									$cache				Cache object
 	* @param \phpbb\config\config									$config				Config object
+	* @param \phpbb\config\db_text 									$config_text		Config text object
 	* @param \phpbb\db\driver\driver_interface						$db					Database object
 	* @param \phpbb\request\request									$request			Request object
-	* @param ContainerInterface                   					$phpbb_container	Service container interface
 	* @param \phpbb\template\template								$template			Template object
 	* @param \phpbb\user											$user				User object
-	* @param \phpbb\log												$log				Log object
+	* @param \phpbb\log\log											$log				Log object
 	* @param \rmcgirr83\contactadmin\core\contactadmin				$contactadmin		Methods for the extension
 	* @param string													$root_path			phpBB root path
 	* @param string													$php_ext			phpEx
-	* @return \rmcgirr83\contactadmin\controller\admin_controller
 	* @access public
 	*/
 	public function __construct(
 			\phpbb\cache\service $cache,
 			\phpbb\config\config $config,
+			\phpbb\config\db_text $config_text,
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\request\request $request,
-			ContainerInterface $phpbb_container,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			\phpbb\log\log $log,
@@ -82,9 +79,9 @@ class admin_controller
 	{
 		$this->cache = $cache;
 		$this->config = $config;
+		$this->config_text = $config_text;
 		$this->db = $db;
 		$this->request = $request;
-		$this->container = $phpbb_container;
 		$this->template = $template;
 		$this->user = $user;
 		$this->log = $log;
@@ -111,9 +108,7 @@ class admin_controller
 		add_form_key('contactadmin_settings');
 		$error = '';
 
-		$config_text = $this->container->get('config_text');
-
-		$contact_admin_data		= $config_text->get_array(array(
+		$contact_admin_data		= $this->config_text->get_array(array(
 			'contactadmin_reasons',
 			'contact_admin_info',
 			'contact_admin_info_uid',

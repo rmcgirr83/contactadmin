@@ -11,7 +11,6 @@ namespace rmcgirr83\contactadmin\controller;
 
 use phpbb\exception\http_exception;
 use rmcgirr83\contactadmin\core\contact_constants;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
 * Main controller
@@ -38,9 +37,6 @@ class main_controller
 
 	/* @var \phpbb\request\request */
 	protected $request;
-
-	/** @var ContainerInterface */
-	protected $phpbb_container;
 
 	/** @var \phpbb\template\template */
 	protected $template;
@@ -71,7 +67,6 @@ class main_controller
 			\phpbb\controller\helper $helper,
 			\phpbb\event\dispatcher_interface $dispatcher,
 			\phpbb\request\request $request,
-			ContainerInterface $phpbb_container,
 			\phpbb\template\template $template,
 			\phpbb\user $user,
 			\phpbb\log\log $log,
@@ -88,7 +83,6 @@ class main_controller
 		$this->helper = $helper;
 		$this->dispatcher = $dispatcher;
 		$this->request = $request;
-		$this->container = $phpbb_container;
 		$this->template = $template;
 		$this->user = $user;
 		$this->log = $log;
@@ -135,7 +129,6 @@ class main_controller
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		// Trigger error if board email is disabled but email set in config for contact
 		if (!$this->config['email_enable'] && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL)
 		{
 			$this->config->set('contactadmin_enable', 0);
@@ -326,7 +319,7 @@ class main_controller
 				// Grab md5 'checksum' of new message
 				$message_md5 = md5($message_parser->message);
 
-				if (sizeof($message_parser->warn_msg))
+				if (count($message_parser->warn_msg))
 				{
 					$error[] = implode('<br />', $message_parser->warn_msg);
 					$message_parser->warn_msg = array();
@@ -347,7 +340,7 @@ class main_controller
 			extract($this->dispatcher->trigger_event('rmcgirr83.contactadmin.modify_data_and_error', compact($vars)));
 
 			// no errors, let's proceed
-			if (!sizeof($error))
+			if (!count($error))
 			{
 				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_POST)
 				{
@@ -380,7 +373,7 @@ class main_controller
 						);
 
 						// Loop through our list of users
-						$size = sizeof($contact_users);
+						$size = count($contact_users);
 						for ($i = 0; $i < $size; $i++)
 						{
 							$pm_data['address_list'] = array('u' => array($contact_users[$i]['user_id'] => 'to'));
@@ -457,7 +450,7 @@ class main_controller
 						$messenger->headers('X-AntiAbuse: Username - ' . $this->user->data['username']);
 						$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 
-						$size = sizeof($contact_users);
+						$size = count($contact_users);
 
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
 						// if the lang isn't present then errors will present themselves due to no email template found
@@ -513,7 +506,8 @@ class main_controller
 				}
 
 				$message = $this->user->lang('CONTACT_MSG_SENT') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
-				trigger_error($message);
+
+				return $this->helper->message($message);
 			}
 		}
 		// Visual Confirmation - Show images
@@ -587,7 +581,7 @@ class main_controller
 			'S_EMAIL'				=> ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL) ? true : false,
 
 			'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
-			'S_ERROR'				=> (isset($error) && sizeof($error)) ? implode('<br />', $error) : '',
+			'S_ERROR'				=> (isset($error) && count($error)) ? implode('<br />', $error) : '',
 			'S_CONTACT_ACTION'		=> $this->helper->route('rmcgirr83_contactadmin_displayform'),
 		));
 
