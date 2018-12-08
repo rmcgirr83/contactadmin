@@ -19,7 +19,7 @@ class admin_controller
 	protected $config;
 
 	/** @var \phpbb\config\db_text */
-	protected $config_text;	
+	protected $config_text;
 
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
