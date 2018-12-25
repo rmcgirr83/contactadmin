@@ -144,7 +144,7 @@ class admin_controller
 
 			if (empty($error) && $this->request->is_set_post('submit'))
 			{
-				$config_text->set_array(array(
+				$this->config_text->set_array(array(
 					'contactadmin_reasons'			=> $contact_admin_reasons,
 					'contact_admin_info'			=> $contact_admin_info,
 					'contact_admin_info_uid'		=> $contact_admin_info_uid,
