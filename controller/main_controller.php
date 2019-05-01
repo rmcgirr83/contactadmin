@@ -469,7 +469,7 @@ class main_controller
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
 							$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
-							$messenger->from($data['email']);
+							$messenger->from($this->config['board_contact']);
 							$messenger->replyto($data['email']);
 
 							$messenger->assign_vars(array(
