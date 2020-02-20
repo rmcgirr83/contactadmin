@@ -64,4 +64,5 @@ $lang = array_merge($lang, array(
 	'CONTACT_NO_NAME'			=> 'You didn’t enter a name.',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
+	'CONTACTADMIN_CONFIRM_EXPLAIN'			=> 'To prevent automated registrations the board requires you to enter a confirmation code. The code is displayed in the image you should see below. If you are visually impaired or cannot otherwise read this code please contact the %sBoard Administrator%s.',
 ));

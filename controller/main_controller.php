@@ -533,14 +533,18 @@ class main_controller
 		$attachment_allowed = false;
 
 		// the forum allows attachments?
-		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_POST)
+		$post_attachments_allowed = $this->config['allow_attachments'] ? true : false;
+		$pm_attachments_allowed = $post_attachments_allowed && $this->config['allow_pm_attach'] ?  true : false;
+		
+		// forum and contact form allows attachments
+		if ($post_attachments_allowed && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_POST)
 		{
-			$attachment_allowed = ($this->config['allow_attachments'] && $this->config['contactadmin_attach_allowed'] && $form_enctype) ? true : $attachment_allowed;
+			$attachment_allowed = ($this->config['allow_attachments'] && $this->config['contactadmin_attach_allowed'] && $form_enctype) ? true : false;
 		}
 		// the forum allows attachments in PMs?
-		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM)
+		if ($pm_attachments_allowed && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM)
 		{
-			$attachment_allowed = ($this->config['contactadmin_attach_allowed'] && $this->config['allow_pm_attach'] && $form_enctype) ? true : $attachment_allowed;
+			$attachment_allowed = ($this->config['contactadmin_attach_allowed'] && $this->config['allow_pm_attach'] && $form_enctype) ? true : false;
 		}
 
 		// restore permissions

@@ -49,6 +49,7 @@ class listener implements EventSubscriberInterface
 			'core.page_header_after'	=> 'page_header_after',
 			'core.user_setup'			=> 'user_setup',
 			'core.login_box_failed'		=> 'login_box_failed',
+			'core.ucp_register_modify_template_data'	=> 'contact_form_register',
 		);
 	}
 
@@ -84,5 +85,16 @@ class listener implements EventSubscriberInterface
 			$error = sprintf($this->user->lang[$result['error_msg']], '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>');
 		}
 		$event['err'] = $error;
+	}
+
+	public function contact_form_register($event)
+	{
+		if ($this->config['contactadmin_enable'])
+		{
+			$this->user->add_lang_ext('rmcgirr83/contactadmin', 'contact');
+			$this->template->assign_vars(array(
+				'L_CONFIRM_EXPLAIN' => sprintf($this->user->lang['CONTACTADMIN_CONFIRM_EXPLAIN'], '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>'),
+			));
+		}
 	}
 }

@@ -37,6 +37,8 @@ $lang = array_merge($lang, array(
 	// General config options
 	'ACP_CAT_CONTACTADMIN'	=> 'Contact Board Administration',
 	'ACP_CONTACTADMIN_CONFIG'			=> 'Configuration',
+	'FORUM_EMAIL_INACTIVE'	=> 'How do you want users to be able to make contact.<br><span style="color:red;">No email allowed per forum settings</span>',
+	'NO_FORUM_ATTACHMENTS'		=> 'If set attachments will be allowed in posting to the forum and private messages. The extensions allowed are the same as the board configuration.<br><span style="color:red;">No attachments allowed per forum settings!</span>',	
 	// Log entries
 	'LOG_CONFIG_CONTACT_ADMIN'		=> '<strong>Altered Contact Board Administration extension page settings</strong>',
 	'LOG_CONTACT_BOT_INVALID'		=> '<strong>The Contact Board Administration extension bot has an invalid user id selected:</strong><br />User ID %1$s',

@@ -372,11 +372,23 @@ class contactadmin
 	 */
 	public function method_select($value, $key = '')
 	{
-		$radio_ary = array(
+		if($this->config['email_enable'])
+		{
+			$radio_array = array(
 			contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
 			contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
 			contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
 		);
+		}
+		else
+		{
+			$radio_array = array(
+				contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
+				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
+			);
+		}
+		
+		$radio_ary = $radio_array;
 		return h_radio('contact_method', $radio_ary, $value, $key);
 	}
 	/**
