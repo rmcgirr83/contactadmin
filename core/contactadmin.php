@@ -372,7 +372,7 @@ class contactadmin
 	 */
 	public function method_select($value, $key = '')
 	{
-		if($this->config['email_enable'])
+		if ($this->config['email_enable'])
 		{
 			$radio_array = array(
 			contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
@@ -387,7 +387,7 @@ class contactadmin
 				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
 			);
 		}
-		
+
 		$radio_ary = $radio_array;
 		return h_radio('contact_method', $radio_ary, $value, $key);
 	}
@@ -469,8 +469,8 @@ class contactadmin
 	}
 
 	/*
-     * Get an array that represents directory tree
-     */
+	* Get an array that represents directory tree
+	*/
 	public function dir_to_array($directory)
 	{
 		$directories = glob($directory . '/*' , GLOB_ONLYDIR);

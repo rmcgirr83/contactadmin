@@ -452,7 +452,7 @@ class main_controller
 
 						$contact_name = htmlspecialchars_decode($this->config['board_contact_name']);
 						$board_contact = (($contact_name !== '') ? '"' . mail_encode($contact_name) . '" ' : '') . '<' . $this->config['board_contact'] . '>';
-					
+
 						$size = count($contact_users);
 
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
@@ -535,7 +535,7 @@ class main_controller
 		// the forum allows attachments?
 		$post_attachments_allowed = $this->config['allow_attachments'] ? true : false;
 		$pm_attachments_allowed = $post_attachments_allowed && $this->config['allow_pm_attach'] ?  true : false;
-		
+
 		// forum and contact form allows attachments
 		if ($post_attachments_allowed && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_POST)
 		{
