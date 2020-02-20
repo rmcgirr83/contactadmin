@@ -1,9 +1,8 @@
-# Opt into fully virtualized infrastructure
 language: php
 dist: xenial
 
 matrix:
- include:
+  include:
     - php: 7.1
       env: DB=none;NOTESTS=1
     - php: 7.1
@@ -29,10 +28,11 @@ matrix:
 env:
   global:
     - EXTNAME="rmcgirr83/contactadmin" # CHANGE name of the extension HERE
+    - GITREPO="rmcgirr83/contactadmin" # CHANGE name of the repository HERE
     - SNIFF="1"        # Should we run code sniffer on your code?
     - IMAGE_ICC="0"    # Should we run icc profile sniffer on your images?
     - EPV="1"          # Should we run EPV (Extension Pre Validator) on your code?
-    - COVERAGE="1"    
+    - COVERAGE="1"     # Should we send code coverage?
     - PHPBB_BRANCH="3.3.x"
 
 branches:
@@ -46,7 +46,7 @@ branches:
 services:
   - postgresql
   - mysql
- 
+
 install:
   - travis/prepare-phpbb.sh $PHPBB_BRANCH
   - cd ../../phpBB3
