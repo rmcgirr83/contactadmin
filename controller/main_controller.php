@@ -450,6 +450,9 @@ class main_controller
 						$messenger->headers('X-AntiAbuse: Username - ' . $this->user->data['username']);
 						$messenger->headers('X-AntiAbuse: User IP - ' . $this->user->ip);
 
+						$contact_name = htmlspecialchars_decode($this->config['board_contact_name']);
+						$board_contact = (($contact_name !== '') ? '"' . mail_encode($contact_name) . '" ' : '') . '<' . $this->config['board_contact'] . '>';
+					
 						$size = count($contact_users);
 
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
@@ -469,7 +472,7 @@ class main_controller
 
 							$messenger->to($contact_users[$i]['user_email'], $contact_users[$i]['username']);
 							$messenger->im($contact_users[$i]['user_jabber'], $contact_users[$i]['username']);
-							$messenger->from($this->config['board_contact']);
+							$messenger->from($board_contact);
 							$messenger->replyto($data['email']);
 
 							$messenger->assign_vars(array(
