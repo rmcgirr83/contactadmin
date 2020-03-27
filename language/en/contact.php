@@ -39,11 +39,10 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_CAT_CONTACTADMIN'		=> 'Contact Administration',
 	'ADD_ATTACHMENT_EXPLAIN'	=> 'If you wish to attach a file enter the details below.',
-	'CONTACT_BOT_ERROR'			=> 'You can’t use the contact form at the moment because there is an error in the configuration.  An email has been sent to the founder.',
-	'CONTACT_BOT_NONE'			=> 'The user %1$s tried to use the Contact Admin Extension at %2$s to send a %3$s, but there are no Administrators that allow %3$ss by users. Please enter the Contact Bot Configuration in the Admin Panel for the forum %4$s and choose the “Board Founder” option',
+	'CONTACT_ERROR'			=> 'You can’t use the contact form at the moment because there is an error in the configuration.  An email has been sent to the founder.',
+	'CONTACT_BOT_NONE'			=> 'The user %1$s tried to use the Contact Admin Extension at %2$s to send a %3$s, but there are no Administrators that allow %3$ss by users. Please enter the Contact Bot Configuration in the Admin Panel for the board %4$s and choose the “Board Founder” option',
 	'CONTACT_BOT_SUBJECT'		=> 'Contact Administration Extension Error',
-	'CONTACT_BOT_USER_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the user selected in the configuration is incorrect. Please visit the forum %3$s and choose a different user in the ACP for the Contact Administration.',
-	'CONTACT_BOT_FORUM_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the forum selected in the configuration is incorrect. Please visit the forum %3$s and choose a different forum in the ACP for the Contact Administration.',
+	'CONTACT_BOT_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the %3$s selected in the configuration is incorrect. Please visit the board %4$s and choose a different %3$s in the settings for the Contact Administration Extension.',
 	'CONTACT_CONFIRM'			=> 'Confirm',
 	'CONTACT_DISABLED'			=> 'You can’t use the contact form at the moment because it is disabled.',
 	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration. The extension is set to send an email but the board configuration isn’t setup to send emails.  Please notify the %sBoard Administrator%s',
@@ -53,7 +52,6 @@ $lang = array_merge($lang, array(
 	'CONTACT_REASON'			=> 'Reason',
 	'CONTACT_TEMPLATE'			=> '[b]Name:[/b] %1$s' . "\n" . '[b]Email Address:[/b] %2$s' . "\n" . '[b]IP:[/b] %3$s' . "\n" . '[b]Subject:[/b] %4$s' . "\n" . '[b]Has entered the following message into the contact form:[/b] %5$s',
 	'CONTACT_TITLE'				=> 'Contact Administration',
-	'CONTACT_TOO_MANY'			=> 'You have exceeded the maximum number of contact confirmation attempts for this session. Please try again later.',
 
 	'CONTACT_YOUR_NAME'			=> 'Your name',
 	'CONTACT_YOUR_NAME_EXPLAIN'	=> 'Please enter your name, so the message has an identity.',
@@ -62,6 +60,8 @@ $lang = array_merge($lang, array(
 
 	'TOO_MANY_CONTACT_TRIES'	=> 'You have exceeded the maximum number of attempts for this session. Please try again later.',
 	'CONTACT_NO_NAME'			=> 'You didn’t enter a name.',
+	'FORUM'						=> 'forum',
+	'USER'						=> 'user',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
 	'CONTACTADMIN_CONFIRM_EXPLAIN'			=> 'To prevent automated registrations the board requires you to enter a confirmation code. The code is displayed in the image you should see below. If you are visually impaired or cannot otherwise read this code please contact the %sBoard Administrator%s.',
