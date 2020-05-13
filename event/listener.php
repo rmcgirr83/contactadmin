@@ -91,9 +91,8 @@ class listener implements EventSubscriberInterface
 	{
 		if ($this->config['contactadmin_enable'])
 		{
-			$this->user->add_lang_ext('rmcgirr83/contactadmin', 'contact');
 			$this->template->assign_vars(array(
-				'L_CONFIRM_EXPLAIN' => sprintf($this->user->lang['CONTACTADMIN_CONFIRM_EXPLAIN'], '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>'),
+				'L_CONFIRM_EXPLAIN' => sprintf($this->user->lang['CONFIRM_EXPLAIN'], '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>'),
 			));
 		}
 	}
