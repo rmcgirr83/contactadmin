@@ -29,4 +29,11 @@ class m1_update_data extends \phpbb\db\migration\migration
 			array('config.update', array('contactadmin_confirm', true)),
 		);
 	}
+
+	public function revert_data()
+	{
+		return array(
+			array('config.update', array('contact_admin_form_enable', true)),
+		);
+	}
 }

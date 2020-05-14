@@ -46,12 +46,25 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.acp_extensions_run_action_before'	=> 'enable_default_contact',
 			'core.adm_page_footer'	=> 'extension_enabled',
 			'core.page_header_after'	=> 'page_header_after',
 			'core.user_setup'			=> 'user_setup',
 			'core.login_box_failed'		=> 'login_box_failed',
 			'core.ucp_register_modify_template_data'	=> 'contact_form_register',
 		);
+	}
+
+	// enable the default phpbb contact page upon disabling the extension
+	public function enable_default_contact($event)
+	{
+		$action = $event['action'];
+		$ext_name = $event['ext_name'];
+
+		if ($action = 'disable' && $ext_name = 'rmcgirr83/contactadmin')
+		{
+			$this->config->set('contact_admin_form_enable', true);
+		}
 	}
 
 	// change the display of information on the default contact page of phpBB within the ACP
