@@ -76,4 +76,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_POST_NEITHER'			=> 'Neither',
 	'CONTACT_POST_GUEST'			=> 'Guests only',
 	'CONTACT_POST_ALL'				=> 'Everyone',
+
+	// Overwrite the default contact page lang
+	'CONTACT_EXTENSION_ACTIVE'	=> '<span style="color:red;">The settings here will not matter as you currently have the contact admin extension enabled. You will not be able to set this to enabled without first disabling the extension</span>',
 ));

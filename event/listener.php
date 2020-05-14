@@ -46,6 +46,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
+			'core.adm_page_footer'	=> 'extension_enabled',
 			'core.page_header_after'	=> 'page_header_after',
 			'core.user_setup'			=> 'user_setup',
 			'core.login_box_failed'		=> 'login_box_failed',
@@ -53,12 +54,31 @@ class listener implements EventSubscriberInterface
 		);
 	}
 
+	// change the display of information on the default contact page of phpBB within the ACP
+	public function extension_enabled($event)
+	{
+		if ($this->config['contactadmin_enable'])
+		{
+			$this->user->add_lang_ext('rmcgirr83/contactadmin', 'acp_contact');
+			$this->template->assign_vars(array(
+				'L_CONTACT_US_ENABLE_EXPLAIN'	=> $this->user->lang['CONTACT_EXTENSION_ACTIVE'],
+			));
+		}
+	}
+
 	public function user_setup($event)
 	{
 		$url = $this->helper->get_current_url();
+
 		if ($this->config['contactadmin_enable'] && empty($this->user->data['is_bot']) && $this->config['board_disable'] && substr($url, strrpos($url, '/') + 1) === 'contactadmin')
 		{
 			define('SKIP_CHECK_DISABLED', true);
+		}
+
+		// if the extension is enabled ensure the default phpBB contact page is disabled.
+		if ($this->config['contactadmin_enable'] && $this->config['contact_admin_form_enable'])
+		{
+			$this->config->set('contact_admin_form_enable', 0);
 		}
 	}
 
