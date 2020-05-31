@@ -71,6 +71,7 @@ $lang = array_merge($lang, array(
 	'CONTACT_METHOD_EMAIL'			=> 'Email',
 	'CONTACT_METHOD_PM'				=> 'Private message',
 	'CONTACT_METHOD_POST'			=> 'Forum post',
+	'CONTACT_METHOD_BOARD_DEFAULT'	=> 'Board Default Email',
 
 	// Contact posters...user bot
 	'CONTACT_POST_NEITHER'			=> 'Neither',

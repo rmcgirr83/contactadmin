@@ -378,6 +378,7 @@ class contactadmin
 			contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
 			contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
 			contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
+			contact_constants::CONTACT_METHOD_BOARD_DEFAULT	=> 'CONTACT_METHOD_BOARD_DEFAULT',
 		);
 		}
 		else
@@ -426,6 +427,21 @@ class contactadmin
 	{
 		$sql_where = '';
 		$contact_users = array();
+
+		// board default email
+		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_BOARD_DEFAULT)
+		{
+			$contact_users[] = array(
+				'username'	=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
+				'user_email'	=> $this->config['board_contact'],
+				'user_jabber'	=> '',
+				'user_lang'		=> $this->config['default_lang'],
+				'user_notify_type'	=> 0,
+			);
+
+			return $contact_users;
+		}
+
 		// Only founders...maybe
 		if ($this->config['contactadmin_founder_only'])
 		{

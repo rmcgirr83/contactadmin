@@ -16,6 +16,7 @@ class contact_constants
 	const CONTACT_METHOD_EMAIL = 0;
 	const CONTACT_METHOD_POST = 1;
 	const CONTACT_METHOD_PM = 2;
+	const CONTACT_METHOD_BOARD_DEFAULT = 3;
 	const CONTACT_POST_NEITHER = 0;
 	const CONTACT_POST_GUEST = 1;
 	const CONTACT_POST_ALL = 2;

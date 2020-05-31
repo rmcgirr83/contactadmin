@@ -129,7 +129,7 @@ class main_controller
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		if (!$this->config['email_enable'] && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL)
+		if (!$this->config['email_enable'] && in_array($this->config['contactadmin_method'], array(contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_BOARD_DEFAULT)))
 		{
 			$this->config->set('contactadmin_enable', 0);
 
@@ -275,7 +275,7 @@ class main_controller
 				$user_name = $data['username'];
 			}
 
-			if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_EMAIL)
+			if (!in_array($this->config['contactadmin_method'], array(contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_BOARD_DEFAULT)))
 			{
 				// change the users stuff
 				if ($this->config['contactadmin_bot_poster'] == contact_constants::CONTACT_POST_ALL || ($this->config['contactadmin_bot_poster'] == contact_constants::CONTACT_POST_GUEST && !$this->user->data['is_registered']))
@@ -340,7 +340,7 @@ class main_controller
 			extract($this->dispatcher->trigger_event('rmcgirr83.contactadmin.modify_data_and_error', compact($vars)));
 
 			// no errors, let's proceed
-			if (!count($error))
+			if (!sizeof($error))
 			{
 				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_POST)
 				{
@@ -440,9 +440,8 @@ class main_controller
 						$message = htmlspecialchars_decode($message);
 
 						// Some of the code borrowed from includes/ucp/ucp_register.php
-						// The first argument of messenger::messenger() decides if it uses the message queue (which we will)
-
-						$messenger = new \messenger(true);
+						// The first argument of messenger::messenger() decides if it uses the message queue (which we will not)
+						$messenger = new \messenger(false);
 
 						// Email headers
 						$messenger->headers('X-AntiAbuse: Board servername - ' . $this->config['server_name']);
@@ -458,6 +457,7 @@ class main_controller
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
 						// if the lang isn't present then errors will present themselves due to no email template found
 						$dir_array = $this->contactadmin->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
+
 						// Loop through our list of users
 						for ($i = 0; $i < $size; $i++)
 						{
