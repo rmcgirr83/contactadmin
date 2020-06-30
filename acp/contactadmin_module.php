@@ -30,7 +30,7 @@ class contactadmin_module
 
 				$this->page_title = $user->lang('ACP_CAT_CONTACTADMIN');
 
-				$this->tpl_name = 'acp_contact';
+				$this->tpl_name = 'acp_contactadmin';
 
 				// Load the display options handle in the admin controller
 				$admin_controller->display_options();
