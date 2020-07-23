@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,11 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
+	'ADMINS_NOT_EXIST_FOR_METHOD'	=> [
+		0 => 'There are no Administrators who allow emails.  You must choose a different method of contact.',
+		2 => 'There are no Administrators who allow private messages. You must choose a different method of contact.',
+	],
 	'CONTACT_CONFIG_SAVED'			=> 'Contact Board Administration configuration has been updated',
 	'CONTACT_ENABLE'				=> 'Enable Contact Board Administration Extension',
 	'CONTACT_ENABLE_EXPLAIN'		=> 'Enable or disable the extension globally',
@@ -80,4 +84,4 @@ $lang = array_merge($lang, array(
 
 	// Overwrite the default contact page lang
 	'CONTACT_EXTENSION_ACTIVE'	=> '<span style="color:red;">The settings here will not matter as you currently have the contact admin extension enabled. You will not be able to set this to enabled without first disabling the extension</span>',
-));
+]);

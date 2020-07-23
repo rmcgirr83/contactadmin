@@ -2,7 +2,7 @@ services:
     rmcgirr83.contactadmin.admin.controller:
         class: rmcgirr83\contactadmin\controller\admin_controller
         arguments:
-            - '@cache'
+            - '@auth'
             - '@config'
             - '@config_text'
             - '@dbal.conn'

@@ -10,7 +10,7 @@
 
 namespace rmcgirr83\contactadmin\controller;
 
-use phpbb\cache\service as cache_service;
+use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\config\db_text;
 use phpbb\db\driver\driver_interface;
@@ -20,11 +20,12 @@ use phpbb\request\request;
 use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\contactadmin\core\contactadmin as contactadmin;
+use rmcgirr83\contactadmin\core\contact_constants;
 
 class admin_controller
 {
-	/** @var cache_service */
-	protected $cache;
+	/** @var auth */
+	protected $auth;
 
 	/** @var config */
 	protected $config;
@@ -65,7 +66,7 @@ class admin_controller
 	/**
 	* Constructor
 	*
-	* @param cache_service				$cache				Cache object
+	* @param auth						$auth				Auth object
 	* @param config						$config				Config object
 	* @param db_text 					$config_text		Config text object
 	* @param driver_interface			$db					Database object
@@ -80,7 +81,7 @@ class admin_controller
 	* @access public
 	*/
 	public function __construct(
-			cache_service $cache,
+			auth $auth,
 			config $config,
 			db_text $config_text,
 			driver_interface $db,
@@ -93,15 +94,15 @@ class admin_controller
 			$root_path,
 			$php_ext)
 	{
-		$this->cache = $cache;
+		$this->auth = $auth;
 		$this->config = $config;
 		$this->config_text = $config_text;
 		$this->db = $db;
 		$this->language = $language;
+		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
-		$this->log = $log;
 		$this->contactadmin = $contactadmin;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -123,7 +124,6 @@ class admin_controller
 
 		// Create a form key for preventing CSRF attacks
 		add_form_key('contactadmin_settings');
-		$error = '';
 
 		$contact_admin_data		= $this->config_text->get_array([
 			'contactadmin_reasons',
@@ -139,11 +139,22 @@ class admin_controller
 		$contact_admin_info_bitfield	= $contact_admin_data['contact_admin_info_bitfield'];
 		$contact_admin_info_flags		= $contact_admin_data['contact_admin_info_flags'];
 
+		$error = [];
 		if ($this->request->is_set_post('submit')  || $this->request->is_set_post('preview'))
 		{
 			if (!check_form_key('contactadmin_settings'))
 			{
-				$error = $this->language->lang('FORM_INVALID');
+				$error[] = $this->language->lang('FORM_INVALID');
+			}
+
+			if (in_array($this->request->variable('contact_method', 0), [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_PM]))
+			{
+				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
+
+				if(!$admins_exist)
+				{
+					$error[] = $this->language->lang('ADMINS_NOT_EXIST_FOR_METHOD', $this->request->variable('contact_method', 0));
+				}
 			}
 
 			$contact_admin_info		= $this->request->variable('contact_admin_info', '', true);
@@ -187,7 +198,7 @@ class admin_controller
 		$contact_admin_edit = generate_text_for_edit($contact_admin_info, $contact_admin_info_uid, $contact_admin_info_flags);
 
 		$this->template->assign_vars([
-			'CONTACT_ERROR'					=> $error,
+			'CONTACT_ERROR'					=> (sizeof($error)) ? implode('<br />', $error) : false,
 			'CONTACT_ENABLE'				=> $this->config['contactadmin_enable'],
 			'CONTACT_CONFIRM'				=> $this->config['contactadmin_confirm'],
 			'CONTACT_CONFIRM_GUESTS'		=> $this->config['contactadmin_confirm_guests'],
@@ -229,7 +240,7 @@ class admin_controller
 		display_custom_bbcodes();
 	}
 
-	public function set_options()
+	protected function set_options()
 	{
 		$this->config->set('contactadmin_enable', $this->request->variable('contactadmin_enable', 0));
 		$this->config->set('contactadmin_confirm', $this->request->variable('confirm', 0));
@@ -244,6 +255,48 @@ class admin_controller
 		$this->config->set('contactadmin_email_chk', $this->request->variable('email_chk', 0));
 		$this->config->set('contactadmin_method', $this->request->variable('contact_method', 0));
 	}
+
+	/*ensure we have admins that accept emails or pms to be sent via the board
+	*
+	* @param 	int		$method
+	* @return	bool
+	* @access	protected
+	*/
+	protected function check_for_admins($method)
+	{
+		// Grab an array of user_id's with admin permissions
+		$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
+		$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
+
+		$sql_where = '';
+		$admins = [];
+		if ($method == contact_constants::CONTACT_METHOD_EMAIL && count($admin_ary))
+		{
+			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
+		}
+		else if ($method == contact_constants::CONTACT_METHOD_PM && count($admin_ary))
+		{
+			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
+		}
+
+		if (!empty($sql_where))
+		{
+			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
+				FROM ' . USERS_TABLE . ' ' .
+				$sql_where;
+			$result = $this->db->sql_query($sql);
+			$admins = $this->db->sql_fetchrowset($result);
+			$this->db->sql_freeresult($result);
+		}
+
+		if (!count($admins))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Set page url
 	 *
