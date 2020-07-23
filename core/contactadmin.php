@@ -9,27 +9,37 @@
 */
 namespace rmcgirr83\contactadmin\core;
 
+use phpbb\auth\auth;
+use phpbb\cache\service as cache_service;
+use phpbb\config\config;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\log\log;
+use phpbb\user;
 use phpbb\exception\http_exception;
-use rmcgirr83\contactadmin\core\contact_constants;
+use rmcgirr83\contactadmin\core\contact_constants as contact_constants;
 
 class contactadmin
 {
-	/** @var \phpbb\auth\auth */
+	/** @var auth */
 	protected $auth;
 
-	/** @var \phpbb\cache\service */
+	/** @var cache_service */
 	protected $cache;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\log\log */
+	/** @var language */
+	protected $language;
+
+	/** @var log */
 	protected $log;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
 	/** @var string phpBB root path */
@@ -39,12 +49,13 @@ class contactadmin
 	protected $php_ext;
 
 	public function __construct(
-			\phpbb\auth\auth $auth,
-			\phpbb\cache\service $cache,
-			\phpbb\config\config $config,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\log\log $log,
-			\phpbb\user $user,
+			auth $auth,
+			cache_service $cache,
+			config $config,
+			driver_interface $db,
+			language $language,
+			log $log,
+			user $user,
 			$root_path,
 			$php_ext)
 	{
@@ -52,6 +63,7 @@ class contactadmin
 		$this->cache = $cache;
 		$this->config = $config;
 		$this->db = $db;
+		$this->language = $language;
 		$this->log = $log;
 		$this->user = $user;
 		$this->root_path = $root_path;
@@ -146,7 +158,7 @@ class contactadmin
 
 					// send an email to the board default
 					$email_template = '@rmcgirr83_contactadmin/contact_error';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_MESSAGE'), $this->user->data['username'], $this->config['sitename'], $this->user->lang('FORUM'), $server_url);
+					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('FORUM'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
 					// disable the extension
@@ -156,7 +168,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
+					$message = $this->language->lang('CONTACT_ERROR') . '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -168,7 +180,7 @@ class contactadmin
 					// add an entry into the error log
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), array($forum_id, $row));
 
-					$message = sprintf($this->user->lang['CONTACT_DISABLED'], '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -191,7 +203,7 @@ class contactadmin
 				{
 					// send an email to the board default
 					$email_template = '@rmcgirr83_contactadmin/contact_error';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_MESSAGE'), $this->user->data['username'], $this->config['sitename'], $this->user->lang('USER'), $server_url);
+					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('USER'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
 					// disable the extension
@@ -201,7 +213,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), array($bot_id, $row));
 
 					// show a message to the user
-					$message = $this->user->lang('CONTACT_ERROR') . '<br /><br />' . sprintf($this->user->lang('RETURN_INDEX'), '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
+					$message = $this->language->lang('CONTACT_ERROR') . '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -214,7 +226,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), array($bot_id, $row));
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_DISABLED'), '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -226,11 +238,11 @@ class contactadmin
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
 				if ($method == contact_constants::CONTACT_METHOD_EMAIL)
 				{
-					$error = $this->user->lang('EMAIL');
+					$error = $this->language->lang('EMAIL');
 				}
 				else
 				{
-					$error = $this->user->lang('PRIVATE_MESSAGE');
+					$error = $this->language->lang('PRIVATE_MESSAGE');
 				}
 
 				// only send an email if the board allows it
@@ -238,7 +250,7 @@ class contactadmin
 				{
 					// send an email to the board default
 					$email_template = '@rmcgirr83_contactadmin/contact_error';
-					$email_message = sprintf($this->user->lang('CONTACT_BOT_NONE'), $this->user->data['username'], $this->config['sitename'], $error, $server_url);
+					$email_message = $this->language->lang('CONTACT_BOT_NONE', $this->user->data['username'], $this->config['sitename'], $error, $server_url);
 
 					$this->contact_send_email($email_template, $email_message);
 
@@ -249,7 +261,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_ERROR'), '<br /><br />' . sprintf($this->user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>'));
+					$message = $this->language->lang('CONTACT_ERROR', '<br /><br />' . $this->language->lang('RETURN_INDEX', '<a href="' . append_sid("{$this->root_path}index.$this->php_ext") . '">', '</a>'));
 
 					throw new http_exception(503, $message);
 				}
@@ -262,7 +274,7 @@ class contactadmin
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), array($error));
 
 					// show a message to the user
-					$message = sprintf($this->user->lang('CONTACT_DISABLED'), '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
+					$message = $this->language->lang('CONTACT_DISABLED', '<a href="mailto:' . $this->config['board_contact'] . '">', '</a>');
 
 					throw new http_exception(503, $message);
 				}
@@ -296,7 +308,7 @@ class contactadmin
 		$messenger->from($this->config['server_name']);
 
 		$messenger->assign_vars(array(
-			'SUBJECT'		=> $this->user->lang('CONTACT_BOT_SUBJECT'),
+			'SUBJECT'		=> $this->language->lang('CONTACT_BOT_SUBJECT'),
 			'EMAIL_SIG'  	=> $this->config['board_email_sig'],
 			'MESSAGE'		=> $email_message,
 		));

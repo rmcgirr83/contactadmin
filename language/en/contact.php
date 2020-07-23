@@ -62,6 +62,8 @@ $lang = array_merge($lang, array(
 	'CONTACT_NO_NAME'			=> 'You didn’t enter a name.',
 	'FORUM'						=> 'forum',
 	'USER'						=> 'user',
+	'CONTACT_REGISTERED'		=> 'Registered User',
+	'CONTACT_GUEST'				=> 'Guest User',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
 ));

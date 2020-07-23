@@ -4,33 +4,38 @@ services:
         arguments:
             - '@cache'
             - '@config'
-            - '@config_text'            
+            - '@config_text'
             - '@dbal.conn'
+            - '@language'
+            - '@log'
             - '@request'
             - '@template'
             - '@user'
-            - '@log'
             - '@rmcgirr83.contactadmin.core'
             - '%core.root_path%'
             - '%core.php_ext%'
+
     rmcgirr83.contactadmin.main.controller:
         class: rmcgirr83\contactadmin\controller\main_controller
         arguments:
             - '@auth'
             - '@config'
             - '@config_text'
-            - '@dbal.conn'
             - '@controller.helper'
+            - '@dbal.conn'
             - '@dispatcher'
+            - '@language'
+            - '@log'
             - '@request'
             - '@template'
+            - '@text_formatter.s9e.utils'
             - '@user'
-            - '@log'
-            - '%core.root_path%'
-            - '%core.php_ext%'
             - '@rmcgirr83.contactadmin.core'
             - '@captcha.factory'
+            - '%core.root_path%'
+            - '%core.php_ext%'
             - '@?rmcgirr83.topicdescription.listener'
+
     rmcgirr83.contactadmin.listener:
         class: rmcgirr83\contactadmin\event\listener
         arguments:
@@ -40,6 +45,7 @@ services:
             - '@user'
         tags:
             - { name: event.listener }
+
     rmcgirr83.contactadmin.core:
         class: rmcgirr83\contactadmin\core\contactadmin
         arguments:
@@ -47,9 +53,11 @@ services:
             - '@cache'
             - '@config'
             - '@dbal.conn'
+            - '@language'
             - '@log'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+
     rmcgirr83.contactadmin.contact_constants:
         class: rmcgirr83\contactadmin\core\contact_constants

@@ -10,33 +10,47 @@
 
 namespace rmcgirr83\contactadmin\controller;
 
+use phpbb\cache\service as cache_service;
+use phpbb\config\config;
+use phpbb\config\db_text;
+use phpbb\db\driver\driver_interface;
+use phpbb\language\language;
+use phpbb\log\log;
+use phpbb\request\request;
+use phpbb\template\template;
+use phpbb\user;
+use rmcgirr83\contactadmin\core\contactadmin as contactadmin;
+
 class admin_controller
 {
-	/** @var \phpbb\cache\service */
+	/** @var cache_service */
 	protected $cache;
 
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\config\db_text */
+	/** @var db_text */
 	protected $config_text;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var driver_interface */
 	protected $db;
 
-	/** @var \phpbb\request\request */
-	protected $request;
+	/** @var language */
+	protected $language;
 
-	/** @var \phpbb\template\template */
-	protected $template;
-
-	/** @var \phpbb\user */
-	protected $user;
-
-	/** @var \phpbb\log\log */
+	/** @var log */
 	protected $log;
 
-	/* @var \rmcgirr83\contactadmin\core\contactadmin */
+	/** @var request */
+	protected $request;
+
+	/** @var template */
+	protected $template;
+
+	/** @var user */
+	protected $user;
+
+	/* @var contactadmin */
 	protected $contactadmin;
 
 	/** @var string phpBB root path */
@@ -51,29 +65,31 @@ class admin_controller
 	/**
 	* Constructor
 	*
-	* @param \phpbb\cache\service									$cache				Cache object
-	* @param \phpbb\config\config									$config				Config object
-	* @param \phpbb\config\db_text 									$config_text		Config text object
-	* @param \phpbb\db\driver\driver_interface						$db					Database object
-	* @param \phpbb\request\request									$request			Request object
-	* @param \phpbb\template\template								$template			Template object
-	* @param \phpbb\user											$user				User object
-	* @param \phpbb\log\log											$log				Log object
-	* @param \rmcgirr83\contactadmin\core\contactadmin				$contactadmin		Methods for the extension
-	* @param string													$root_path			phpBB root path
-	* @param string													$php_ext			phpEx
+	* @param cache_service				$cache				Cache object
+	* @param config						$config				Config object
+	* @param db_text 					$config_text		Config text object
+	* @param driver_interface			$db					Database object
+	* @param language					$language			Language object
+	* @param log						$log				Log object
+	* @param request					$request			Request object
+	* @param template					$template			Template object
+	* @param user						$user				User object
+	* @param contactadmin				$contactadmin		Methods for the extension
+	* @param string						$root_path			phpBB root path
+	* @param string						$php_ext			phpEx
 	* @access public
 	*/
 	public function __construct(
-			\phpbb\cache\service $cache,
-			\phpbb\config\config $config,
-			\phpbb\config\db_text $config_text,
-			\phpbb\db\driver\driver_interface $db,
-			\phpbb\request\request $request,
-			\phpbb\template\template $template,
-			\phpbb\user $user,
-			\phpbb\log\log $log,
-			\rmcgirr83\contactadmin\core\contactadmin $contactadmin,
+			cache_service $cache,
+			config $config,
+			db_text $config_text,
+			driver_interface $db,
+			language $language,
+			log $log,
+			request $request,
+			template $template,
+			user $user,
+			contactadmin $contactadmin,
 			$root_path,
 			$php_ext)
 	{
@@ -81,6 +97,7 @@ class admin_controller
 		$this->config = $config;
 		$this->config_text = $config_text;
 		$this->db = $db;
+		$this->language = $language;
 		$this->request = $request;
 		$this->template = $template;
 		$this->user = $user;
@@ -101,20 +118,20 @@ class admin_controller
 
 	public function display_options()
 	{
-		$this->user->add_lang(array('acp/board', 'posting'));
-		$this->user->add_lang_ext('rmcgirr83/contactadmin', 'acp_contact');
+		$this->language->add_lang(['acp/board', 'posting']);
+		$this->language->add_lang('acp_contact', 'rmcgirr83/contactadmin');
 
 		// Create a form key for preventing CSRF attacks
 		add_form_key('contactadmin_settings');
 		$error = '';
 
-		$contact_admin_data		= $this->config_text->get_array(array(
+		$contact_admin_data		= $this->config_text->get_array([
 			'contactadmin_reasons',
 			'contact_admin_info',
 			'contact_admin_info_uid',
 			'contact_admin_info_bitfield',
 			'contact_admin_info_flags',
-		));
+		]);
 
 		$contact_admin_reasons			= $contact_admin_data['contactadmin_reasons'];
 		$contact_admin_info				= $contact_admin_data['contact_admin_info'];
@@ -126,7 +143,7 @@ class admin_controller
 		{
 			if (!check_form_key('contactadmin_settings'))
 			{
-				$error = $this->user->lang('FORM_INVALID');
+				$error = $this->language->lang('FORM_INVALID');
 			}
 
 			$contact_admin_info		= $this->request->variable('contact_admin_info', '', true);
@@ -144,20 +161,20 @@ class admin_controller
 
 			if (empty($error) && $this->request->is_set_post('submit'))
 			{
-				$this->config_text->set_array(array(
+				$this->config_text->set_array([
 					'contactadmin_reasons'			=> $contact_admin_reasons,
 					'contact_admin_info'			=> $contact_admin_info,
 					'contact_admin_info_uid'		=> $contact_admin_info_uid,
 					'contact_admin_info_bitfield'	=> $contact_admin_info_bitfield,
 					'contact_admin_info_flags'		=> $contact_admin_info_flags,
-				));
+				]);
 
 				$this->set_options();
 
 				// and an entry into the log table
 				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_CONFIG_UPDATE');
 
-				trigger_error($this->user->lang('CONTACT_CONFIG_SAVED') . adm_back_link($this->u_action));
+				trigger_error($this->language->lang('CONTACT_CONFIG_SAVED') . adm_back_link($this->u_action));
 			}
 		}
 
@@ -169,7 +186,7 @@ class admin_controller
 
 		$contact_admin_edit = generate_text_for_edit($contact_admin_info, $contact_admin_info_uid, $contact_admin_info_flags);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'CONTACT_ERROR'					=> $error,
 			'CONTACT_ENABLE'				=> $this->config['contactadmin_enable'],
 			'CONTACT_CONFIRM'				=> $this->config['contactadmin_confirm'],
@@ -179,8 +196,8 @@ class admin_controller
 			'CONTACT_FOUNDER'				=> $this->config['contactadmin_founder_only'],
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
-			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->user->lang['CONTACT_METHOD_EXPLAIN'] : $this->user->lang['FORUM_EMAIL_INACTIVE'],
-			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->user->lang['CONTACT_ATTACHMENTS_EXPLAIN'] : $this->user->lang['NO_FORUM_ATTACHMENTS'],
+			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->language->lang('CONTACT_METHOD_EXPLAIN') : $this->language->lang('FORUM_EMAIL_INACTIVE'),
+			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->language->lang('CONTACT_ATTACHMENTS_EXPLAIN') : $this->language->lang('NO_FORUM_ATTACHMENTS'),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
 			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
 			'CONTACT_BOT_USER'				=> $this->contactadmin->bot_user_select($this->config['contactadmin_bot_user']),
@@ -194,11 +211,11 @@ class admin_controller
 			'S_SMILIES_DISABLE_CHECKED'		=> !$contact_admin_edit['allow_smilies'],
 			'S_MAGIC_URL_DISABLE_CHECKED'	=> !$contact_admin_edit['allow_urls'],
 
-			'BBCODE_STATUS'			=> $this->user->lang('BBCODE_IS_ON', '<a href="' . append_sid("{$this->root_path}faq.$this->php_ext", 'mode=bbcode') . '">', '</a>'),
-			'SMILIES_STATUS'		=> $this->user->lang['SMILIES_ARE_ON'],
-			'IMG_STATUS'			=> $this->user->lang['IMAGES_ARE_ON'],
-			'FLASH_STATUS'			=> $this->user->lang['FLASH_IS_ON'],
-			'URL_STATUS'			=> $this->user->lang['URL_IS_ON'],
+			'BBCODE_STATUS'			=> $this->language->lang('BBCODE_IS_ON', '<a href="' . append_sid("{$this->root_path}faq.$this->php_ext", 'mode=bbcode') . '">', '</a>'),
+			'SMILIES_STATUS'		=> $this->language->lang('SMILIES_ARE_ON'),
+			'IMG_STATUS'			=> $this->language->lang('IMAGES_ARE_ON'),
+			'FLASH_STATUS'			=> $this->language->lang('FLASH_IS_ON'),
+			'URL_STATUS'			=> $this->language->lang('URL_IS_ON'),
 
 			'S_BBCODE_ALLOWED'		=> true,
 			'S_SMILIES_ALLOWED'		=> true,
@@ -207,7 +224,7 @@ class admin_controller
 			'S_LINKS_ALLOWED'		=> true,
 
 			'U_ACTION'				=> $this->u_action,
-		));
+		]);
 		// Assigning custom bbcodes
 		display_custom_bbcodes();
 	}

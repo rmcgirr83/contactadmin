@@ -1,93 +1,93 @@
-<!-- INCLUDE overall_header.html -->
-<h2 class="titlespace">{L_ACP_CAT_CONTACTADMIN}</h2>
+{% INCLUDE 'overall_header.html' %}
+<h2 class="titlespace">{{ lang('ACP_CAT_CONTACTADMIN') }}</h2>
 
-<form method="post" id="postform" name="postform" action="{S_CONTACT_ACTION}"{S_FORM_ENCTYPE}>
-	<!-- IF CONTACT_INFO -->
+<form method="post" id="postform" name="postform" action="{{ S_CONTACT_ACTION }}"{{ S_FORM_ENCTYPE }}>
+	{% if CONTACT_INFO %}
 	<div class="contactpanel">
 		<div class="content">
-			{CONTACT_INFO}
+			{{ CONTACT_INFO }}
 		</div>
 	</div>
 		<br class="clear" />
-	<!-- ENDIF -->
+	{% endif %}
 <div class="panel">
 	<div class="inner">
 
 		<fieldset class="fields2">
-		<!-- IF S_ERROR -->
-		<p class="error">{S_ERROR}</p>
-		<!-- ENDIF -->
+		{% if S_ERROR %}
+		<p class="error">{{ S_ERROR }}</p>
+		{% endif %}
 
-		<!-- IF not S_USER_LOGGED_IN -->
+		{% if not S_USER_LOGGED_IN %}
 		<dl>
-			<dt><label for="username">{L_CONTACT_YOUR_NAME}{L_COLON}</label><br /><span>{L_CONTACT_YOUR_NAME_EXPLAIN}</span></dt>
-			<dd><input type="text" class="inputbox autowidth" name="username" id="username" value="{USERNAME}" size="30" tabindex="1" /></dd>
+			<dt><label for="username">{{ lang('CONTACT_YOUR_NAME') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTACT_YOUR_NAME_EXPLAIN') }}</span></dt>
+			<dd><input type="text" class="inputbox autowidth" name="username" id="username" value="{{ USERNAME }}" size="30" tabindex="1" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="email">{L_CONTACT_YOUR_EMAIL}{L_COLON}</label><br /><span>{L_CONTACT_YOUR_EMAIL_EXPLAIN}</span></dt>
-			<dd><input type="text" class="inputbox autowidth" name="email" id="email" value="{EMAIL}" size="30" tabindex="2" /></dd>
+			<dt><label for="email">{{ lang('CONTACT_YOUR_EMAIL') }}{{ lang('COLON') }}</label><br /><span>{{ lang('CONTACT_YOUR_EMAIL_EXPLAIN') }}</span></dt>
+			<dd><input type="text" class="inputbox autowidth" name="email" id="email" value="{{ EMAIL }}" size="30" tabindex="2" /></dd>
 		</dl>
 		<hr />
-		<!-- ENDIF -->
-		<!-- IF CONTACT_REASONS -->
+		{% endif %}
+		{% if CONTACT_REASONS %}
 		<dl>
-			<dt><label for="contact_reason">{L_CONTACT_REASON}{L_COLON}</label></dt>
-			<dd><select name="contact_reason" id="contact_reason" tabindex="4">{CONTACT_REASONS}</select></dd>
+			<dt><label for="contact_reason">{{ lang('CONTACT_REASON') }}{{ lang('COLON') }}</label></dt>
+			<dd><select name="contact_reason" id="contact_reason" tabindex="4">{{ CONTACT_REASONS }}</select></dd>
 		</dl>
-		<!-- ENDIF -->
-		<!-- IF not CONTACT_REASONS -->
+		{% endif %}
+		{% if not CONTACT_REASONS %}
 		<dl>
-			<dt><label for="contact_subject">{L_SUBJECT}{L_COLON}</label></dt>
-			<dd><input type="text" size="45" maxlength="64" class="inputbox" name="contact_subject" id="contact_subject" value="{CONTACT_SUBJECT}" tabindex="5" /></dd>
+			<dt><label for="contact_subject">{{ lang('SUBJECT') }}{{ lang('COLON') }}</label></dt>
+			<dd><input type="text" size="45" maxlength="64" class="inputbox" name="contact_subject" id="contact_subject" value="{{ CONTACT_SUBJECT }}" tabindex="5" /></dd>
 		</dl>
-		<!-- ENDIF -->
+		{% endif %}
 		<dl>
-			<dt><label for="message">{L_MESSAGE_BODY}{L_COLON}</label></dt>
-			<dd><textarea name="message" id="message" class="inputbox" tabindex="6" style="width:98%;height:160px;">{CONTACT_MESSAGE}</textarea></dd>
+			<dt><label for="message">{{ lang('MESSAGE_BODY') }}{{ lang('COLON') }}</label></dt>
+			<dd><textarea name="message" id="message" class="inputbox" tabindex="6" style="width:98%;height:160px;">{{ CONTACT_MESSAGE }}</textarea></dd>
 		</dl>
 		</fieldset>
 	</div>
 </div>
-<!-- IF CAPTCHA_TEMPLATE -->
+{% if CAPTCHA_TEMPLATE %}
 <div class="panel captcha-panel">
 	<div class="inner">
 	<fieldset class="fields2">
-	<!-- DEFINE $CAPTCHA_TAB_INDEX = 8 -->
-	<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+	{% DEFINE CAPTCHA_TAB_INDEX = 8 %}
+	{% INCLUDE ''~ CAPTCHA_TEMPLATE ~'' %}
 	</fieldset>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
-<!-- IF S_ATTACH_BOX -->
+{% if S_ATTACH_BOX %}
 <div class="panel bg3 panel-container" id="attach-panel">
 	<div class="inner">
 
-	<p>{L_ADD_ATTACHMENT_EXPLAIN}</p>
+	<p>{{ lang('ADD_ATTACHMENT_EXPLAIN') }}</p>
 
 	<fieldset class="fields2" id="attach-panel-basic">
 	<dl>
-		<dt><label for="fileupload">{L_FILENAME}{L_COLON}</label></dt>
+		<dt><label for="fileupload">{{ lang('FILENAME') }}{{ lang('COLON') }}</label></dt>
 		<dd>
 			<input type="file" name="fileupload" id="fileupload" class="inputbox autowidth" />
 		</dd>
 	</dl>
 	<dl>
-		<dt><label for="filecomment">{L_FILE_COMMENT}{L_COLON}</label></dt>
-		<dd><textarea name="filecomment" id="filecomment" rows="1" cols="40" class="inputbox autowidth">{FILE_COMMENT}</textarea></dd>
+		<dt><label for="filecomment">{{ lang('FILE_COMMENT') }}{{ lang('COLON') }}</label></dt>
+		<dd><textarea name="filecomment" id="filecomment" rows="1" cols="40" class="inputbox autowidth">{{ FILE_COMMENT }}</textarea></dd>
 	</dl>
 	</fieldset>
 	</div>
 </div>
-<!-- ENDIF -->
+{% endif %}
 
 <div class="panel bg2">
 	<div class="inner">
 
 	<fieldset class="submit-buttons">
-		{S_HIDDEN_FIELDS}
-		<input type="submit" name="submit" id="submit" value="{L_SUBMIT}" class="button1" tabindex="9" />&nbsp;
-		{S_FORM_TOKEN}
+		{{ S_HIDDEN_FIELDS }}
+		<input type="submit" name="submit" id="submit" value="{{ lang('SUBMIT') }}" class="button1" tabindex="9" />&nbsp;
+		{{ S_FORM_TOKEN }}
 	</fieldset>
 
 	</div>
@@ -95,4 +95,4 @@
 
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% INCLUDE 'overall_footer.html' %}
