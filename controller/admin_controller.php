@@ -166,7 +166,7 @@ class admin_controller
 			{
 				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
 
-				if(!$admins_exist)
+				if (!$admins_exist)
 				{
 					$error[] = $this->language->lang('ADMINS_NOT_EXIST_FOR_METHOD', $this->request->variable('contact_method', 0));
 				}
