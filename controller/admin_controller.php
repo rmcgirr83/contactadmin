@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2016 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -14,6 +14,7 @@ use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\config\db_text;
 use phpbb\db\driver\driver_interface;
+use phpbb\controller\helper;
 use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\request\request;
@@ -35,6 +36,9 @@ class admin_controller
 
 	/** @var driver_interface */
 	protected $db;
+
+	/** @var \phpbb\controller\helper */
+	protected $helper;
 
 	/** @var language */
 	protected $language;
@@ -70,6 +74,7 @@ class admin_controller
 	* @param config						$config				Config object
 	* @param db_text 					$config_text		Config text object
 	* @param driver_interface			$db					Database object
+	* @param helper						$helper				Controller helper object
 	* @param language					$language			Language object
 	* @param log						$log				Log object
 	* @param request					$request			Request object
@@ -85,6 +90,7 @@ class admin_controller
 			config $config,
 			db_text $config_text,
 			driver_interface $db,
+			helper $helper,
 			language $language,
 			log $log,
 			request $request,
@@ -98,6 +104,7 @@ class admin_controller
 		$this->config = $config;
 		$this->config_text = $config_text;
 		$this->db = $db;
+		$this->helper = $helper;
 		$this->language = $language;
 		$this->log = $log;
 		$this->request = $request;
@@ -110,10 +117,6 @@ class admin_controller
 		if (!function_exists('display_custom_bbcodes'))
 		{
 			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-		}
-		if (!class_exists('parse_message'))
-		{
-			include($this->root_path . 'includes/message_parser.' . $this->php_ext);
 		}
 	}
 
@@ -143,7 +146,7 @@ class admin_controller
 
 		$bot_max_id = (int) $this->bot_max_id();
 
-		$bot_info = $this->bot_user_info($this->request->variable('contact_bot_user', (int) $this->config['contactadmin_bot_user']));
+		$bot_info = $this->contactadmin->bot_user_info($this->request->variable('contact_bot_user', (int) $this->config['contactadmin_bot_user']));
 
 		if (isset($bot_info['error']))
 		{
@@ -177,7 +180,6 @@ class admin_controller
 				$error[] = $bot_info['error'];
 			}
 
-			//$contact_admin_info		= $this->request->variable('contact_admin_info', '', true);
 			$contact_admin_reasons	= $this->request->variable('reasons', '', true);
 
 			generate_text_for_storage(
@@ -229,7 +231,6 @@ class admin_controller
 		$this->template->assign_vars([
 			'CONTACT_ERROR'					=> (sizeof($error)) ? implode('<br />', $error) : false,
 
-			'CONTACT_ENABLE'				=> $this->config['contactadmin_enable'],
 			'CONTACT_CONFIRM'				=> $this->config['contactadmin_confirm'],
 			'CONTACT_CONFIRM_GUESTS'		=> $this->config['contactadmin_confirm_guests'],
 			'CONTACT_ATTACHMENTS'			=> $this->config['allow_attachments'] ? $this->config['contactadmin_attach_allowed'] : $this->config['allow_attachments'],
@@ -240,8 +241,6 @@ class admin_controller
 
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
-			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->language->lang('CONTACT_METHOD_EXPLAIN') : $this->language->lang('FORUM_EMAIL_INACTIVE'),
-			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->language->lang('CONTACT_ATTACHMENTS_EXPLAIN') : $this->language->lang('NO_FORUM_ATTACHMENTS'),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
 			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
 
@@ -252,9 +251,8 @@ class admin_controller
 			'CONTACT_INFO'					=> $contact_admin_edit['text'],
 			'CONTACT_INFO_PREVIEW'			=> $contact_admin_info_preview,
 
-			'S_BBCODE_DISABLE_CHECKED'		=> !$contact_admin_edit['allow_bbcode'],
-			'S_SMILIES_DISABLE_CHECKED'		=> !$contact_admin_edit['allow_smilies'],
-			'S_MAGIC_URL_DISABLE_CHECKED'	=> !$contact_admin_edit['allow_urls'],
+			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->language->lang('CONTACT_METHOD_EXPLAIN') : $this->language->lang('FORUM_EMAIL_INACTIVE'),
+			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->language->lang('CONTACT_ATTACHMENTS_EXPLAIN') : $this->language->lang('NO_FORUM_ATTACHMENTS'),
 
 			'BBCODE_STATUS'			=> $this->language->lang('BBCODE_IS_ON', '<a href="' . append_sid("{$this->root_path}faq.$this->php_ext", 'mode=bbcode') . '">', '</a>'),
 			'SMILIES_STATUS'		=> $this->language->lang('SMILIES_ARE_ON'),
@@ -262,11 +260,16 @@ class admin_controller
 			'FLASH_STATUS'			=> $this->language->lang('FLASH_IS_ON'),
 			'URL_STATUS'			=> $this->language->lang('URL_IS_ON'),
 
+			'S_BBCODE_DISABLE_CHECKED'		=> !$contact_admin_edit['allow_bbcode'],
+			'S_SMILIES_DISABLE_CHECKED'		=> !$contact_admin_edit['allow_smilies'],
+			'S_MAGIC_URL_DISABLE_CHECKED'	=> !$contact_admin_edit['allow_urls'],
 			'S_BBCODE_ALLOWED'		=> true,
 			'S_SMILIES_ALLOWED'		=> true,
 			'S_BBCODE_IMG'			=> true,
 			'S_BBCODE_FLASH'		=> true,
 			'S_LINKS_ALLOWED'		=> true,
+
+			'AJAX_USER_LINK'		=> $this->helper->route('rmcgirr83_contactadmin_botuserinfo', array('user_id' => 'USER_ID')),
 
 			'U_ACTION'				=> $this->u_action,
 		]);
@@ -276,53 +279,26 @@ class admin_controller
 
 	protected function set_options()
 	{
-		$this->config->set('contactadmin_enable', $this->request->variable('contactadmin_enable', 0));
 		$this->config->set('contactadmin_confirm', $this->request->variable('confirm', 0));
 		$this->config->set('contactadmin_confirm_guests', $this->request->variable('confirm_guests', 0));
-		$this->config->set('contactadmin_attach_allowed', $this->request->variable('attach_allowed', 0));
-		$this->config->set('contactadmin_max_attempts', $this->request->variable('max_attempts', 0));
-		$this->config->set('contactadmin_founder_only', $this->request->variable('founder_only', 0));
-		$this->config->set('contactadmin_bot_poster', $this->request->variable('contact_bot_poster', 0));
-		$this->config->set('contactadmin_forum', $this->request->variable('forum', 0));
-		$this->config->set('contactadmin_bot_user', $this->request->variable('bot_user', 0));
 		$this->config->set('contactadmin_username_chk', $this->request->variable('username_chk', 0));
 		$this->config->set('contactadmin_email_chk', $this->request->variable('email_chk', 0));
+		$this->config->set('contactadmin_max_attempts', $this->request->variable('max_attempts', 0));
+		$this->config->set('contactadmin_attach_allowed', $this->request->variable('attach_allowed', 0));
+		$this->config->set('contactadmin_founder_only', $this->request->variable('founder_only', 0));
 		$this->config->set('contactadmin_method', $this->request->variable('contact_method', 0));
+		$this->config->set('contactadmin_bot_user', $this->request->variable('contact_bot_user', 0));
+		$this->config->set('contactadmin_bot_poster', $this->request->variable('contact_bot_poster', 0));
+		$this->config->set('contactadmin_forum', $this->request->variable('forum', 0));
 	}
 
 	/**
-	* bot_user_info
-	*
-	* @param user_id				user id
-	* @return array					array of user info or error if not found
-	* @access private
-	*/
-	private function bot_user_info($user_id)
-	{
-		$bot_user_info = [];
-
-		$sql = 'SELECT user_id, username
-			FROM ' . USERS_TABLE . "
-			WHERE user_id = " . (int) $user_id;
-		$result = $this->db->sql_query($sql);
-		$bot_user_info = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		if (!isset($bot_user_info['username']))
-		{
-			$bot_user_info['error'] = $this->language->lang('CONTACT_NO_BOT_USER');
-		}
-
-		return $bot_user_info;
-	}
-
-	/**
-	* bot_max_id
+	* bot_max_id				Used to limit the number allowed for the bot user
 	*
 	* @return int				The maximum userid on the forum
-	* @access private
+	* @access protected
 	*/
-	private function bot_max_id()
+	protected function bot_max_id()
 	{
 		$bot_max_id = '';
 		$ignored_users = [USER_IGNORE];

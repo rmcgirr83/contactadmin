@@ -95,8 +95,7 @@ class main_controller
 			contactadmin $contactadmin,
 			captcha_factory $captcha_factory,
 			$root_path,
-			$php_ext,
-			\rmcgirr83\topicdescription\event\listener $topicdescription = null)
+			$php_ext)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
@@ -114,7 +113,6 @@ class main_controller
 		$this->captcha_factory = $captcha_factory;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-		$this->topicdescription = $topicdescription;
 
 		$this->contact_reasons = $this->config_text->get_array(['contactadmin_reasons']);
 
@@ -437,10 +435,7 @@ class main_controller
 							'force_approved_state'	=> ITEM_APPROVED,
 							'force_visibility' => ITEM_APPROVED,
 						];
-						if ($this->topicdescription !== null)
-						{
-							$post_data['topic_desc'] = '';
-						}
+
 						$poll = [];
 
 						// Submit the post!
@@ -452,9 +447,7 @@ class main_controller
 					default:
 
 						// Send using email (default)..first remove all bbcodes
-						//$bbcode_remove = '#\[/?[^\[\]]+\]#';
 						$message = censor_text($data['contact_message']);
-						//$message = preg_replace($bbcode_remove, '', $message);
 						$message = $this->utils->clean_formatting($message);
 						$message = htmlspecialchars_decode($message);
 
@@ -548,7 +541,7 @@ class main_controller
 			]);
 		}
 
-		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? '' : ' enctype="multipart/form-data"';
+		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? false : ' enctype="multipart/form-data"';
 		$attachment_allowed = false;
 
 		// the forum allows attachments?

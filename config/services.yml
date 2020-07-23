@@ -6,6 +6,7 @@ services:
             - '@config'
             - '@config_text'
             - '@dbal.conn'
+            - '@controller.helper'
             - '@language'
             - '@log'
             - '@request'
@@ -34,7 +35,6 @@ services:
             - '@captcha.factory'
             - '%core.root_path%'
             - '%core.php_ext%'
-            - '@?rmcgirr83.topicdescription.listener'
 
     rmcgirr83.contactadmin.listener:
         class: rmcgirr83\contactadmin\event\listener
@@ -55,6 +55,7 @@ services:
             - '@dbal.conn'
             - '@language'
             - '@log'
+            - '@request'
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'

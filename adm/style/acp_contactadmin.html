@@ -1,14 +1,10 @@
 {% INCLUDE 'overall_header.html' %}
-<script type="text/javascript">
-// <![CDATA[
-
+<script>
 	var form_name = 'contactadmin';
 	var text_name = 'contact_admin_info';
 	var load_draft = false;
 	var upload = false;
 	var imageTag = false;
-
-// ]]>
 </script>
 <h1>{{ lang('ACP_CAT_CONTACTADMIN') }}</h1>
 
@@ -20,16 +16,7 @@
 
 <form id="contactadmin" method="post" action="{{ U_ACTION }}">
 	<fieldset>
-		<legend>{{ lang('CONTACT_GENERAL_SETTINGS') }}</legend>
-			<dl>
-				<dt><label for="contactadmin_enable">{{ lang('CONTACT_ENABLE') }}{{ lang('COLON') }}</label><br>
-				<span>{{ lang('CONTACT_ENABLE_EXPLAIN') }}</span></dt>
-				<dd><label><input type="radio" class="radio" name="contactadmin_enable" value="1" {% if CONTACT_ENABLE %}id="contactadmin_enable" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="contactadmin_enable" value="0" {% if not CONTACT_ENABLE %}id="contactadmin_enable" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
-			</dl>
-	</fieldset>
-
-	<fieldset>
+		<legend>{{ lang('CONTACT_US_INFO') }}</legend>
 		<p>{{ lang('CONTACT_US_INFO_EXPLAIN') }}</p>
 		{% if CONTACT_INFO_PREVIEW %}
 		<fieldset>
@@ -65,6 +52,7 @@
 	</fieldset>
 
 	<fieldset>
+		<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
 		<dl>
 			<dt><label for="confirm">{{ lang('CONTACT_ACP_CONFIRM') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ACP_CONFIRM_EXPLAIN') }}</span></dt>
@@ -119,7 +107,7 @@
 		<dl>
 			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_USER_EXPLAIN') }}</span></dt>
-			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{CONTACT_BOT_MAX_ID}" value="{CONTACT_BOT_USER}"> {CONTACT_BOT_USER_LINK}</dd>
+			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{{ CONTACT_BOT_MAX_ID }}" value="{{ CONTACT_BOT_USER }}"> <span id="user_link">{{ CONTACT_BOT_USER_LINK }}</span></dd>
 		</dl>
 		<dl>
 			<dt><label>{{ lang('CONTACT_BOT_POSTER') }}{{ lang('COLON') }}</label><br>

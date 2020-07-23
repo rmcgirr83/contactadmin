@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2016 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -15,9 +15,11 @@ use phpbb\config\config;
 use phpbb\db\driver\driver_interface;
 use phpbb\language\language;
 use phpbb\log\log;
+use phpbb\request\request;
 use phpbb\user;
 use phpbb\exception\http_exception;
 use rmcgirr83\contactadmin\core\contact_constants as contact_constants;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class contactadmin
 {
@@ -39,6 +41,9 @@ class contactadmin
 	/** @var log */
 	protected $log;
 
+	/** @var request */
+	protected $request;
+
 	/** @var user */
 	protected $user;
 
@@ -55,6 +60,7 @@ class contactadmin
 			driver_interface $db,
 			language $language,
 			log $log,
+			request $request,
 			user $user,
 			$root_path,
 			$php_ext)
@@ -65,6 +71,7 @@ class contactadmin
 		$this->db = $db;
 		$this->language = $language;
 		$this->log = $log;
+		$this->request = $request;
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
@@ -496,6 +503,48 @@ class contactadmin
 		return $contact_users;
 	}
 
+	/**
+	* bot_user_info					used in the ACP when choosing the "bot"
+	*
+	* @param user_id				user id
+	* @return array					array of user info or error if not found
+	* @access public
+	*/
+	public function bot_user_info($user_id)
+	{
+		$bot_user_info = [];
+
+		$sql = 'SELECT user_id, username
+			FROM ' . USERS_TABLE . "
+			WHERE user_id = " . (int) $user_id;
+		$result = $this->db->sql_query($sql);
+		$bot_user_info = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if (!isset($bot_user_info['username']))
+		{
+			$bot_user_info['error'] = $this->language->lang('CONTACT_NO_BOT_USER');
+		}
+
+		if ($this->request->is_ajax())
+		{
+			if (!isset($bot_user_info['username']))
+			{
+				$json = new JsonResponse(array(
+					'error'     => true,
+				));
+			}
+			else
+			{
+				$json = new JsonResponse(array(
+					'user_link'     => '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_user_info['user_id']) . '" target="_blank">' . $bot_user_info['username'] . '</a>',
+				));
+			}
+			return $json;
+		}
+
+		return $bot_user_info;
+	}
 	/*
 	* Get an array that represents directory tree
 	*/

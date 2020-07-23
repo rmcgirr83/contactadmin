@@ -37,15 +37,15 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_CAT_CONTACTADMIN'		=> 'Contact Administration',
+	'ACP_CAT_CONTACTADMIN'		=> 'Contact Admin',
 	'ADD_ATTACHMENT_EXPLAIN'	=> 'If you wish to attach a file enter the details below.',
 	'CONTACT_ERROR'			=> 'You can’t use the contact form at the moment because there is an error in the configuration.  An email has been sent to the founder.',
-	'CONTACT_NONE'			=> 'The user %1$s tried to use the Contact Administration Extension at %2$s to send a %3$s, but there are no Administrators that allow %3$ss by users. Please enter the Contact Board Administration Configuration in the Admin Extension Panel for the board %4$s and choose a different method for contact',
-	'CONTACT_BOT_SUBJECT'		=> 'Contact Administration Extension Error',
-	'CONTACT_BOT_MESSAGE'	=> 'The user %1$s tried to use the Contact Administration extension at %2$s, but the %3$s selected in the configuration is incorrect. Please visit the board %4$s and choose a different %3$s in the settings for the Contact Administration Extension.',
+	'CONTACT_NONE'			=> 'The user %1$s tried to use the Contact Admin extension at %2$s to send a %3$s, but there are no Administrators that allow %3$ss by users. Please enter the Contact Admin Configuration in the Admin Extension Panel for the board %4$s and choose a different method for contact',
+	'CONTACT_BOT_SUBJECT'		=> 'Contact Admin Extension Error',
+	'CONTACT_BOT_MESSAGE'	=> 'The user %1$s tried to use the Contact Admin extension at %2$s, but the %3$s selected in the configuration is incorrect. Please visit the board %4$s and choose a different %3$s in the settings for the Contact Administration Extension.',
 	'CONTACT_CONFIRM'			=> 'Confirm',
 	'CONTACT_DISABLED'			=> 'You can’t use the contact form at the moment because it is disabled.',
-	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Administration. The extension is set to send an email but the board configuration isn’t setup to send emails.  Please notify the %sBoard Administrator%s',
+	'CONTACT_MAIL_DISABLED'		=> 'There is an error with the configuration of the Contact  Admin extension. The extension is set to send an email but the board configuration isn’t setup to send emails.  Please notify the %sBoard Administrator%s',
 	'CONTACT_MSG_SENT'			=> 'Your message has been sent successfully',
 	'CONTACT_NO_MSG'			=> 'You didn’t enter a message.',
 	'CONTACT_NO_SUBJ'			=> 'You didn’t enter a subject.',

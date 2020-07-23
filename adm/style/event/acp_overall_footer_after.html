@@ -1,0 +1,27 @@
+{% if AJAX_USER_LINK %}
+<script>
+var AJAX_USER_LINK = "{{ AJAX_USER_LINK }}";
+var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
+(function($) { // Avoid conflicts with other libraries
+	'use strict';
+	$("#contact_bot_user").change(function () {
+		var userId = $(this).val();
+        $.ajax({
+            url: AJAX_USER_LINK.replace("USER_ID", userId),
+			dataType: 'text',
+			success: function(data){
+				var json = $.parseJSON(data);
+				if (json.error)
+				{
+					$('#user_link').html(''+ERROR+'').show();
+				}
+				else
+				{
+					$('#user_link').html(''+json.user_link+'').show();
+				}
+			}
+		});
+	});
+})(jQuery);
+</script>
+{% endif %}

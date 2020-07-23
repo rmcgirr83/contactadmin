@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2016 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -41,9 +41,7 @@ $lang = array_merge($lang, [
 		0 => 'There are no Administrators who allow emails.  You must choose a different method of contact.',
 		2 => 'There are no Administrators who allow private messages. You must choose a different method of contact.',
 	],
-	'CONTACT_CONFIG_SAVED'			=> 'Contact Board Administration configuration has been updated',
-	'CONTACT_ENABLE'				=> 'Enable Contact Board Administration Extension',
-	'CONTACT_ENABLE_EXPLAIN'		=> 'Enable or disable the extension globally',
+	'CONTACT_CONFIG_SAVED'			=> 'Contact Admin configuration has been updated',
 	'CONTACT_ACP_CONFIRM'				=> 'Enable visual confirmation',
 	'CONTACT_ACP_CONFIRM_EXPLAIN'		=> 'If you enable this option, users will have to enter a visual confirmation to send the message.<br>This is to prevent spam messages. Note that this option is for the contact page only.  It does not affect other visual confirmation settings.',
 	'CONTACT_ATTACHMENTS'				=> 'Attachments allowed',
@@ -52,7 +50,7 @@ $lang = array_merge($lang, [
 	'CONTACT_CONFIRM_GUESTS_EXPLAIN'	=> 'If this option is enabled, the visual confirmation is only displayed to guests (if it’s enabled).',
 	'CONTACT_FOUNDER'					=> 'Contact via just the Board Founder',
 	'CONTACT_FOUNDER_EXPLAIN'			=> 'If set only the Founder of the Forum will get Email or PM notifications.',
-	'CONTACT_GENERAL_SETTINGS'			=> 'General contact page settings',
+
 	'CONTACT_MAX_ATTEMPTS'				=> 'Maximum confirmation attempts',
 	'CONTACT_MAX_ATTEMPTS_EXPLAIN'		=> 'How many times may a user attempt to enter the correct confirmation image?<br>Enter 0 for unlimited attempts.',
 	'CONTACT_METHOD'					=> 'Contact method',
