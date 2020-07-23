@@ -36,7 +36,7 @@
 			<legend>{{ lang('CONTACT_US_INFO_PREVIEW') }}</legend>
 			<p>{{ CONTACT_INFO_PREVIEW }}</p>
 		</fieldset>
-		{% endif %}			
+		{% endif %}
 		{% INCLUDE 'acp_posting_buttons.html' %}
 		<dl class="responsive-columns">
 			<dt style="width: 90px;" id="color_palette_placeholder" data-orientation="v" data-height="12" data-width="15" data-bbcode="true">
@@ -61,10 +61,10 @@
 		</dl>
 		<fieldset class="submit-buttons">
 			<input class="button2" type="submit" name="preview" value="{{ lang('PREVIEW') }}" />
-		</fieldset>	
+		</fieldset>
 	</fieldset>
 
-	<fieldset>		
+	<fieldset>
 		<dl>
 			<dt><label for="confirm">{{ lang('CONTACT_ACP_CONFIRM') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ACP_CONFIRM_EXPLAIN') }}</span></dt>
@@ -119,7 +119,7 @@
 		<dl>
 			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_USER_EXPLAIN') }}</span></dt>
-			<dd>{{ CONTACT_BOT_USER }}</dd>
+			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{CONTACT_BOT_MAX_ID}" value="{CONTACT_BOT_USER}"> {CONTACT_BOT_USER_LINK}</dd>
 		</dl>
 		<dl>
 			<dt><label>{{ lang('CONTACT_BOT_POSTER') }}{{ lang('COLON') }}</label><br>
@@ -134,7 +134,7 @@
 	</fieldset>
 
 	<fieldset class="submit-buttons">
-		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />		
+		<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}" />
 		{{ S_FORM_TOKEN }}
 	</fieldset>
 </form>

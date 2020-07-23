@@ -139,6 +139,21 @@ class admin_controller
 		$contact_admin_info_bitfield	= $contact_admin_data['contact_admin_info_bitfield'];
 		$contact_admin_info_flags		= $contact_admin_data['contact_admin_info_flags'];
 
+		$contact_admin_info = $this->request->variable('contact_admin_info', $contact_admin_info, true);
+
+		$bot_max_id = (int) $this->bot_max_id();
+
+		$bot_info = $this->bot_user_info($this->request->variable('contact_bot_user', (int) $this->config['contactadmin_bot_user']));
+
+		if (isset($bot_info['error']))
+		{
+			$user_link = $bot_info['error'];
+		}
+		else
+		{
+			$user_link = '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_info['user_id']) . '" target="_blank">' . $bot_info['username'] . '</a>';
+		}
+
 		$error = [];
 		if ($this->request->is_set_post('submit')  || $this->request->is_set_post('preview'))
 		{
@@ -151,13 +166,18 @@ class admin_controller
 			{
 				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
 
-				if (!$admins_exist)
+				if(!$admins_exist)
 				{
 					$error[] = $this->language->lang('ADMINS_NOT_EXIST_FOR_METHOD', $this->request->variable('contact_method', 0));
 				}
 			}
 
-			$contact_admin_info		= $this->request->variable('contact_admin_info', '', true);
+			if (isset($bot_info['error']))
+			{
+				$error[] = $bot_info['error'];
+			}
+
+			//$contact_admin_info		= $this->request->variable('contact_admin_info', '', true);
 			$contact_admin_reasons	= $this->request->variable('reasons', '', true);
 
 			generate_text_for_storage(
@@ -192,6 +212,15 @@ class admin_controller
 		$contact_admin_info_preview = '';
 		if ($this->request->is_set_post('preview'))
 		{
+			generate_text_for_storage(
+				$contact_admin_info_preview,
+				$contact_admin_info_uid,
+				$contact_admin_info_bitfield,
+				$contact_admin_info_flags,
+				!$this->request->variable('disable_bbcode', false),
+				!$this->request->variable('disable_magic_url', false),
+				!$this->request->variable('disable_smilies', false)
+			);
 			$contact_admin_info_preview = generate_text_for_display($contact_admin_info, $contact_admin_info_uid, $contact_admin_info_bitfield, $contact_admin_info_flags);
 		}
 
@@ -199,21 +228,26 @@ class admin_controller
 
 		$this->template->assign_vars([
 			'CONTACT_ERROR'					=> (sizeof($error)) ? implode('<br />', $error) : false,
+
 			'CONTACT_ENABLE'				=> $this->config['contactadmin_enable'],
 			'CONTACT_CONFIRM'				=> $this->config['contactadmin_confirm'],
 			'CONTACT_CONFIRM_GUESTS'		=> $this->config['contactadmin_confirm_guests'],
 			'CONTACT_ATTACHMENTS'			=> $this->config['allow_attachments'] ? $this->config['contactadmin_attach_allowed'] : $this->config['allow_attachments'],
 			'CONTACT_MAX_ATTEMPTS'			=> $this->config['contactadmin_max_attempts'],
 			'CONTACT_FOUNDER'				=> $this->config['contactadmin_founder_only'],
+			'CONTACT_USERNAME_CHK'			=> $this->config['contactadmin_username_chk'],
+			'CONTACT_EMAIL_CHK'				=> $this->config['contactadmin_email_chk'],
+
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
 			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->language->lang('CONTACT_METHOD_EXPLAIN') : $this->language->lang('FORUM_EMAIL_INACTIVE'),
 			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->language->lang('CONTACT_ATTACHMENTS_EXPLAIN') : $this->language->lang('NO_FORUM_ATTACHMENTS'),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
 			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
-			'CONTACT_BOT_USER'				=> $this->contactadmin->bot_user_select($this->config['contactadmin_bot_user']),
-			'CONTACT_USERNAME_CHK'			=> $this->config['contactadmin_username_chk'],
-			'CONTACT_EMAIL_CHK'				=> $this->config['contactadmin_email_chk'],
+
+			'CONTACT_BOT_MAX_ID'			=> $bot_max_id,
+			'CONTACT_BOT_USER'				=> $this->request->variable('contact_bot_user', $this->config['contactadmin_bot_user']),
+			'CONTACT_BOT_USER_LINK'			=> $user_link,
 
 			'CONTACT_INFO'					=> $contact_admin_edit['text'],
 			'CONTACT_INFO_PREVIEW'			=> $contact_admin_info_preview,
@@ -254,6 +288,53 @@ class admin_controller
 		$this->config->set('contactadmin_username_chk', $this->request->variable('username_chk', 0));
 		$this->config->set('contactadmin_email_chk', $this->request->variable('email_chk', 0));
 		$this->config->set('contactadmin_method', $this->request->variable('contact_method', 0));
+	}
+
+	/**
+	* bot_user_info
+	*
+	* @param user_id				user id
+	* @return array					array of user info or error if not found
+	* @access private
+	*/
+	private function bot_user_info($user_id)
+	{
+		$bot_user_info = [];
+
+		$sql = 'SELECT user_id, username
+			FROM ' . USERS_TABLE . "
+			WHERE user_id = " . (int) $user_id;
+		$result = $this->db->sql_query($sql);
+		$bot_user_info = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		if (!isset($bot_user_info['username']))
+		{
+			$bot_user_info['error'] = $this->language->lang('CONTACT_NO_BOT_USER');
+		}
+
+		return $bot_user_info;
+	}
+
+	/**
+	* bot_max_id
+	*
+	* @return int				The maximum userid on the forum
+	* @access private
+	*/
+	private function bot_max_id()
+	{
+		$bot_max_id = '';
+		$ignored_users = [USER_IGNORE];
+
+		$sql = 'SELECT MAX(user_id) as max_id
+			FROM ' . USERS_TABLE . '
+			WHERE ' . $this->db->sql_in_set('user_type', $ignored_users, true);
+		$result = $this->db->sql_query($sql);
+		$bot_max_id = $this->db->sql_fetchfield('max_id');
+		$this->db->sql_freeresult($result);
+
+		return (int) $bot_max_id;
 	}
 
 	/*ensure we have admins that accept emails or pms to be sent via the board
