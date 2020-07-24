@@ -142,10 +142,6 @@ class main_controller
 		$this->language->add_lang(['ucp', 'posting']);
 		$this->language->add_lang('contact', 'rmcgirr83/contactadmin');
 
-		if (!$this->config['contactadmin_enable'])
-		{
-			throw new http_exception(503, 'CONTACT_DISABLED');
-		}
 		if ($this->user->data['is_bot'])
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
@@ -153,7 +149,6 @@ class main_controller
 
 		if (!$this->config['email_enable'] && in_array($this->config['contactadmin_method'], [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_BOARD_DEFAULT]))
 		{
-			$this->config->set('contactadmin_enable', 0);
 
 			// add an entry into the error log
 			$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_EMAIL_INVALID',  time());

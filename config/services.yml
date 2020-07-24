@@ -41,6 +41,7 @@ services:
         arguments:
             - '@config'
             - '@controller.helper'
+            - '@language'
             - '@template'
             - '@user'
         tags:

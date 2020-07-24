@@ -168,9 +168,6 @@ class contactadmin
 					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('FORUM'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the error log
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), [$forum_id, $row]);
 
@@ -181,9 +178,6 @@ class contactadmin
 				}
 				else if (!$row)
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the error log
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_FORUM_INVALID',  time(), [$forum_id, $row]);
 
@@ -213,9 +207,6 @@ class contactadmin
 					$email_message = $this->language->lang('CONTACT_BOT_MESSAGE', $this->user->data['username'], $this->config['sitename'], $this->language->lang('USER'), $server_url);
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), [$bot_id, $row]);
 
@@ -226,9 +217,6 @@ class contactadmin
 				}
 				else if (!$row)
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_BOT_INVALID',  time(), [$bot_id, $row]);
 
@@ -261,9 +249,6 @@ class contactadmin
 
 					$this->contact_send_email($email_template, $email_message);
 
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), [$error]);
 
@@ -274,9 +259,6 @@ class contactadmin
 				}
 				else
 				{
-					// disable the extension
-					$this->config->set('contactadmin_enable', 0);
-
 					// add an entry into the log error table
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_CONTACT_NONE',  time(), [$error]);
 
