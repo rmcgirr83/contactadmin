@@ -29,7 +29,6 @@ services:
             - '@log'
             - '@request'
             - '@template'
-            - '@text_formatter.s9e.utils'
             - '@user'
             - '@rmcgirr83.contactadmin.core'
             - '@captcha.factory'

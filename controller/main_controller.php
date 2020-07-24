@@ -19,7 +19,6 @@ use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\request\request;
 use phpbb\template\template;
-use phpbb\textformatter\s9e\utils as utils;
 use phpbb\user;
 use rmcgirr83\contactadmin\core\contactadmin as contactadmin;
 use phpbb\captcha\factory as captcha_factory;
@@ -61,9 +60,6 @@ class main_controller
 	/** @var template */
 	protected $template;
 
-	/** @var utils */
-	protected $utils;
-
 	/** @var user */
 	protected $user;
 
@@ -90,7 +86,6 @@ class main_controller
 			log $log,
 			request $request,
 			template $template,
-			utils $utils,
 			user $user,
 			contactadmin $contactadmin,
 			captcha_factory $captcha_factory,
@@ -107,24 +102,11 @@ class main_controller
 		$this->log = $log;
 		$this->request = $request;
 		$this->template = $template;
-		$this->utils = $utils;
 		$this->user = $user;
 		$this->contactadmin = $contactadmin;
 		$this->captcha_factory = $captcha_factory;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-
-		$this->contact_reasons = $this->config_text->get_array(['contactadmin_reasons']);
-
-		//convert the reasons string into an array
-		if (!empty($this->contact_reasons['contactadmin_reasons']))
-		{
-			$this->contact_reasons = explode("\n",$this->contact_reasons['contactadmin_reasons']);
-		}
-		else
-		{
-			$this->contact_reasons = [];
-		}
 
 		if (!class_exists('messenger'))
 		{
@@ -141,6 +123,19 @@ class main_controller
 	{
 		$this->language->add_lang(['ucp', 'posting']);
 		$this->language->add_lang('contact', 'rmcgirr83/contactadmin');
+
+		// move this from the constructor so the query isn't run on every page
+		$contact_reasons = $this->config_text->get_array(['contactadmin_reasons']);
+
+		//convert the reasons string into an array
+		if (!empty($contact_reasons['contactadmin_reasons']))
+		{
+			$contact_reasons = explode("\n",$contact_reasons['contactadmin_reasons']);
+		}
+		else
+		{
+			$contact_reasons = [];
+		}
 
 		if ($this->user->data['is_bot'])
 		{
@@ -442,8 +437,9 @@ class main_controller
 					default:
 
 						// Send using email (default)..first remove all bbcodes
+						$bbcode_remove = '#\[/?[^\[\]]+\]#';
 						$message = censor_text($data['contact_message']);
-						$message = $this->utils->clean_formatting($message);
+						$message = preg_replace($bbcode_remove, '', $message);
 						$message = htmlspecialchars_decode($message);
 
 						// Some of the code borrowed from includes/ucp/ucp_register.php
@@ -459,12 +455,11 @@ class main_controller
 						$contact_name = htmlspecialchars_decode($this->config['board_contact_name']);
 						$board_contact = (($contact_name !== '') ? '"' . mail_encode($contact_name) . '" ' : '') . '<' . $this->config['board_contact'] . '>';
 
-						$size = count($contact_users);
-
 						// build an array of all lang directories for the extension and check to make sure we have the lang available that is being chosen
 						// if the lang isn't present then errors will present themselves due to no email template found
 						$dir_array = $this->contactadmin->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
 
+						$size = count($contact_users);
 						// Loop through our list of users
 						for ($i = 0; $i < $size; $i++)
 						{
@@ -582,7 +577,7 @@ class main_controller
 		$this->template->assign_vars([
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
-			'CONTACT_REASONS'	=> $this->contactadmin->contact_make_select($this->contact_reasons, $data['contact_reason']),
+			'CONTACT_REASONS'	=> $this->contactadmin->contact_make_select($contact_reasons, $data['contact_reason']),
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
 			'CONTACT_INFO'		=> $l_admin_info,
