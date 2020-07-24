@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Contact admin extension for the phpBB Forum Software package.
+* Contact Admin extension for the phpBB Forum Software package.
 *
 * @copyright 2020 Rich McGirr (RMcGirr83)
 * @license GNU General Public License, version 2 (GPL-2.0)
@@ -27,13 +27,7 @@ class m1_update_data extends \phpbb\db\migration\migration
 			// Update config entry
 			array('config.update', array('contactadmin_enable', true)),
 			array('config.update', array('contactadmin_confirm', true)),
-		);
-	}
-
-	public function revert_data()
-	{
-		return array(
-			array('config.update', array('contact_admin_form_enable', true)),
+			array('config.update', array('contact_admin_form_enable', false)),
 		);
 	}
 }
