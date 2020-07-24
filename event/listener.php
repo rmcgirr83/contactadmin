@@ -133,7 +133,10 @@ class listener implements EventSubscriberInterface
 		}
 
 		//always ensure the default contact page is disabled if this extension is enabled
-		$this->config->set('contact_admin_form_enable', 0);
+		if ($this->config['contact_admin_form_enable'])
+		{
+			$this->config->set('contact_admin_form_enable', 0);
+		}
 	}
 
 	/**
