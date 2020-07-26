@@ -13,13 +13,13 @@ class contactadmin_info
 {
 	function module()
 	{
-		return array(
+		return [
 			'filename'	=> '\rmcgirr83\contactadmin\acp\contactadmin_module',
 			'title'		=> 'ACP_CAT_CONTACTADMIN',
 			'version'	=> '1.0.0',
-			'modes'	=> array(
-				'configuration'	=> array('title' => 'ACP_CONTACTADMIN_CONFIG', 'auth' => 'ext_rmcgirr83/contactadmin && acl_a_board', 'cat' => array('ACP_CAT_CONTACTADMIN')),
-			),
-		);
+			'modes'	=> [
+				'configuration'	=> ['title' => 'ACP_CONTACTADMIN_CONFIG', 'auth' => 'ext_rmcgirr83/contactadmin && acl_a_board', 'cat' => array('ACP_CAT_CONTACTADMIN')],
+			],
+		];
 	}
 }

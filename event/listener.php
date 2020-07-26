@@ -73,14 +73,14 @@ class listener implements EventSubscriberInterface
 	*/
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.acp_extensions_run_action_before'	=> 'enable_default_contact',
 			'core.adm_page_footer'		=> 'extension_enabled',
 			'core.page_header_after'	=> 'page_header_after',
 			'core.user_setup'			=> 'user_setup',
 			'core.login_box_failed'		=> 'login_box_failed',
 			'core.ucp_register_modify_template_data'	=> 'contact_form_register',
-		);
+		];
 	}
 
 	/**
@@ -111,9 +111,9 @@ class listener implements EventSubscriberInterface
 	public function extension_enabled($event)
 	{
 		$this->language->add_lang('acp_contact', 'rmcgirr83/contactadmin');
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'L_CONTACT_US_ENABLE_EXPLAIN'	=> $this->language->lang('CONTACT_EXTENSION_ACTIVE'),
-		));
+		]);
 	}
 
 	/**
@@ -152,11 +152,11 @@ class listener implements EventSubscriberInterface
 		{
 			$version = phpbb_version_compare($this->config['version'], '3.2.0-b2', '>=');
 
-			$this->template->assign_vars(array(
+			$this->template->assign_vars([
 				'U_CONTACT_US'		=> false,
 				'U_CONTACTADMIN'	=> $this->helper->route('rmcgirr83_contactadmin_displayform'),
 				'S_FORUM_VERSION'	=> $version,
-			));
+			]);
 		}
 	}
 
@@ -187,8 +187,8 @@ class listener implements EventSubscriberInterface
 	*/
 	public function contact_form_register($event)
 	{
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'L_CONFIRM_EXPLAIN' => $this->language->lang('CONFIRM_EXPLAIN', '<a href="' . $this->helper->route('rmcgirr83_contactadmin_displayform') . '">', '</a>'),
-		));
+		]);
 	}
 }

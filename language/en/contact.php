@@ -17,7 +17,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -36,7 +36,7 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ACP_CAT_CONTACTADMIN'		=> 'Contact Admin',
 	'ADD_ATTACHMENT_EXPLAIN'	=> 'If you wish to attach a file enter the details below.',
 	'CONTACT_ERROR'			=> 'You can’t use the contact form at the moment because there is an error in the configuration.  An email has been sent to the founder.',
@@ -66,4 +66,4 @@ $lang = array_merge($lang, array(
 	'CONTACT_GUEST'				=> 'Guest User',
 
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
-));
+]);

@@ -512,15 +512,15 @@ class contactadmin
 		{
 			if (!isset($bot_user_info['username']))
 			{
-				$json = new JsonResponse(array(
+				$json = new JsonResponse([
 					'error'     => true,
-				));
+				]);
 			}
 			else
 			{
-				$json = new JsonResponse(array(
+				$json = new JsonResponse([
 					'user_link'     => '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_user_info['user_id']) . '" target="_blank">' . $bot_user_info['username'] . '</a>',
-				));
+				]);
 			}
 			return $json;
 		}
