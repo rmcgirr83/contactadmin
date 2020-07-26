@@ -270,7 +270,7 @@ class admin_controller
 			'S_BBCODE_FLASH'		=> true,
 			'S_LINKS_ALLOWED'		=> true,
 
-			'AJAX_USER_LINK'		=> $this->helper->route('rmcgirr83_contactadmin_botuserinfo', array('user_id' => 'USER_ID')),
+			'AJAX_USER_LINK'		=> $this->helper->route('rmcgirr83_contactadmin_botuserinfo', ['user_id' => 'USER_ID']),
 
 			'U_ACTION'				=> $this->u_action,
 		]);

@@ -18,7 +18,7 @@ class contactadmin_info
 			'title'		=> 'ACP_CAT_CONTACTADMIN',
 			'version'	=> '1.0.0',
 			'modes'	=> [
-				'configuration'	=> ['title' => 'ACP_CONTACTADMIN_CONFIG', 'auth' => 'ext_rmcgirr83/contactadmin && acl_a_board', 'cat' => array('ACP_CAT_CONTACTADMIN')],
+				'configuration'	=> ['title' => 'ACP_CONTACTADMIN_CONFIG', 'auth' => 'ext_rmcgirr83/contactadmin && acl_a_board', 'cat' => ['ACP_CAT_CONTACTADMIN']],
 			],
 		];
 	}
