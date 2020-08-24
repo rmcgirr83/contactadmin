@@ -1,23 +1,23 @@
-{% if AJAX_USER_LINK %}
+{% if AJAX_BOT_USER_INFO %}
 <script>
-var AJAX_USER_LINK = "{{ AJAX_USER_LINK }}";
+var AJAX_BOT_USER_INFO = "{{ AJAX_BOT_USER_INFO|escape('js') }}";
 var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
 (function($) { // Avoid conflicts with other libraries
 	'use strict';
 	$("#contact_bot_user").change(function () {
-		var userId = $(this).val();
+		var user_id = $(this).val();
         $.ajax({
-            url: AJAX_USER_LINK.replace("USER_ID", userId),
+            url: AJAX_BOT_USER_INFO.replace(/\_bot_info\/[0-9]*/g, "_bot_info/" + user_id),
 			dataType: 'text',
 			success: function(data){
 				var json = $.parseJSON(data);
 				if (json.error)
 				{
-					$('#user_link').html(''+ERROR+'').show();
+					$('#bot_user_link').html(''+ERROR+'').show();
 				}
 				else
 				{
-					$('#user_link').html(''+json.user_link+'').show();
+					$('#bot_user_link').html(''+json.user_link+'').show();
 				}
 			}
 		});

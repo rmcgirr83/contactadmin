@@ -52,5 +52,5 @@ $lang = array_merge($lang, [
 	'BUY_ME_A_BEER_URL'         => 'https://paypal.me/RMcGirr83',
 	'BUY_ME_A_BEER'				=> 'Buy me a beer for creating this extension',
 	'BUY ME A BEER_SHORT'		=> 'Make a donation for this extension',
-	'BUY ME A BEER_EXPLAIN'		=> 'This extension is completely free. It is a project that I’m spending my time on for the enjoyment and use of the phpBB community. If you enjoy using this extension, or if it has benefited your forum, please consider %1$sbuying me a beer%2$s. It would be greatly appreciated. <i class="fa fa-smile-o" style="color:green;font-size:1.5em;" aria-hidden="true"></i>',
+	'BUY ME A BEER_EXPLAIN'		=> 'This extension is completely free. It is a project that I spend my time on for the enjoyment and use of the phpBB community. If you enjoy using this extension, or if it has benefited your forum, please consider %1$sbuying me a beer%2$s. It would be greatly appreciated. <i class="fa fa-smile-o" style="color:green;font-size:1.5em;" aria-hidden="true"></i>',
 ]);
