@@ -66,9 +66,9 @@ $lang = array_merge($lang, [
 	'CONTACT_BOT_USER_EXPLAIN'		=> 'Select the user that messages will be posted under if the contact method is set to “Private Message” or “Forum Post”.',
 	'CONTACT_NO_BOT_USER'			=> '<b>The contact bot user id chosen does not exist</b>',
 	'CONTACT_USERNAME_CHK'			=> 'Check Username',
-	'CONTACT_USERNAME_CHK_EXPLAIN'	=> 'If set yes, the users name that is entered will be checked against those in the database. If a similar name is found the user will be presented with an error and asked to input a different user name.',
+	'CONTACT_USERNAME_CHK_EXPLAIN'	=> 'If set yes, the user’s name that is entered will be checked against those in the database. If the name is found the user will be presented with an error and asked to input a different user name.',
 	'CONTACT_EMAIL_CHK'				=> 'Check Email',
-	'CONTACT_EMAIL_CHK_EXPLAIN'		=> 'If set yes, the users email will be checked against those in the database. If a similar email is found the user will be presented with an error and asked to input a different email address.',
+	'CONTACT_EMAIL_CHK_EXPLAIN'		=> 'If set yes, the user’s email address will be checked against those in the database. If the email address is found the user will be presented with an error and asked to input a different email address.',
 
 	// Contact methods
 	'CONTACT_METHOD_EMAIL'			=> 'Email',

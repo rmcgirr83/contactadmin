@@ -325,6 +325,9 @@ class main_controller
 
 				$message_parser->message = $contact_message;
 
+				// Grab md5 'checksum' of new message
+				$message_md5 = md5($message_parser->message);
+
 				if (count($message_parser->warn_msg))
 				{
 					$error[] = implode('<br />', $message_parser->warn_msg);
@@ -360,7 +363,7 @@ class main_controller
 					case contact_constants::CONTACT_METHOD_PM:
 						if (!function_exists('submit_pm'))
 						{
-							include_once($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
+							include($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
 						}
 						$pm_data = [
 							'from_user_id'		=> (int) $this->user->data['user_id'],

@@ -95,7 +95,7 @@ class listener implements EventSubscriberInterface
 		$action = $event['action'];
 		$ext_name = $event['ext_name'];
 
-		if ($action = 'disable' && $ext_name = 'rmcgirr83/contactadmin')
+		if ($action == 'disable' && $ext_name == 'rmcgirr83/contactadmin')
 		{
 			$this->config->set('contact_admin_form_enable', true);
 		}

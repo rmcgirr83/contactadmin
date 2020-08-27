@@ -113,11 +113,6 @@ class admin_controller
 		$this->contactadmin = $contactadmin;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-
-		if (!function_exists('display_custom_bbcodes'))
-		{
-			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
-		}
 	}
 
 	public function display_options()
@@ -274,6 +269,11 @@ class admin_controller
 
 			'U_ACTION'				=> $this->u_action,
 		]);
+
+		if (!function_exists('display_custom_bbcodes'))
+		{
+			include($this->root_path . 'includes/functions_display.' . $this->php_ext);
+		}
 		// Assigning custom bbcodes
 		display_custom_bbcodes();
 	}
