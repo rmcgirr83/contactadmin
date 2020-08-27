@@ -248,7 +248,6 @@ class admin_controller
 
 			'L_CONTACT_METHOD_EXPLAIN'		=> $this->config['email_enable'] ? $this->language->lang('CONTACT_METHOD_EXPLAIN') : $this->language->lang('FORUM_EMAIL_INACTIVE'),
 			'L_CONTACT_ATTACHMENTS_EXPLAIN'	=> $this->config['allow_attachments'] ? $this->language->lang('CONTACT_ATTACHMENTS_EXPLAIN') : $this->language->lang('NO_FORUM_ATTACHMENTS'),
-			'L_BUY_ME_A_BEER_EXPLAIN'		=> $this->language->lang('BUY ME A BEER_EXPLAIN', '<a href="' . $this->language->lang('BUY_ME_A_BEER_URL') . '" target="_blank" rel=”noreferrer noopener”>', '</a>'),
 
 			'BBCODE_STATUS'			=> $this->language->lang('BBCODE_IS_ON', '<a href="' . append_sid("{$this->root_path}faq.$this->php_ext", 'mode=bbcode') . '">', '</a>'),
 			'SMILIES_STATUS'		=> $this->language->lang('SMILIES_ARE_ON'),
