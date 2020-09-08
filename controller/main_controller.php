@@ -254,7 +254,7 @@ class main_controller
 			}
 
 			// confirm emails match
-			if ($data['email'] != $data['email_confirm'])
+			if (strtolower($data['email']) != strtolower($data['email_confirm']))
 			{
 				$error[] = $this->language->lang('WRONG_DATA_EMAIL');
 			}
