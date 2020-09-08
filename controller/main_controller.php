@@ -107,11 +107,6 @@ class main_controller
 		$this->captcha_factory = $captcha_factory;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-
-		if (!class_exists('messenger'))
-		{
-			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
-		}
 	}
 
 	/**
@@ -177,6 +172,7 @@ class main_controller
 		$data = [
 			'username'			=> ($this->user->data['user_id'] != ANONYMOUS) ?  $this->user->data['username'] : $this->request->variable('username', '', true),
 			'email'				=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['user_email'] : strtolower($this->request->variable('email', '')),
+			'email_confirm'		=> ($this->user->data['user_id'] != ANONYMOUS) ? $this->user->data['user_email'] : strtolower($this->request->variable('email_confirm', '')),
 			'contact_reason'	=> $this->request->variable('contact_reason', '', true),
 			'contact_subject'	=> $this->request->variable('contact_subject', '', true),
 			'contact_message'	=> $this->request->variable('message', '', true),
@@ -194,13 +190,21 @@ class main_controller
 		if ($this->request->is_set_post('submit'))
 		{
 			$error = [];
+
+			// check form
+			if (!check_form_key('contactadmin'))
+			{
+				$error[] = $this->language->lang('FORM_INVALID');
+			}
+
+			if (!function_exists('validate_data'))
+			{
+				include($this->root_path . 'includes/functions_user.' . $this->php_ext);
+			}
+
 			// let's check our inputs against the database..but only for unregistered user and only if so set in ACP
 			if (!$this->user->data['is_registered'] && ($this->config['contactadmin_username_chk'] || $this->config['contactadmin_email_chk']))
 			{
-				if (!function_exists('validate_data'))
-				{
-					include($this->root_path . 'includes/functions_user.' . $this->php_ext);
-				}
 				if ($this->config['contactadmin_username_chk'] && $this->config['contactadmin_email_chk'])
 				{
 					$error = validate_data($data, [
@@ -229,22 +233,30 @@ class main_controller
 					]);
 				}
 			}
+
+			// always check email addresses for validity but only if setting in ACP isn't set
+			if (!$this->config['contactadmin_email_check'])
+			{
+				$validate_email = phpbb_validate_email($data['email']);
+				if ($validate_email)
+				{
+					$error[] = $validate_email . '_EMAIL';
+				}
+			}
+
+			// Replace "error" strings with their real, localised form
+			$error = array_map(array($this->language, 'lang'), $error);
+
 			// always check for a username
 			if (utf8_clean_string($data['username']) === '' && !$this->config['contactadmin_username_chk'])
 			{
 				$error[] = $this->language->lang('CONTACT_NO_NAME');
 			}
 
-			// always check our email addresses
-			if (!preg_match('/^' . get_preg_expression('email') . '$/i', $data['email']) && !$this->config['contactadmin_email_chk'])
+			// confirm emails match
+			if ($data['email'] != $data['email_confirm'])
 			{
-				$error[] = $this->language->lang('EMAIL_INVALID_EMAIL');
-			}
-
-			// check form
-			if (!check_form_key('contactadmin'))
-			{
-				$error[] = $this->language->lang('FORM_INVALID');
+				$error[] = $this->language->lang('WRONG_DATA_EMAIL');
 			}
 
 			// Validate message and subject
@@ -253,6 +265,13 @@ class main_controller
 				$error[] = $this->language->lang('CONTACT_NO_SUBJ');
 			}
 
+			// must have a valid reason if reasons are set
+			if (!empty($contact_reasons) && $data['contact_reason'] == $this->language->lang('REASON_EXPLAIN'))
+			{
+				$error[] = $this->language->lang('REASON_ERROR');
+			}
+
+			// ensure we have a message
 			if (utf8_clean_string($data['contact_message']) === '')
 			{
 				$error[] = $this->language->lang('CONTACT_NO_MSG');
@@ -445,6 +464,10 @@ class main_controller
 						$message = preg_replace($bbcode_remove, '', $message);
 						$message = htmlspecialchars_decode($message);
 
+						if (!class_exists('messenger'))
+						{
+							include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+						}
 						// Some of the code borrowed from includes/ucp/ucp_register.php
 						// The first argument of messenger::messenger() decides if it uses the message queue (which we will not)
 						$messenger = new \messenger(false);
@@ -580,6 +603,7 @@ class main_controller
 		$this->template->assign_vars([
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
+			'EMAIL_CONFIRM'		=> isset($data['email_confirm']) ? $data['email_confirm'] : '',
 			'CONTACT_REASONS'	=> $this->contactadmin->contact_make_select($contact_reasons, $data['contact_reason']),
 			'CONTACT_SUBJECT'	=> isset($data['contact_subject']) ? $data['contact_subject'] : '',
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',

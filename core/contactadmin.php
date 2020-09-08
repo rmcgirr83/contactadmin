@@ -75,11 +75,6 @@ class contactadmin
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
-
-		if (!class_exists('messenger'))
-		{
-			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
-		}
 	}
 
 	/**
@@ -283,6 +278,11 @@ class contactadmin
 		$dir_array = $this->dir_to_array($this->root_path .'ext/rmcgirr83/contactadmin/language');
 
 		$lang = (in_array($this->config['default_lang'], $dir_array)) ? $this->config['default_lang'] : 'en';
+
+		if (!class_exists('messenger'))
+		{
+			include($this->root_path . 'includes/functions_messenger.' . $this->php_ext);
+		}
 		// don't use the queue send the email immediately if not sooner
 		$messenger = new \messenger(false);
 
@@ -312,7 +312,7 @@ class contactadmin
 	 *
 	 * @param array 	$input_ary	an array of contact reasons
 	 * @param string	$selected	the chosen reason
-	 * @return string Select html
+	 * @return string 				Select html
 	 * for drop down reasons in the contact page
 	 */
 	public function contact_make_select($input_ary, $selected)
@@ -323,19 +323,18 @@ class contactadmin
 			return false;
 		}
 
-		// If selected isn't in the array, use first entry
-		if (!in_array($selected, $input_ary))
-		{
-			$selected = $input_ary[0];
-		}
+		// add a default entry asking for user to choose a reason
+		$default_reason[] = $this->language->lang('REASON_EXPLAIN');
+
+		$input_ary = array_merge($default_reason, $input_ary);
 
 		$select = '';
 		foreach ($input_ary as $item)
 		{
-			//$item = htmlspecialchars($item);
 			$item_selected = ($item == $selected) ? ' selected="selected"' : '';
 			$select .= '<option value="' . $item . '"' . $item_selected . '>' . $item . '</option>';
 		}
+
 		return $select;
 	}
 
@@ -368,6 +367,7 @@ class contactadmin
 
 		return $user_list;
 	}
+
 	/**
 	 * Create the selection for the contact method
 	 */
@@ -393,6 +393,7 @@ class contactadmin
 		$radio_ary = $radio_array;
 		return h_radio('contact_method', $radio_ary, $value, $key);
 	}
+
 	/**
 	 * Create the selection for the post method
 	 */
@@ -406,6 +407,7 @@ class contactadmin
 
 		return h_radio('contact_bot_poster', $radio_ary, $value, $key);
 	}
+
 	/**
 	 * Create the selection for the bot forum
 	 */
@@ -413,6 +415,7 @@ class contactadmin
 	{
 		return '<select id="contact_forum" name="forum">' . make_forum_select($value, false, true, true) . '</select>';
 	}
+
 	/**
 	 * Create the selection for the bot
 	 */
@@ -527,6 +530,7 @@ class contactadmin
 
 		return $bot_user_info;
 	}
+
 	/*
 	* Get an array that represents directory tree
 	*/

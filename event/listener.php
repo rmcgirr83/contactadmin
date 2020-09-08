@@ -150,7 +150,7 @@ class listener implements EventSubscriberInterface
 	{
 		if (!$this->user->data['is_bot'])
 		{
-			$version = phpbb_version_compare($this->config['version'], '3.2.0-b2', '>=');
+			$version = phpbb_version_compare($this->config['version'], '3.2.6', '>=');
 
 			$this->template->assign_vars([
 				'U_CONTACT_US'		=> false,
