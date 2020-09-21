@@ -552,9 +552,7 @@ class main_controller
 
 		if ($this->config['contactadmin_confirm'] && !$captcha->is_solved())
 		{
-			$this->template->assign_vars([
-				'CAPTCHA_TEMPLATE'		=> $captcha->get_template(),
-			]);
+			$this->template->assign_var('CONTACT_ADMIN_CAPTCHA_TEMPLATE', $captcha->get_template());
 		}
 
 		$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off') ? false : ' enctype="multipart/form-data"';
