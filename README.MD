@@ -3,7 +3,7 @@ Contact Admin
 
 phpBB extension that allows guests and/or registered users to either send an email to admins or to either send a PM or make a Post in a designated forum. It also overrides the default contact admin link found on the forum.  A port of the phpBB 3.0.x mod “Contact Board Adminnistration”
 
-[![Build Status](https://travis-ci.org/rmcgirr83/contactadmin.svg?branch=master)](https://travis-ci.org/rmcgirr83/contactadmin)
+[![Build Status](https://travis-ci.com/rmcgirr83/contactadmin.svg?branch=master)](https://travis-ci.com/rmcgirr83/contactadmin)
 ## Installation
 
 ### 1. clone
