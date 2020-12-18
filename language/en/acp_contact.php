@@ -83,4 +83,6 @@ $lang = array_merge($lang, [
 
 	// Overwrite the default contact page lang
 	'CONTACT_EXTENSION_ACTIVE'	=> '<span style="color:red;">The settings here will not matter as you currently have the contact admin extension enabled. You will not be able to set this to enabled without first disabling the extension</span>',
+	'CONTACT_GDPR'	=> 'GDPR',
+	'CONTACT_GDPR_EXPLAIN' => 'If set yes, the user will be presented with a check box to acknowledge the boards privacy policy. The box must be checked for the contact form to be submitted.',
 ]);

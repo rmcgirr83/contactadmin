@@ -89,6 +89,12 @@
 			<dd><input type="text" id="max_attempts" name="max_attempts" size="10" value="{{ CONTACT_MAX_ATTEMPTS }}" /></dd>
 		</dl>
 		<dl>
+			<dt><label for="gdpr">{{ lang('CONTACT_GDPR') }}{{ lang('COLON') }}</label><br>
+			<span>{{ lang('CONTACT_GDPR_EXPLAIN') }}</span></dt>
+			<dd><label><input type="radio" class="radio" name="gdpr" value="1" {% if CONTACT_GDPR %}id="gdpr" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+			<label><input type="radio" class="radio" name="gdpr" value="0" {% if not CONTACT_GDPR %}id="gdpr" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+		</dl>
+		<dl>
 			<dt><label for="attach_allowed">{{ lang('CONTACT_ATTACHMENTS') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ATTACHMENTS_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" {% if CONTACT_ATTACHMENTS %}id="attach_allowed" checked="checked"{% endif %} /> {{ lang('YES') }}</label>

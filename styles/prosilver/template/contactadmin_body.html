@@ -52,6 +52,22 @@
 		</fieldset>
 	</div>
 </div>
+
+{% if S_CONTACT_GDPR %}
+<div class="panel bg1">
+	<div class="inner">
+		<fieldset class="fields2" id="gdpr">
+			<dl>
+				<dt><label for="gdpr">{{ lang('CONTACT_PRIVACYPOLICY') }}{{ lang('COLON') }}</label></dt>
+				<dd>
+					<input type="checkbox" class="radio" name="gdpr" id="gdpr" /><span>{{ lang('CONTACT_PRIVACYPOLICY_EXPLAIN') }}</span>
+				</dd>
+			</dl>
+		</fieldset>
+	</div>
+</div>
+{% endif %}
+
 {% if CONTACT_ADMIN_CAPTCHA_TEMPLATE %}
 <div class="panel captcha-panel">
 	<div class="inner">
@@ -84,6 +100,7 @@
 	</div>
 </div>
 {% endif %}
+
 
 <div class="panel bg2">
 	<div class="inner">
