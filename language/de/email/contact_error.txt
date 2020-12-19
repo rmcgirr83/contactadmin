@@ -1,0 +1,5 @@
+Betreff: {{ SUBJECT }}
+
+{{ MESSAGE }}
+
+{{ EMAIL_SIG }}

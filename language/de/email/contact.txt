@@ -1,0 +1,12 @@
+Betreff: {{ SUBJECT }}
+
+Hallo {{ ADM_USERNAME }},
+
+jemand mit dem Namen „{{ USERNAME }}“ und der E-Mail-Adresse „{{ USER_EMAIL }}“ sowie der IP-Adresse „{{ USER_IP }}“ hat am „{{ DATE }}“ die folgende Nachricht:
+
+{{ MESSAGE }}
+
+mit Hilfe des Kontaktformulars auf „{{ SITENAME }}“ gesendet.
+
+
+{{ EMAIL_SIG }}
