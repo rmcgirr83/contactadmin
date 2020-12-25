@@ -1,7 +1,9 @@
-Contact Admin
+# ![Contact Admin](https://imattpro.github.io/logo/search.png "Contact Admin") Contact Admin for phpBB3
 =========================
 
-phpBB extension that allows guests and/or registered users to either send an email to admins or to either send a PM or make a Post in a designated forum. It also overrides the default contact admin link found on the forum.  A port of the phpBB 3.0.x mod “Contact Board Adminnistration”
+phpBB extension that allows guests and/or registered users to either send an email to admins or to either send a PM or make a Post in a designated forum. It also overrides the default contact admin link found on the forum.  A port of the phpBB 3.0.x mod “Contact Board Administration”
+
+[![Build Status](https://github.com/rmcgirr83/contactadmin/workflows/Tests/badge.svg)](https://github.com/rmcgirr83/contactadmin/actions)
 
 ## Installation
 
