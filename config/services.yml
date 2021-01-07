@@ -1,3 +1,5 @@
+imports:
+    - {resource: contact_constants.yml}
 services:
     rmcgirr83.contactadmin.admin.controller:
         class: rmcgirr83\contactadmin\controller\admin_controller
@@ -15,6 +17,7 @@ services:
             - '@rmcgirr83.contactadmin.core'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%contact_constants%'
 
     rmcgirr83.contactadmin.main.controller:
         class: rmcgirr83\contactadmin\controller\main_controller
@@ -34,6 +37,7 @@ services:
             - '@captcha.factory'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%contact_constants%'
 
     rmcgirr83.contactadmin.listener:
         class: rmcgirr83\contactadmin\event\listener
@@ -59,6 +63,7 @@ services:
             - '@user'
             - '%core.root_path%'
             - '%core.php_ext%'
+            - '%contact_constants%'
 
     rmcgirr83.contactadmin.contact_constants:
         class: rmcgirr83\contactadmin\core\contact_constants

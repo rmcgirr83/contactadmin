@@ -44,21 +44,21 @@ class m2_update_data extends \phpbb\db\migration\migration
 
 	public function disable_module()
 	{
-		$sql = 'UPDATE ' . MODULES_TABLE . '
+		$sql = 'UPDATE ' . MODULES_TABLE . "
 			SET module_enabled = 0
-			WHERE module_class = "acp"
-				AND module_basename = "acp_contact"
-				AND module_mode = "contact"';
+			WHERE module_class = 'acp'
+				AND module_basename = 'acp_contact'
+				AND module_mode = 'contact'";
 		$this->sql_query($sql);
 	}
 
 	public function enable_module()
 	{
-		$sql = 'UPDATE ' . MODULES_TABLE . '
+		$sql = 'UPDATE ' . MODULES_TABLE . "
 			SET module_enabled = 1
-			WHERE module_class = "acp"
-				AND module_basename = "acp_contact"
-				AND module_mode = "contact"';
+			WHERE module_class = 'acp'
+				AND module_basename = 'acp_contact'
+				AND module_mode = 'contact'";
 		$this->sql_query($sql);
 	}
 }

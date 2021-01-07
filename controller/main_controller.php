@@ -605,6 +605,7 @@ class main_controller
 		}
 
 		$privacy_policy_url = generate_board_url() . '/ucp.' . $this->php_ext . '?mode=privacy';
+
 		$this->template->assign_vars([
 			'USERNAME'			=> isset($data['username']) ? $data['username'] : '',
 			'EMAIL'				=> isset($data['email']) ? $data['email'] : '',
@@ -614,7 +615,7 @@ class main_controller
 			'CONTACT_MESSAGE'	=> isset($data['contact_message']) ? $data['contact_message'] : '',
 			'CONTACT_INFO'		=> $l_admin_info,
 
-			'L_CONTACT_PRIVACYPOLICY_EXPLAIN'	=> $this->language->lang('CONTACT_PRIVACYPOLICY_EXPLAIN', $privacy_policy_url),
+			'PRIVACY_POLICY_URL'	=> $privacy_policy_url,
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? $this->language->lang($this->config['allow_name_chars'] . '_EXPLAIN', $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->language->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 
 			'S_ATTACH_BOX'			=> ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL) ? false : $attachment_allowed,

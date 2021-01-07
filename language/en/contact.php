@@ -71,6 +71,6 @@ $lang = array_merge($lang, [
 	'REASON_ERROR'				=> 'Please choose an appropriate reason',
 	'RETURN_CONTACT'			=> '%sReturn to the contact page%s',
 	'CONTACT_PRIVACYPOLICY'				=> 'Privacy policy',
-	'CONTACT_PRIVACYPOLICY_EXPLAIN'		=> 'I confirm that the given name, e-mail address, message text and my IP address will be processed and stored by the owner of the board according to the <a target="_blank" title="Privacy policy link" href="%1$s">Privacy Policy</a>',
+	'CONTACT_PRIVACYPOLICY_EXPLAIN'		=> 'I confirm that the given name, e-mail address, message text and my IP address will be processed and stored by the owner of the board according to the <a target="_blank" title="Privacy policy link" href="%s">Privacy Policy</a>',
 	'CONTACT_PRIVACYPOLICY_ERROR'		=> 'Please check the privacy policy box. Without your confirmation you won’t able to send us a message.',
 ]);
