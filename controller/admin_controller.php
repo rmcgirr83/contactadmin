@@ -165,6 +165,11 @@ class admin_controller
 				$error[] = $this->language->lang('FORM_INVALID');
 			}
 
+			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]) && !$this->config['email_enable'])
+			{
+				$error[] = $this->language->lang('EMAIL_NOT_CONFIGURED');
+			}
+
 			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]))
 			{
 				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
