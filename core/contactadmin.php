@@ -10,15 +10,14 @@
 namespace rmcgirr83\contactadmin\core;
 
 use phpbb\auth\auth;
-use phpbb\cache\service as cache_service;
+use phpbb\cache\service as cache;
 use phpbb\config\config;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\language\language;
 use phpbb\log\log;
 use phpbb\request\request;
 use phpbb\user;
 use phpbb\exception\http_exception;
-use rmcgirr83\contactadmin\core\contact_constants as contact_constants;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class contactadmin
@@ -26,13 +25,13 @@ class contactadmin
 	/** @var auth */
 	protected $auth;
 
-	/** @var cache_service */
+	/** @var cache */
 	protected $cache;
 
 	/** @var config */
 	protected $config;
 
-	/** @var driver_interface */
+	/** @var db */
 	protected $db;
 
 	/** @var language */
@@ -47,23 +46,43 @@ class contactadmin
 	/** @var user */
 	protected $user;
 
-	/** @var string phpBB root path */
+	/** @var string root_path */
 	protected $root_path;
 
-	/** @var string phpEx */
+	/** @var string php_ext */
 	protected $php_ext;
 
+	/** @var array contact_constants */
+	protected $contact_constants;
+
+	/**
+	* Constructor
+	*
+	* @param auth						$auth					Auth object
+	* @param cache						$cache					Cache object
+	* @param config 					$config					Config object
+	* @param db							$db						Database object
+	* @param language					$language				Language object
+	* @param log						$log					Log object
+	* @param request					$request				Request object
+	* @param user						$user					User object
+	* @param string						$root_path				phpBB root path
+	* @param string						$php_ext				phpEx
+	* @param array						$contact_constants		constants for the extension
+	* @access public
+	*/
 	public function __construct(
 			auth $auth,
-			cache_service $cache,
+			cache $cache,
 			config $config,
-			driver_interface $db,
+			db $db,
 			language $language,
 			log $log,
 			request $request,
 			user $user,
-			$root_path,
-			$php_ext)
+			string $root_path,
+			string $php_ext,
+			array $contact_constants)
 	{
 		$this->auth = $auth;
 		$this->cache = $cache;
@@ -75,6 +94,7 @@ class contactadmin
 		$this->user = $user;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->contact_constants = $contact_constants;
 	}
 
 	/**
@@ -226,7 +246,7 @@ class contactadmin
 
 				//this is only called if there are no contact admins available
 				// for pm'ing or for emailing to per the preferences set by the admin user in their profiles
-				if ($method == contact_constants::CONTACT_METHOD_EMAIL)
+				if ($method == $this->contact_constants['CONTACT_METHOD_EMAIL'])
 				{
 					$error = $this->language->lang('EMAIL');
 				}
@@ -376,17 +396,17 @@ class contactadmin
 		if ($this->config['email_enable'])
 		{
 			$radio_ary = [
-				contact_constants::CONTACT_METHOD_EMAIL	=> 'CONTACT_METHOD_EMAIL',
-				contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
-				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
-				contact_constants::CONTACT_METHOD_BOARD_DEFAULT	=> 'CONTACT_METHOD_BOARD_DEFAULT',
+				$this->contact_constants['CONTACT_METHOD_EMAIL']	=> 'CONTACT_METHOD_EMAIL',
+				$this->contact_constants['CONTACT_METHOD_POST']		=> 'CONTACT_METHOD_POST',
+				$this->contact_constants['CONTACT_METHOD_PM']		=> 'CONTACT_METHOD_PM',
+				$this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']	=> 'CONTACT_METHOD_BOARD_DEFAULT',
 			];
 		}
 		else
 		{
 			$radio_ary = [
-				contact_constants::CONTACT_METHOD_POST	=> 'CONTACT_METHOD_POST',
-				contact_constants::CONTACT_METHOD_PM	=> 'CONTACT_METHOD_PM',
+				$this->contact_constants['CONTACT_METHOD_POST']	=> 'CONTACT_METHOD_POST',
+				$this->contact_constants['CONTACT_METHOD_PM']	=> 'CONTACT_METHOD_PM',
 			];
 		}
 
@@ -399,9 +419,9 @@ class contactadmin
 	public function poster_select($value, $key = '')
 	{
 		$radio_ary = [
-			contact_constants::CONTACT_POST_NEITHER	=> 'CONTACT_POST_NEITHER',
-			contact_constants::CONTACT_POST_GUEST	=> 'CONTACT_POST_GUEST',
-			contact_constants::CONTACT_POST_ALL		=> 'CONTACT_POST_ALL',
+			$this->contact_constants['CONTACT_POST_NEITHER']	=> 'CONTACT_POST_NEITHER',
+			$this->contact_constants['CONTACT_POST_GUEST']		=> 'CONTACT_POST_GUEST',
+			$this->contact_constants['CONTACT_POST_ALL']		=> 'CONTACT_POST_ALL',
 		];
 
 		return h_radio('contact_bot_poster', $radio_ary, $value, $key);
@@ -432,10 +452,10 @@ class contactadmin
 		$contact_users = [];
 
 		// board default email
-		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_BOARD_DEFAULT)
+		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT'])
 		{
 			$contact_users[] = [
-				'username'	=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
+				'username'		=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
 				'user_email'	=> $this->config['board_contact'],
 				'user_jabber'	=> '',
 				'user_lang'		=> $this->config['default_lang'],
@@ -456,11 +476,11 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
 
-			if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL && count($admin_ary))
+			if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'] && count($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
 			}
-			else if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM && count($admin_ary))
+			else if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'] && count($admin_ary))
 			{
 				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
 			}

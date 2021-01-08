@@ -13,7 +13,7 @@ use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\config\db_text;
 use phpbb\controller\helper;
-use phpbb\db\driver\driver_interface;
+use phpbb\db\driver\driver_interface as db;
 use phpbb\event\dispatcher_interface;
 use phpbb\language\language;
 use phpbb\log\log;
@@ -22,7 +22,6 @@ use phpbb\template\template;
 use phpbb\user;
 use rmcgirr83\contactadmin\core\contactadmin as contactadmin;
 use phpbb\captcha\factory as captcha_factory;
-use rmcgirr83\contactadmin\core\contact_constants;
 use phpbb\exception\http_exception;
 
 /**
@@ -37,12 +36,12 @@ class main_controller
 	protected $config;
 
 	/** @var db_text */
-	protected $config_text;
+	protected $db_text;
 
 	/** @var helper */
 	protected $helper;
 
-	/** @var driver_interface */
+	/** @var db */
 	protected $db;
 
 	/** @var dispatcher_interface */
@@ -69,18 +68,42 @@ class main_controller
 	/** @var captcha_factory */
 	protected $captcha_factory;
 
-	/** @var string phpBB root path */
+	/** @var string root_path */
 	protected $root_path;
 
-	/** @var string phpEx */
+	/** @var string php_ext */
 	protected $php_ext;
 
+	/** @var array contact_constants */
+	protected $contact_constants;
+
+	/**
+	* Constructor
+	*
+	* @param auth						$auth					Auth object
+	* @param config						$config					Config object
+	* @param db_text 					$db_text				Config text object
+	* @param helper						$helper					Controller helper object
+	* @param db							$db						Database object
+	* @param dispatcher_interface		$dispatcher_interface	Dispatcher interface object
+	* @param language					$language				Language object
+	* @param log						$log					Log object
+	* @param request					$request				Request object
+	* @param template					$template				Template object
+	* @param user						$user					User object
+	* @param contactadmin				$contactadmin			Methods for the extension
+	* @param captcha_factory			$captcha_factory		Captcha object
+	* @param string						$root_path				phpBB root path
+	* @param string						$php_ext				phpEx
+	* @param array						$contact_constants		constants for the extension
+	* @access public
+	*/
 	public function __construct(
 			auth $auth,
 			config $config,
-			db_text $config_text,
+			db_text $db_text,
 			helper $helper,
-			driver_interface $db,
+			db $db,
 			dispatcher_interface $dispatcher_interface,
 			language $language,
 			log $log,
@@ -89,12 +112,13 @@ class main_controller
 			user $user,
 			contactadmin $contactadmin,
 			captcha_factory $captcha_factory,
-			$root_path,
-			$php_ext)
+			string $root_path,
+			string $php_ext,
+			array $contact_constants)
 	{
 		$this->auth = $auth;
 		$this->config = $config;
-		$this->config_text = $config_text;
+		$this->db_text = $db_text;
 		$this->helper = $helper;
 		$this->db = $db;
 		$this->dispatcher = $dispatcher_interface;
@@ -107,6 +131,7 @@ class main_controller
 		$this->captcha_factory = $captcha_factory;
 		$this->root_path = $root_path;
 		$this->php_ext = $php_ext;
+		$this->contact_constants = $contact_constants;
 	}
 
 	/**
@@ -120,7 +145,7 @@ class main_controller
 		$this->language->add_lang('contact', 'rmcgirr83/contactadmin');
 
 		// move this from the constructor so the query isn't run on every page
-		$contact_reasons = $this->config_text->get_array(['contactadmin_reasons']);
+		$contact_reasons = $this->db_text->get_array(['contactadmin_reasons']);
 
 		//convert the reasons string into an array
 		if (!empty($contact_reasons['contactadmin_reasons']))
@@ -137,7 +162,7 @@ class main_controller
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		if (!$this->config['email_enable'] && in_array($this->config['contactadmin_method'], [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_BOARD_DEFAULT]))
+		if (!$this->config['email_enable'] && in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]))
 		{
 
 			// add an entry into the error log
@@ -150,13 +175,13 @@ class main_controller
 
 		// check to make sure the contact forum is legit for posting
 		// has to be able to accept posts
-		if ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_POST)
+		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_POST'])
 		{
 			// check to make sure forum is, ermmm, forum
 			// not link and not cat
 			$this->contactadmin->contact_check('contact_check_forum', $this->config['contactadmin_forum']);
 		}
-		else if (in_array($this->config['contactadmin_method'], [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_PM]))
+		else if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]))
 		{
 			// quick check to ensure our "bot" is good
 			$this->contactadmin->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user']);
@@ -184,7 +209,7 @@ class main_controller
 		if ($this->config['contactadmin_confirm'])
 		{
 			$captcha = $this->captcha_factory->get_instance($this->config['captcha_plugin']);
-			$captcha->init(contact_constants::CONFIRM_CONTACT);
+			$captcha->init($this->contact_constants['CONFIRM_CONTACT']);
 		}
 
 		if ($this->request->is_set_post('submit'))
@@ -298,7 +323,7 @@ class main_controller
 				}
 			}
 			// pretty up the user name..but only for non emails
-			if (in_array($this->config['contactadmin_method'], [contact_constants::CONTACT_METHOD_PM, contact_constants::CONTACT_METHOD_POST]))
+			if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_PM'], $this->contact_constants['CONTACT_METHOD_POST']]))
 			{
 				$url = generate_board_url() . '/memberlist.' . $this->php_ext . '?mode=viewprofile&u=' . $this->user->data['user_id'];
 				$color = $this->user->data['user_colour'] ? '[color=#' . $this->user->data['user_colour'] . ']' . $this->user->data['username'] . '[/color]' : $this->user->data['username'];
@@ -309,10 +334,10 @@ class main_controller
 				$user_name = $data['username'];
 			}
 
-			if (!in_array($this->config['contactadmin_method'], [contact_constants::CONTACT_METHOD_EMAIL, contact_constants::CONTACT_METHOD_BOARD_DEFAULT]))
+			if (!in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]))
 			{
 				// change the users stuff
-				if ($this->config['contactadmin_bot_poster'] == contact_constants::CONTACT_POST_ALL || ($this->config['contactadmin_bot_poster'] == contact_constants::CONTACT_POST_GUEST && !$this->user->data['is_registered']))
+				if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && !$this->user->data['is_registered']))
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
 				}
@@ -326,7 +351,7 @@ class main_controller
 				}
 				$message_parser = new \parse_message();
 				// Parse Attachments - before checksum is calculated
-				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_PM)
+				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_PM'])
 				{
 					$message_parser->parse_attachments('fileupload', 'post', $this->config['contactadmin_forum'], true, false, false);
 				}
@@ -375,7 +400,7 @@ class main_controller
 			// no errors, let's proceed
 			if (!sizeof($error))
 			{
-				if ($this->config['contactadmin_method'] != contact_constants::CONTACT_METHOD_POST)
+				if ($this->config['contactadmin_method'] != $this->contact_constants['CONTACT_METHOD_POST'])
 				{
 					$contact_users = $this->contactadmin->admin_array();
 				}
@@ -385,7 +410,7 @@ class main_controller
 
 				switch ($this->config['contactadmin_method'])
 				{
-					case contact_constants::CONTACT_METHOD_PM:
+					case $this->contact_constants['CONTACT_METHOD_PM']:
 						if (!function_exists('submit_pm'))
 						{
 							include($this->root_path . 'includes/functions_privmsgs.' . $this->php_ext);
@@ -416,7 +441,7 @@ class main_controller
 
 					break;
 
-					case contact_constants::CONTACT_METHOD_POST:
+					case $this->contact_constants['CONTACT_METHOD_POST']:
 
 						$sql = 'SELECT forum_name
 							FROM ' . FORUMS_TABLE . '
@@ -461,7 +486,7 @@ class main_controller
 
 					break;
 
-					case contact_constants::CONTACT_METHOD_EMAIL:
+					case $this->contact_constants['CONTACT_METHOD_EMAIL']:
 					default:
 
 						// Send using email (default)..first remove all bbcodes
@@ -569,12 +594,12 @@ class main_controller
 		$pm_attachments_allowed = $post_attachments_allowed && $this->config['allow_pm_attach'] ?  true : false;
 
 		// forum and contact form allows attachments
-		if ($post_attachments_allowed && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_POST)
+		if ($post_attachments_allowed && $this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_POST'])
 		{
 			$attachment_allowed = ($this->config['allow_attachments'] && $this->config['contactadmin_attach_allowed'] && $form_enctype) ? true : false;
 		}
 		// the forum allows attachments in PMs?
-		if ($pm_attachments_allowed && $this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_PM)
+		if ($pm_attachments_allowed && $this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'])
 		{
 			$attachment_allowed = ($this->config['contactadmin_attach_allowed'] && $this->config['allow_pm_attach'] && $form_enctype) ? true : false;
 		}
@@ -586,10 +611,10 @@ class main_controller
 			$this->contactadmin->contact_change_auth('', 'restore', $contact_perms);
 		}
 
-		$l_admin_info = $this->config_text->get('contact_admin_info');
+		$l_admin_info = $this->db_text->get('contact_admin_info');
 		if ($l_admin_info)
 		{
-			$contactadmin_data			= $this->config_text->get_array([
+			$contactadmin_data			= $this->db_text->get_array([
 				'contact_admin_info',
 				'contact_admin_info_uid',
 				'contact_admin_info_bitfield',
@@ -618,10 +643,10 @@ class main_controller
 			'PRIVACY_POLICY_URL'	=> $privacy_policy_url,
 			'L_CONTACT_YOUR_NAME_EXPLAIN'	=> $this->config['contactadmin_username_chk'] ? $this->language->lang($this->config['allow_name_chars'] . '_EXPLAIN', $this->config['min_name_chars'], $this->config['max_name_chars']) : $this->language->lang('CONTACT_YOUR_NAME_EXPLAIN'),
 
-			'S_ATTACH_BOX'			=> ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL) ? false : $attachment_allowed,
+			'S_ATTACH_BOX'			=> ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL']) ? false : $attachment_allowed,
 			'S_FORM_ENCTYPE'		=> $form_enctype,
 			'S_CONFIRM_REFRESH'		=> ($this->config['contactadmin_confirm']) ? true : false,
-			'S_EMAIL'				=> ($this->config['contactadmin_method'] == contact_constants::CONTACT_METHOD_EMAIL) ? true : false,
+			'S_EMAIL'				=> ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL']) ? true : false,
 
 			'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 			'S_ERROR'				=> (isset($error) && count($error)) ? implode('<br />', $error) : '',
