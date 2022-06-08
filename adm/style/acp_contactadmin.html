@@ -11,7 +11,7 @@
 	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
 	<dl>
 		<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
-		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" border="0" alt="{{ lang('PAYPAL_ALT') }}" style="cursor:pointer;margin-top:15px;"></a></dd>
+		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" alt="{{ lang('PAYPAL_ALT') }}" style="cursor: pointer; margin-top: 15px;"></a></dd>
 	</dl>
 </fieldset>
 {% if CONTACT_ERROR %}
@@ -81,7 +81,7 @@
 			<dt><label for="email_chk">{{ lang('CONTACT_EMAIL_CHK') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_EMAIL_CHK_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="email_chk" value="1" {% if CONTACT_EMAIL_CHK %}id="email_chk" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="email_chk" value="0" {% if not CONTACT_EMAIL_CHK %}id="email_chk"checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
+			<label><input type="radio" class="radio" name="email_chk" value="0" {% if not CONTACT_EMAIL_CHK %}id="email_chk" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
 			<dt><label for="max_attempts">{{ lang('CONTACT_MAX_ATTEMPTS') }}{{ lang('COLON') }}</label><br>
