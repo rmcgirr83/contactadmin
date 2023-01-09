@@ -21,12 +21,12 @@ on:
 jobs:
     # START Basic Checks Job (EPV, code sniffer, images check, etc.)
     basic-checks:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-22.04
         strategy:
             matrix:
                 include:
                     - db: 'none'
-                      php: ['7.3', '7.4', '8.0']
+                      php: '7.3'
                       NOTESTS: 1
 
         name: PHP ${{ matrix.php }} - ${{ matrix.db }}
