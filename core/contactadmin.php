@@ -389,6 +389,20 @@ class contactadmin
 	}
 
 	/**
+	 * Create the selection for who gets the message
+	 */
+	public function who_select($value, $key = '')
+	{
+		$radio_ary = [
+			$this->contact_constants['CONTACT_WHO_ALL_ADMINS']		=> 'CONTACT_WHO_ALL_ADMINS',
+			$this->contact_constants['CONTACT_WHO_BOARD_DEFAULT']	=> 'CONTACT_WHO_BOARD_DEFAULT',
+			$this->contact_constants['CONTACT_WHO_BOARD_FOUNDER']		=> 'CONTACT_WHO_BOARD_FOUNDER',
+		];
+
+		return h_radio('contact_who', $radio_ary, $value, $key);
+	}
+
+	/**
 	 * Create the selection for the contact method
 	 */
 	public function method_select($value, $key = '')
@@ -399,7 +413,6 @@ class contactadmin
 				$this->contact_constants['CONTACT_METHOD_EMAIL']	=> 'CONTACT_METHOD_EMAIL',
 				$this->contact_constants['CONTACT_METHOD_POST']		=> 'CONTACT_METHOD_POST',
 				$this->contact_constants['CONTACT_METHOD_PM']		=> 'CONTACT_METHOD_PM',
-				$this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']	=> 'CONTACT_METHOD_BOARD_DEFAULT',
 			];
 		}
 		else
@@ -452,7 +465,7 @@ class contactadmin
 		$contact_users = [];
 
 		// board default email
-		if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT'])
+		if ($this->config['contactadmin_who'] == $this->contact_constants['CONTACT_WHO_BOARD_DEFAULT'])
 		{
 			$contact_users[] = [
 				'username'		=> !empty($this->config['board_contact_name']) ? $this->config['board_contact_name'] : $this->config['sitename'],
@@ -464,9 +477,7 @@ class contactadmin
 
 			return $contact_users;
 		}
-
-		// Only founders...maybe
-		if ($this->config['contactadmin_founder_only'])
+		else if ($this->config['contactadmin_who'] == $this->contact_constants['CONTACT_WHO_BOARD_FOUNDER'])
 		{
 			$sql_where .= ' WHERE user_type = ' . USER_FOUNDER;
 		}
@@ -476,13 +487,9 @@ class contactadmin
 			$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 			$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
 
-			if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'] && count($admin_ary))
+			if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]) && count($admin_ary))
 			{
-				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
-			}
-			else if ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_PM'] && count($admin_ary))
-			{
-				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
+				$sql_where .= ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary);
 			}
 		}
 

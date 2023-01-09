@@ -142,6 +142,15 @@ class admin_controller
 		$contact_admin_info_bitfield	= $contact_admin_data['contact_admin_info_bitfield'];
 		$contact_admin_info_flags		= $contact_admin_data['contact_admin_info_flags'];
 
+		$contact_email_methods = [];
+		foreach ($this->contact_constants as $key => $value)
+		{
+			if (in_array($key, ['CONTACT_METHOD_BOARD_DEFAULT', 'CONTACT_METHOD_EMAIL']))
+			{
+				$contact_email_methods[] = $value;
+			}
+		}
+
 		$contact_admin_info = $this->request->variable('contact_admin_info', $contact_admin_info, true);
 
 		$bot_max_id = (int) $this->bot_max_id();
@@ -165,7 +174,7 @@ class admin_controller
 				$error[] = $this->language->lang('FORM_INVALID');
 			}
 
-			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]) && !$this->config['email_enable'])
+			if (in_array($this->request->variable('contact_method', 0), $contact_email_methods) && !$this->config['email_enable'])
 			{
 				$error[] = $this->language->lang('EMAIL_NOT_CONFIGURED');
 			}
@@ -246,6 +255,8 @@ class admin_controller
 			'CONTACT_GDPR'					=> $this->config['contactadmin_gdpr'],
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
+			'CONTACT_WHO'					=> $this->contactadmin->who_select($this->config['contactadmin_who']),
+			'CONTACT_EMAIL_METHODS'			=> json_encode($contact_email_methods),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
 			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
 
@@ -295,7 +306,7 @@ class admin_controller
 		$this->config->set('contactadmin_email_chk', $this->request->variable('email_chk', 0));
 		$this->config->set('contactadmin_max_attempts', $this->request->variable('max_attempts', 0));
 		$this->config->set('contactadmin_attach_allowed', $this->request->variable('attach_allowed', 0));
-		$this->config->set('contactadmin_founder_only', $this->request->variable('founder_only', 0));
+		$this->config->set('contactadmin_who', $this->request->variable('contact_who', 0));
 		$this->config->set('contactadmin_method', $this->request->variable('contact_method', 0));
 		$this->config->set('contactadmin_bot_user', $this->request->variable('contact_bot_user', 0));
 		$this->config->set('contactadmin_bot_poster', $this->request->variable('contact_bot_poster', 0));
@@ -336,26 +347,14 @@ class admin_controller
 		$admin_ary = $this->auth->acl_get_list(false, 'a_', false);
 		$admin_ary = (!empty($admin_ary[0]['a_'])) ? $admin_ary[0]['a_'] : [];
 
-		$sql_where = '';
 		$admins = [];
-		if ($method == $this->contact_constants['CONTACT_METHOD_EMAIL'] && count($admin_ary))
-		{
-			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_viewemail = 1';
-		}
-		else if ($method == $this->contact_constants['CONTACT_METHOD_PM'] && count($admin_ary))
-		{
-			$sql_where = ' WHERE ' . $this->db->sql_in_set('user_id', $admin_ary) . ' AND user_allow_pm = 1';
-		}
 
-		if (!empty($sql_where))
-		{
-			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
-				FROM ' . USERS_TABLE . ' ' .
-				$sql_where;
-			$result = $this->db->sql_query($sql);
-			$admins = $this->db->sql_fetchrowset($result);
-			$this->db->sql_freeresult($result);
-		}
+		$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
+			FROM ' . USERS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('user_id', $admin_ary);
+		$result = $this->db->sql_query($sql);
+		$admins = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
 
 		if (!count($admins))
 		{

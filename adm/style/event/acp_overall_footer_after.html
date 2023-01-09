@@ -2,6 +2,8 @@
 <script>
 var AJAX_BOT_USER_INFO = "{{ AJAX_BOT_USER_INFO|escape('js') }}";
 var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
+var contact_email_methods = "{{ CONTACT_EMAIL_METHODS|escape('js') }}";
+
 (function($) { // Avoid conflicts with other libraries
 	'use strict';
 	$("#contact_bot_user").change(function () {
@@ -21,6 +23,26 @@ var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
 				}
 			}
 		});
+	});
+
+	// hide or show contact options panel
+	$("input[name='contact_method']").each(function() {
+		if ($(this).is(':checked') && $.inArray(this.value, contact_email_methods) !== -1)
+		{
+			$(".contact-options").hide();
+		}
+	});
+
+	$("input[name='contact_method']").change(function() {
+		var method = $(this).val();
+		if ($.inArray(method, contact_email_methods) !== -1)
+		{
+			$(".contact-options").hide("slow");
+		}
+		else
+		{
+			$(".contact-options").show("slow");
+		}
 	});
 })(jQuery);
 </script>

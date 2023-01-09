@@ -95,38 +95,40 @@
 			<label><input type="radio" class="radio" name="gdpr" value="0" {% if not CONTACT_GDPR %}id="gdpr" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
+			<dt><label for="contact_reasons">{{ lang('CONTACT_REASONS') }}{{ lang('COLON') }}</label><br>
+			<span>{{ lang('CONTACT_REASONS_EXPLAIN') }}</span></dt>
+			<dd><textarea id="contact_reasons" name="reasons" rows="10" cols="40">{{ CONTACT_REASONS }}</textarea></dd>
+		</dl>
+		<dl>
+			<dt><label>{{ lang('CONTACT_WHO') }}{{ lang('COLON') }}</label><br>
+			<span>{{ lang('CONTACT_WHO_EXPLAIN') }}</span></dt>
+			<dd>{{ CONTACT_WHO }}</dd>
+		</dl>		
+		<dl>
+			<dt><label>{{ lang('CONTACT_METHOD') }}{{ lang('COLON') }}</label><br>
+			<span>{{ lang('CONTACT_METHOD_EXPLAIN') }}</span></dt>
+			<dd>{{ CONTACT_METHOD }}</dd>
+		</dl>
+	</fieldset>
+	<fieldset class="contact-options">
+		<legend>{{ lang('CONTACT_POST_OPTIONS') }}</legend>
+		<dl>
 			<dt><label for="attach_allowed">{{ lang('CONTACT_ATTACHMENTS') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ATTACHMENTS_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" {% if CONTACT_ATTACHMENTS %}id="attach_allowed" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="attach_allowed" value="0" {% if not CONTACT_ATTACHMENTS %}id="attach_allowed" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_founder">{{ lang('CONTACT_FOUNDER') }}{{ lang('COLON') }}</label><br>
-			<span>{{ lang('CONTACT_FOUNDER_EXPLAIN') }}</span></dt>
-			<dd><label><input type="radio" class="radio" name="founder_only" value="1" {% if CONTACT_FOUNDER %}id="contact_founder" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
-			<label><input type="radio" class="radio" name="founder_only" value="0" {% if not CONTACT_FOUNDER %}id="contact_founder" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
-		</dl>
-		<dl>
-			<dt><label for="contact_reasons">{{ lang('CONTACT_REASONS') }}{{ lang('COLON') }}</label><br>
-			<span>{{ lang('CONTACT_REASONS_EXPLAIN') }}</span></dt>
-			<dd><textarea id="contact_reasons" name="reasons" rows="10" cols="40">{{ CONTACT_REASONS }}</textarea></dd>
-		</dl>
-		<dl>
-			<dt><label>{{ lang('CONTACT_METHOD') }}{{ lang('COLON') }}</label><br>
-			<span>{{ lang('CONTACT_METHOD_EXPLAIN') }}</span></dt>
-			<dd>{{ CONTACT_METHOD }}</dd>
-		</dl>
-		<dl>
 			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_USER_EXPLAIN') }}</span></dt>
 			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{{ CONTACT_BOT_MAX_ID }}" value="{{ CONTACT_BOT_USER }}"> <span id="bot_user_link">{{ CONTACT_BOT_USER_LINK }}</span></dd>
 		</dl>
-		<dl>
+		<dl id="contact-bot-poster">
 			<dt><label>{{ lang('CONTACT_BOT_POSTER') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_POSTER_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_BOT_POSTER }}</dd>
 		</dl>
-		<dl>
+		<dl id="contact-bot-forum">
 			<dt><label for="contact_forum">{{ lang('CONTACT_BOT_FORUM') }}{{ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_FORUM_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_BOT_FORUM }}</dd>

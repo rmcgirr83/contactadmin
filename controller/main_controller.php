@@ -162,7 +162,7 @@ class main_controller
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		if (!$this->config['email_enable'] && in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]))
+		if (!$this->config['email_enable'] && $this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL'])
 		{
 
 			// add an entry into the error log
@@ -334,7 +334,7 @@ class main_controller
 				$user_name = $data['username'];
 			}
 
-			if (!in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_BOARD_DEFAULT']]))
+			if (!in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL']]))
 			{
 				// change the users stuff
 				if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && empty($this->user->data['is_registered'])))
