@@ -2,7 +2,9 @@
 <script>
 var AJAX_BOT_USER_INFO = "{{ AJAX_BOT_USER_INFO|escape('js') }}";
 var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
-var contact_email_methods = "{{ CONTACT_EMAIL_METHODS|escape('js') }}";
+var contact_method_email = "{{ CONTACT_METHOD_EMAIL|escape('js') }}";
+var contact_method_pm = "{{ CONTACT_METHOD_PM|escape('js') }}";
+var contact_method_post = "{{ CONTACT_METHOD_POST|escape('js') }}";
 
 (function($) { // Avoid conflicts with other libraries
 	'use strict';
@@ -27,21 +29,28 @@ var contact_email_methods = "{{ CONTACT_EMAIL_METHODS|escape('js') }}";
 
 	// hide or show contact options panel
 	$("input[name='contact_method']").each(function() {
-		if ($(this).is(':checked') && $.inArray(this.value, contact_email_methods) !== -1)
+		if ($(this).is(':checked') && this.value == contact_method_email)
 		{
 			$(".contact-options").hide();
 		}
+		if ($(this).is(':checked') && (this.value == contact_method_post || this.value == contact_method_pm))
+		{
+			$(".contact-who").hide();
+		}
 	});
 
+	// hide or show the contact who and options on type of contact change
 	$("input[name='contact_method']").change(function() {
 		var method = $(this).val();
-		if ($.inArray(method, contact_email_methods) !== -1)
+		if (this.value == contact_method_email)
 		{
+			$(".contact-who").show("slow");
 			$(".contact-options").hide("slow");
 		}
-		else
+		if (this.value == contact_method_post || this.value == contact_method_pm)
 		{
 			$(".contact-options").show("slow");
+			$(".contact-who").hide("slow");
 		}
 	});
 })(jQuery);

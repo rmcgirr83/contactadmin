@@ -142,12 +142,20 @@ class admin_controller
 		$contact_admin_info_bitfield	= $contact_admin_data['contact_admin_info_bitfield'];
 		$contact_admin_info_flags		= $contact_admin_data['contact_admin_info_flags'];
 
-		$contact_email_methods = [];
+		$contact_method_email = $contact_method_pm = $contact_method_post = '';
 		foreach ($this->contact_constants as $key => $value)
 		{
-			if (in_array($key, ['CONTACT_METHOD_BOARD_DEFAULT', 'CONTACT_METHOD_EMAIL']))
+			if ($key == 'CONTACT_METHOD_EMAIL')
 			{
-				$contact_email_methods[] = $value;
+				$contact_method_email = $value;
+			}
+			else if ($key == 'CONTACT_METHOD_PM')
+			{
+				$contact_method_pm = $value;
+			}
+			else if ($key == 'CONTACT_METHOD_POST')
+			{
+				$contact_method_post = $value;
 			}
 		}
 
@@ -174,12 +182,12 @@ class admin_controller
 				$error[] = $this->language->lang('FORM_INVALID');
 			}
 
-			if (in_array($this->request->variable('contact_method', 0), $contact_email_methods) && !$this->config['email_enable'])
+			if (($this->request->variable('contact_method', 0) == $contact_method_email) && !$this->config['email_enable'])
 			{
 				$error[] = $this->language->lang('EMAIL_NOT_CONFIGURED');
 			}
 
-			if (in_array($this->request->variable('contact_method', 0), [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]))
+			if (in_array($this->request->variable('contact_method', 0), [$contact_method_email, $contact_method_pm]))
 			{
 				$admins_exist = $this->check_for_admins($this->request->variable('contact_method', 0));
 
@@ -256,7 +264,9 @@ class admin_controller
 			'CONTACT_REASONS'				=> $contact_admin_reasons,
 			'CONTACT_METHOD'				=> $this->contactadmin->method_select($this->config['contactadmin_method']),
 			'CONTACT_WHO'					=> $this->contactadmin->who_select($this->config['contactadmin_who']),
-			'CONTACT_EMAIL_METHODS'			=> json_encode($contact_email_methods),
+			'CONTACT_METHOD_EMAIL'			=> json_encode($contact_method_email),
+			'CONTACT_METHOD_PM'				=> json_encode($contact_method_pm),
+			'CONTACT_METHOD_POST'			=> json_encode($contact_method_post),
 			'CONTACT_BOT_POSTER'			=> $this->contactadmin->poster_select($this->config['contactadmin_bot_poster']),
 			'CONTACT_BOT_FORUM'				=> $this->contactadmin->forum_select($this->config['contactadmin_forum']),
 
