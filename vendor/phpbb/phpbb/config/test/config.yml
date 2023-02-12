@@ -1,0 +1,6 @@
+imports:
+    - { resource: ../default/config.yml }
+
+core:
+    require_dev_dependencies: true
+    allow_install_dir: true
