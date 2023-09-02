@@ -157,7 +157,7 @@ class main_controller
 			$contact_reasons = [];
 		}
 
-		if ($this->user->data['is_bot'])
+		if (!empty($this->user->data['is_bot']))
 		{
 			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
