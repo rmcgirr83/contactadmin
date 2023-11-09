@@ -1,7 +1,8 @@
 {% if AJAX_BOT_USER_INFO %}
 <script>
 var AJAX_BOT_USER_INFO = "{{ AJAX_BOT_USER_INFO|escape('js') }}";
-var ERROR = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
+var CONTACT_NO_BOT_USER = "{{ lang('CONTACT_NO_BOT_USER')|escape('js') }}";
+var CONTACT_BOT_IS_BOT = "{{ lang('CONTACT_BOT_IS_BOT')|escape('js') }}";
 var contact_method_email = "{{ CONTACT_METHOD_EMAIL|escape('js') }}";
 var contact_method_pm = "{{ CONTACT_METHOD_PM|escape('js') }}";
 var contact_method_post = "{{ CONTACT_METHOD_POST|escape('js') }}";
@@ -15,9 +16,13 @@ var contact_method_post = "{{ CONTACT_METHOD_POST|escape('js') }}";
 			dataType: 'text',
 			success: function(data){
 				var json = $.parseJSON(data);
-				if (json.error)
+				if (json.error == 'CONTACT_NO_BOT_USER')
 				{
-					$('#bot_user_link').html(''+ERROR+'').show();
+					$('#bot_user_link').html(''+CONTACT_NO_BOT_USER+'').show();
+				}
+				else if (json.error == 'CONTACT_BOT_IS_BOT')
+				{
+					$('#bot_user_link').html(''+json.user_link+'<br>'+CONTACT_BOT_IS_BOT+'').show();
 				}
 				else
 				{

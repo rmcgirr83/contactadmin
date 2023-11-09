@@ -333,11 +333,9 @@ class admin_controller
 	protected function bot_max_id()
 	{
 		$bot_max_id = '';
-		$ignored_users = [USER_IGNORE];
 
 		$sql = 'SELECT MAX(user_id) as max_id
-			FROM ' . USERS_TABLE . '
-			WHERE ' . $this->db->sql_in_set('user_type', $ignored_users, true);
+			FROM ' . USERS_TABLE;
 		$result = $this->db->sql_query($sql);
 		$bot_max_id = $this->db->sql_fetchfield('max_id');
 		$this->db->sql_freeresult($result);

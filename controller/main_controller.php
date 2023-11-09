@@ -340,6 +340,7 @@ class main_controller
 				if ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_ALL'] || ($this->config['contactadmin_bot_poster'] == $this->contact_constants['CONTACT_POST_GUEST'] && empty($this->user->data['is_registered'])))
 				{
 					$contact_perms = $this->contactadmin->contact_change_auth($this->config['contactadmin_bot_user']);
+					$data['username'] = $this->user->data['username'];
 				}
 				if (!function_exists('create_thumbnail'))
 				{
@@ -651,7 +652,7 @@ class main_controller
 			'S_FORM_ENCTYPE'		=> $form_enctype,
 			'S_CONFIRM_REFRESH'		=> ($this->config['contactadmin_confirm']) ? true : false,
 			'S_EMAIL'				=> ($this->config['contactadmin_method'] == $this->contact_constants['CONTACT_METHOD_EMAIL']) ? true : false,
-
+			'S_CONTACT_ADMIN'		=> true,
 			'S_HIDDEN_FIELDS'		=> $s_hidden_fields,
 			'S_ERROR'				=> (isset($error) && count($error)) ? implode('<br />', $error) : '',
 			'S_CONTACT_ACTION'		=> $this->helper->route('rmcgirr83_contactadmin_displayform'),

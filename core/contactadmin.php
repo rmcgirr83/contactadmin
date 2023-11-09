@@ -359,36 +359,6 @@ class contactadmin
 	}
 
 	/**
-	 * make_user_select
-	 * @return string User List html
-	 * for drop down when selecting the contact bot
-	 */
-	public function make_user_select($select_id = false)
-	{
-		// variables
-		$user_list = '';
-
-		// groups we ignore for the dropdown
-		$groups = [USER_IGNORE, USER_INACTIVE];
-
-		// do the main sql query
-		$sql = 'SELECT user_id, username
-			FROM ' . USERS_TABLE . '
-			WHERE ' . $this->db->sql_in_set('user_type', $groups, true) . '
-			ORDER BY username_clean';
-		$result = $this->db->sql_query($sql);
-
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$selected = ($row['user_id'] == $select_id) ? ' selected="selected"' : '';
-			$user_list .= '<option value="' . $row['user_id'] . '"' . $selected . '>' . $row['username'] . '</option>';
-		}
-		$this->db->sql_freeresult($result);
-
-		return $user_list;
-	}
-
-	/**
 	 * Create the selection for who gets the message
 	 */
 	public function who_select($value, $key = '')
@@ -446,14 +416,6 @@ class contactadmin
 	public function forum_select($value)
 	{
 		return '<select id="contact_forum" name="forum">' . make_forum_select($value, false, true, true) . '</select>';
-	}
-
-	/**
-	 * Create the selection for the bot
-	 */
-	public function bot_user_select($value)
-	{
-		return '<select id="contact_bot_user" name="bot_user">' . $this->make_user_select($value) . '</select>';
 	}
 
 	/**
@@ -525,9 +487,9 @@ class contactadmin
 	{
 		$bot_user_info = [];
 
-		$sql = 'SELECT user_id, username
+		$sql = 'SELECT user_id, username, user_type
 			FROM ' . USERS_TABLE . "
-			WHERE user_id = " . (int) $user_id . ' AND user_type <> ' . USER_IGNORE;
+			WHERE user_id = " . (int) $user_id;
 		$result = $this->db->sql_query($sql);
 		$bot_user_info = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
@@ -542,12 +504,21 @@ class contactadmin
 			if (!isset($bot_user_info['username']))
 			{
 				$json = new JsonResponse([
-					'error'     => true,
+					'error'     => 'CONTACT_NO_BOT_USER',
+					'user_link'	=> '',
+				]);
+			}
+			else if ($bot_user_info['user_type'] == USER_IGNORE)
+			{
+				$json = new JsonResponse([
+					'error'     => 'CONTACT_BOT_IS_BOT',
+					'user_link'	=> $bot_user_info['username'],
 				]);
 			}
 			else
 			{
 				$json = new JsonResponse([
+					'error'			=> false,
 					'user_link'     => '<a href="' . append_sid("{$this->root_path}memberlist.$this->php_ext", 'mode=viewprofile&amp;u=' . $bot_user_info['user_id']) . '" target="_blank">' . $bot_user_info['username'] . '</a>',
 				]);
 			}

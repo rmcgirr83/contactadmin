@@ -25,7 +25,6 @@ class ext extends \phpbb\extension\base
 	{
 		$config = $this->container->get('config');
 
-		// phpBB only supports 3.2 and so will I
-		return phpbb_version_compare($config['version'], '3.2.6', '>=');
+		return phpbb_version_compare($config['version'], '3.3', '>=');
 	}
 }
