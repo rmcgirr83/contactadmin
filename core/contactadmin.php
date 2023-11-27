@@ -457,7 +457,7 @@ class contactadmin
 
 		if (!empty($sql_where))
 		{
-			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type
+			$sql = 'SELECT user_id, username, user_email, user_lang, user_jabber, user_notify_type, user_dateformat, user_timezone
 				FROM ' . USERS_TABLE . ' ' .
 				$sql_where;
 			$result = $this->db->sql_query($sql);

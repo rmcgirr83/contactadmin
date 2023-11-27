@@ -525,8 +525,27 @@ class main_controller
 						for ($i = 0; $i < $size; $i++)
 						{
 							$tz = (!empty($contact_users[$i]['user_timezone']) ? $contact_users[$i]['user_timezone'] : $this->config['board_timezone']);
-							$date = new \DateTime("now", new \DateTimeZone($tz));
-							$date = $date->format('D M d, Y g:i a');
+							$iso = (!empty($contact_users[$i]['user_lang']) ? $contact_users[$i]['user_lang'] : $this->config['default_lang']);
+							$date_format =(!empty($contact_users[$i]['user_dateformat']) ? $contact_users[$i]['user_dateformat'] : $this->config['default_dateformat']);
+							$time = time();
+
+							// use PHP IntlDateFormatter if possible
+							$intl_installed = extension_loaded('intl');
+							if ($intl_installed)
+							{
+								$fmt = new \IntlDateFormatter(
+									$iso,
+									\IntlDateFormatter::FULL,
+									\IntlDateFormatter::FULL,
+									$tz,
+									\IntlDateFormatter::GREGORIAN);
+								$date = $fmt->format($time);
+							}
+							else
+							{
+								$date = new \DateTime("now", new \DateTimeZone($tz));
+								$date = $date->format($date_format);
+							}
 
 							// now check if the email template may exist.  Can't be helped if there is a lang dir and no email dir
 							// use en if not exist
