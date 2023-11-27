@@ -435,6 +435,8 @@ class contactadmin
 				'user_jabber'	=> '',
 				'user_lang'		=> $this->config['default_lang'],
 				'user_notify_type'	=> 0,
+				'user_dateformat'	=> $this->config['default_dateformat'],
+				'user_timezone'	=> $this->config['board_timezone']
 			];
 
 			return $contact_users;
