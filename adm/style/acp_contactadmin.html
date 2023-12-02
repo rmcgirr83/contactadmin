@@ -10,7 +10,7 @@
 <fieldset>
 	<legend>{{ lang('BUY_ME_A_BEER') }}</legend>
 	<dl>
-		<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') }}{{ lang('COLON') }}</label><br /><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
+		<dt><label>{{ lang('BUY_ME_A_BEER_SHORT') ~ lang('COLON') }}</label><br><span>{{ lang('BUY_ME_A_BEER_EXPLAIN') }}</span></dt>
 		<dd><a href="{{ lang('BUY_ME_A_BEER_URL') }}" target="_blank" rel="noreferrer noopener"><img src="{{ lang('PAYPAL_IMAGE_URL') }}" alt="{{ lang('PAYPAL_ALT') }}" style="cursor: pointer; margin-top: 15px;"></a></dd>
 	</dl>
 </fieldset>
@@ -60,52 +60,52 @@
 	<fieldset>
 		<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
 		<dl>
-			<dt><label for="confirm">{{ lang('CONTACT_ACP_CONFIRM') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="confirm">{{ lang('CONTACT_ACP_CONFIRM') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ACP_CONFIRM_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="confirm" value="1" {% if CONTACT_CONFIRM %}id="confirm" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="confirm" value="0" {% if not CONTACT_CONFIRM %}id="confirm" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="confirm_guests">{{ lang('CONTACT_CONFIRM_GUESTS') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="confirm_guests">{{ lang('CONTACT_CONFIRM_GUESTS') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_CONFIRM_GUESTS_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="confirm_guests" value="1" {% if CONTACT_CONFIRM_GUESTS %}id="confirm_guests" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="confirm_guests" value="0" {% if not CONTACT_CONFIRM_GUESTS %}id="confirm_guests" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="username_chk">{{ lang('CONTACT_USERNAME_CHK') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="username_chk">{{ lang('CONTACT_USERNAME_CHK') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_USERNAME_CHK_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="username_chk" value="1" {% if CONTACT_USERNAME_CHK %}id="username_chk" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="username_chk" value="0" {% if not CONTACT_USERNAME_CHK %}id="username_chk" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="email_chk">{{ lang('CONTACT_EMAIL_CHK') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="email_chk">{{ lang('CONTACT_EMAIL_CHK') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_EMAIL_CHK_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="email_chk" value="1" {% if CONTACT_EMAIL_CHK %}id="email_chk" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="email_chk" value="0" {% if not CONTACT_EMAIL_CHK %}id="email_chk" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="max_attempts">{{ lang('CONTACT_MAX_ATTEMPTS') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="max_attempts">{{ lang('CONTACT_MAX_ATTEMPTS') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_MAX_ATTEMPTS_EXPLAIN') }}</span></dt>
 			<dd><input type="text" id="max_attempts" name="max_attempts" size="10" value="{{ CONTACT_MAX_ATTEMPTS }}" /></dd>
 		</dl>
 		<dl>
-			<dt><label for="gdpr">{{ lang('CONTACT_GDPR') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="gdpr">{{ lang('CONTACT_GDPR') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_GDPR_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="gdpr" value="1" {% if CONTACT_GDPR %}id="gdpr" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="gdpr" value="0" {% if not CONTACT_GDPR %}id="gdpr" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_reasons">{{ lang('CONTACT_REASONS') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="contact_reasons">{{ lang('CONTACT_REASONS') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_REASONS_EXPLAIN') }}</span></dt>
 			<dd><textarea id="contact_reasons" name="reasons" rows="10" cols="40">{{ CONTACT_REASONS }}</textarea></dd>
 		</dl>
 		<dl class="contact-who">
-			<dt><label>{{ lang('CONTACT_WHO') }}{{ lang('COLON') }}</label><br>
+			<dt><label>{{ lang('CONTACT_WHO') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_WHO_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_WHO }}</dd>
 		</dl>		
 		<dl>
-			<dt><label>{{ lang('CONTACT_METHOD') }}{{ lang('COLON') }}</label><br>
+			<dt><label>{{ lang('CONTACT_METHOD') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_METHOD_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_METHOD }}</dd>
 		</dl>
@@ -113,23 +113,23 @@
 	<fieldset class="contact-options">
 		<legend>{{ lang('CONTACT_POST_OPTIONS') }}</legend>
 		<dl>
-			<dt><label for="attach_allowed">{{ lang('CONTACT_ATTACHMENTS') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="attach_allowed">{{ lang('CONTACT_ATTACHMENTS') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_ATTACHMENTS_EXPLAIN') }}</span></dt>
 			<dd><label><input type="radio" class="radio" name="attach_allowed" value="1" {% if CONTACT_ATTACHMENTS %}id="attach_allowed" checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 			<label><input type="radio" class="radio" name="attach_allowed" value="0" {% if not CONTACT_ATTACHMENTS %}id="attach_allowed" checked="checked"{% endif %} /> {{ lang('NO') }}</label></dd>
 		</dl>
 		<dl>
-			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_USER_EXPLAIN') }}</span></dt>
 			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{{ CONTACT_BOT_MAX_ID }}" value="{{ CONTACT_BOT_USER }}"> <span id="bot_user_link">{{ CONTACT_BOT_USER_LINK }}</span></dd>
 		</dl>
 		<dl id="contact-bot-poster">
-			<dt><label>{{ lang('CONTACT_BOT_POSTER') }}{{ lang('COLON') }}</label><br>
+			<dt><label>{{ lang('CONTACT_BOT_POSTER') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_POSTER_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_BOT_POSTER }}</dd>
 		</dl>
 		<dl id="contact-bot-forum">
-			<dt><label for="contact_forum">{{ lang('CONTACT_BOT_FORUM') }}{{ lang('COLON') }}</label><br>
+			<dt><label for="contact_forum">{{ lang('CONTACT_BOT_FORUM') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_FORUM_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_BOT_FORUM }}</dd>
 		</dl>

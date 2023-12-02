@@ -535,7 +535,7 @@ class main_controller
 							{
 								$fmt = new \IntlDateFormatter(
 									$iso,
-									\IntlDateFormatter::FULL,
+									\IntlDateFormatter::RELATIVE_FULL,
 									\IntlDateFormatter::FULL,
 									$tz,
 									\IntlDateFormatter::GREGORIAN);
