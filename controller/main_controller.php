@@ -181,7 +181,7 @@ class main_controller
 			// not link and not cat
 			$this->contactadmin->contact_check('contact_check_forum', $this->config['contactadmin_forum']);
 		}
-		else if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_EMAIL'], $this->contact_constants['CONTACT_METHOD_PM']]))
+		else if (in_array($this->config['contactadmin_method'], [$this->contact_constants['CONTACT_METHOD_POST'], $this->contact_constants['CONTACT_METHOD_PM']]))
 		{
 			// quick check to ensure our "bot" is good
 			$this->contactadmin->contact_check('contact_check_bot', false, $this->config['contactadmin_bot_user']);
