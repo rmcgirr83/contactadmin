@@ -21,43 +21,46 @@ on:
 jobs:
     # START Basic Checks Job (EPV, code sniffer, images check, etc.)
     basic-checks:
-        runs-on: ubuntu-22.04
+        runs-on: ubuntu-latest
         strategy:
             matrix:
+                php-versions: ['7.3', '8.0', '8.1', '8.2, '8.3']
                 include:
                     - db: 'none'
-                      php: '7.3'
                       NOTESTS: 1
 
-        name: PHP ${{ matrix.php }} - ${{ matrix.db }}
+        name: PHP ${{ matrix.php-versions }} - ${{ matrix.db }}
 
         steps:
             - name: Checkout phpBB
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   repository: phpbb/phpbb
                   ref: ${{ env.PHPBB_BRANCH }}
                   path: phpBB3
 
             - name: Checkout extension
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                   path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php }}
+                  php-version: ${{ matrix.php-versions }}
                   extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysqli, sqlite, pdo_sqlite, intl, gd, exif, iconv, sqlsrv, pdo_sqlsrv, ldap
                   coverage: none
 
             - name: Setup environment for phpBB
               env:
                   DB: ${{ matrix.db }}
-                  PHP_VERSION: ${{ matrix.php }}
+                  PHP_VERSION: ${{ matrix.php-versions }}
                   NOTESTS: '1'
               run: .github/setup-phpbb.sh $DB $PHP_VERSION $NOTESTS
               working-directory: ./phpBB3
+
+            - name: Phing sniff
+              run: .github/phing-sniff.sh
 
             - name: Setup EPV
               if: ${{ env.EPV != 0 }}
