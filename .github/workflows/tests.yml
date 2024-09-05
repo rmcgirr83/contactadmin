@@ -24,12 +24,13 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-versions: ['8.1']
+               # php-versions: ['8.1']
                 include:
+                    - php: '8.1'
                     - db: 'none'
                       NOTESTS: 1
 
-        name: PHP ${{ matrix.php-versions }} - ${{ matrix.db }}
+        name: PHP ${{ matrix.php }} - ${{ matrix.db }}
 
         steps:
             - name: Checkout phpBB
@@ -47,7 +48,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: ${{ matrix.php-versions }}
+                  php-version: ${{ matrix.php }}
                   extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysqli, sqlite, pdo_sqlite, intl, gd, exif, iconv, sqlsrv, pdo_sqlsrv, ldap
                   coverage: none
 
@@ -61,7 +62,7 @@ jobs:
 
             - name: Setup EPV
               if: ${{ env.EPV != 0 }}
-              run: composer require phpbb/epv:dev-master --dev --no-interaction --ignore-platform-reqs --with-all-dependencies
+              run: composer require phpbb/epv:dev-master --dev --no-interaction --ignore-platform-reqs
               working-directory: ./phpBB3/phpBB
 
             - name: Run code sniffer
