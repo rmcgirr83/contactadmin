@@ -100,17 +100,17 @@
 			<dd><textarea id="contact_reasons" name="reasons" rows="10" cols="40">{{ CONTACT_REASONS }}</textarea></dd>
 		</dl>
 		<dl>
-			<dt><label>{{ lang('CONTACT_WHO') ~ lang('COLON') }}</label><br>
-			<span>{{ lang('CONTACT_WHO_EXPLAIN') }}</span></dt>
-			<dd>{{ CONTACT_WHO }}</dd>
-		</dl>		
-		<dl>
 			<dt><label>{{ lang('CONTACT_METHOD') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_METHOD_EXPLAIN') }}</span></dt>
 			<dd>{{ CONTACT_METHOD }}</dd>
 		</dl>
+		<dl class="contact-who">
+			<dt><label>{{ lang('CONTACT_WHO') ~ lang('COLON') }}</label><br>
+			<span>{{ lang('CONTACT_WHO_EXPLAIN') }}</span></dt>
+			<dd>{{ CONTACT_WHO }}</dd>
+		</dl>
 	</fieldset>
-	<fieldset>
+	<fieldset class="contact-options">
 		<legend>{{ lang('CONTACT_POST_OPTIONS') }}</legend>
 		<dl>
 			<dt><label for="attach_allowed">{{ lang('CONTACT_ATTACHMENTS') ~ lang('COLON') }}</label><br>
@@ -121,7 +121,7 @@
 		<dl>
 			<dt><label for="contact_bot_user">{{ lang('CONTACT_BOT_USER') ~ lang('COLON') }}</label><br>
 			<span>{{ lang('CONTACT_BOT_USER_EXPLAIN') }}</span></dt>
-			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="2" max="{{ CONTACT_BOT_MAX_ID }}" value="{{ CONTACT_BOT_USER }}"> <span id="bot_user_link">{{ CONTACT_BOT_USER_LINK }}</span></dd>
+			<dd><input id="contact_bot_user" name="contact_bot_user" type="number" min="1" max="{{ CONTACT_BOT_MAX_ID }}" value="{{ CONTACT_BOT_USER }}"> <span id="bot_user_link">{{ CONTACT_BOT_USER_LINK }}</span></dd>
 		</dl>
 		<dl id="contact-bot-poster">
 			<dt><label>{{ lang('CONTACT_BOT_POSTER') ~ lang('COLON') }}</label><br>

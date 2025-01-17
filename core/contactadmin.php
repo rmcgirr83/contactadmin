@@ -510,6 +510,13 @@ class contactadmin
 					'user_link'	=> '',
 				]);
 			}
+			else if ($bot_user_info['user_id'] == ANONYMOUS)
+			{
+				$json = new JsonResponse([
+					'error'     => 'CONTACT_BOT_IS_GUEST',
+					'user_link'	=> $bot_user_info['username'],
+				]);
+			}
 			else if ($bot_user_info['user_type'] == USER_IGNORE)
 			{
 				$json = new JsonResponse([
