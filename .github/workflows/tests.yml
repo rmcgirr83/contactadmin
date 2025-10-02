@@ -33,6 +33,9 @@ jobs:
         name: PHP ${{ matrix.php }} - ${{ matrix.db }}
 
         steps:
+            - name: Update apt package index
+              run: sudo apt update
+
             - name: Checkout phpBB
               uses: actions/checkout@v4
               with:
